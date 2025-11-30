@@ -1,0 +1,42 @@
+.viewport-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f4f4;
+  overflow: auto;
+}
+
+.app-frame {
+  width: 390px;
+  max-width: 390px;
+  max-height: 100vh;
+  aspect-ratio: 390 / 916;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.15);
+  position: relative;
+  flex-shrink: 0;
+}
+
+@media (max-height: 916px) {
+  .app-frame {
+    height: 100vh;
+    width: calc(390px * (100vh / 916));
+    max-width: 390px;
+  }
+}
+
+@media (max-width: 390px) {
+  .viewport-wrapper {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  
+  .app-frame {
+    width: 390px;
+    max-width: 390px;
+  }
+}
+
