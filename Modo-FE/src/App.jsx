@@ -1,11 +1,15 @@
 import { Routes, Route } from "react-router-dom";
-
 import Onboarding from "./page/Onboarding/Onboarding.jsx";
+import "./App.css";
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/onboarding" element={<Onboarding />} />
-    </Routes>
+    <div className="viewport-wrapper">
+      <div className="app-frame">
+        <Routes>
+          <Route path="/onboarding" element={<Onboarding />} />
+        </Routes>
+      </div>
+    </div>
   );
 }
