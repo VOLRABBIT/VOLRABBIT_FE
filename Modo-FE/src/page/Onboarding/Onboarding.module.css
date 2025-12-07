@@ -140,3 +140,500 @@
   transform: translateY(1px);
   box-shadow: 0 8px 18px rgba(142, 98, 204, 0.25);
 }
+
+/* 질문 페이지 스타일 */
+.questionWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(125, 167, 219, 0.40) 0%, rgba(241, 169, 211, 0.40) 44.71%, rgba(183, 168, 215, 0.40) 69.23%, rgba(116, 179, 170, 0.40) 100%);
+}
+
+.topBar {
+  position: sticky;
+  top: 0;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 14px;
+  padding-right: 16px;
+  z-index: 100;
+  background: transparent;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.backIcon {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.topTitle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 240px;
+  height: 24px;
+  font-family: "NanumSquare", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  color: #393939;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skipButton {
+  width: 51px;
+  height: 22px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #7A7A7A;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.questionContent {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.questionContainer {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.question {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 0;
+  padding: 90px 0px 130px 0px;
+  color: #333;
+  text-align: center;
+}
+
+.options {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  border: none;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  border-radius: 0;
+  transition: background-color 0.2s;
+  background: transparent;
+}
+
+.option:hover {
+  background-color: transparent;
+}
+
+.radioInput {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #666;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+  transition: border-color 0.2s;
+}
+
+.radioInput:checked {
+  border-color: #333;
+  background-color: #333;
+}
+
+.radioInput:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.radioLabel {
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+}
+
+.bottomButtonContainer {
+  padding: 20px 16px;
+  background: transparent;
+}
+
+.nextButton {
+  width: 100%;
+  height: 56px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.nextButton:hover {
+  background-color: #444;
+}
+
+.nextButton:active {
+  background-color: #222;
+}
+
+.nextButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* 모달 스타일 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  position: relative;
+  width: 320px;
+  height: 196px;
+  background: #ffffff;
+  border: 1px solid #E0D0FF;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modalClose {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: none;
+  border: 4px solid transparent;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 16px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.modalCloseIcon {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.modalTitle {
+  position: relative;
+  width: 100%;
+  height: 28px;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+  padding: 8px 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modalContentLabel {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #BB90DD;
+  color: #ffffff;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.modalContentText {
+  width: 272px;
+  min-height: 44px;
+  padding: 6px 24px;
+  border: none;
+  font-family: "NanumSquareOTF", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  font-style: bold;
+  line-height: 22px;
+  letter-spacing: 0%;
+  color: #7A7A7A;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalButtons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  
+}
+
+.modalButtonStop {
+  flex: 1;
+  height: 44px;
+  background-color: #BB90DD;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-radius: 999px;
+}
+
+.modalButtonStop:hover {
+  background-color: #A67BC8;
+}
+
+.modalButtonStop:active {
+  background-color: #9555C4;
+}
+
+.modalButtonContinue {
+  flex: 1;
+  height: 44px;
+  background-color: #E5E5E5;
+  color: #333;
+  border: none;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.modalButtonContinue:hover {
+  background-color: #D5D5D5;
+}
+
+.modalButtonContinue:active {
+  background-color: #C5C5C5;
+}
+
+/* 로딩 페이지 스타일 */
+.loadingWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  overflow: hidden;
+  padding-top: 120px;
+}
+
+.loadingBackground {
+  position: absolute;
+  top: 0;
+  left: -61px;
+  width: 783px;
+  height: 1175px;
+  background-size: 783px 1175px;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.loadingCharacterContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
+  width: 100%;
+  z-index: 1;
+  padding-top: 120px;
+}
+
+.loadingCharacter {
+  animation: bounce 1s ease-in-out infinite, fadeIn 0.5s ease-in-out;
+}
+
+/* 모험가 (adventurer) - 인덱스 0 */
+.character0 {
+  width: 151px;
+  height: 241px;
+}
+
+/* 도굴 (grave robber) - 인덱스 1 */
+.character1 {
+  width: 188px;
+  height: 212px;
+}
+
+/* 로봇 (robot) - 인덱스 2 */
+.character2 {
+  width: 159px;
+  height: 228px;
+}
+
+/* 마법사 (wizard) - 인덱스 3 */
+.character3 {
+  width: 142px;
+  height: 247px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.loadingTextContainer {
+  position: absolute;
+  top: 490px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 65px;
+  width: 100%;
+  z-index: 1;
+}
+
+.loadingText {
+  width: 62px;
+  height: 22px;
+  font-family: "NanumSquare", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 22px;
+  letter-spacing: -0.408px;
+  color: #333;
+  text-align: center;
+  margin: 0;
+  text-transform: lowercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingDots {
+  display: inline-block;
+  width: 24px;
+  text-align: left;
+}
+
+.loadingDots::after {
+  content: "...";
+  animation: dotsAnimation 1.5s steps(4, end) infinite;
+}
+
+@keyframes dotsAnimation {
+  0% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75%, 100% {
+    content: "...";
+  }
+}
+
+.loadingSubtext {
+  width: 260px;
+  height: 22px;
+  font-family: "NanumSquareOTF", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 22px;
+  letter-spacing: -0.408px;
+  color: #333;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
