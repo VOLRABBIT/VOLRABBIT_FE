@@ -12,6 +12,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [focusedField, setFocusedField] = useState(null);
+  const [showKakaoSnack, setShowKakaoSnack] = useState(false);
 
   const isLoginButtonActive = nickname.trim() && id.trim() && password.trim();
 
@@ -20,7 +21,13 @@ export default function Login() {
     // setError("아이디 또는 비밀번호가 일치하지 않습니다");
   };
 
-  const handleKakaoLogin = () => {};
+  const handleKakaoLogin = () => {
+    setShowKakaoSnack(true);
+    // 3초 후 자동으로 숨김
+    setTimeout(() => {
+      setShowKakaoSnack(false);
+    }, 3000);
+  };
 
   return (
     <div className={styles.container}>
@@ -110,10 +117,16 @@ export default function Login() {
           로그인
         </button>
 
-        {/* 카카오톡 로그인 버튼 - 임시 이미지로 대체 */}
-        <button className={styles.kakaoLoginButton} onClick={handleKakaoLogin}>
-          <img src={kakaoLoginImage} alt="카카오톡으로 로그인" className={styles.kakaoLoginImage} />
-        </button>
+        {/* 카카오톡 로그인 버튼 */}
+        {showKakaoSnack ? (
+          <button className={styles.kakaoSnackButton} disabled>
+            카카오톡 계정 확인 중 ...
+          </button>
+        ) : (
+          <button className={styles.kakaoLoginButton} onClick={handleKakaoLogin}>
+            <img src={kakaoLoginImage} alt="카카오톡으로 로그인" className={styles.kakaoLoginImage} />
+          </button>
+        )}
       </div>
     </div>
   );

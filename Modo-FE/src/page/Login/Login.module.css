@@ -114,13 +114,14 @@
   box-sizing: border-box;
 }
 
-.input[type="password"] {
-  font-family: 'Courier New', monospace;
-  letter-spacing: 2px;
-}
-
 .input::placeholder {
   color: #dedede;
+  font-family: 'NanumSquare', 'NanumSquare Bold', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.input[type="password"]:not(:placeholder-shown) {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
 }
 
 .input:focus {
@@ -232,5 +233,27 @@
   height: 100%;
   object-fit: contain;
   display: block;
+}
+
+/* 카카오톡 계정 확인 */
+.kakaoSnackButton {
+  width: 358px;
+  height: auto;
+  min-height: 46px;
+  border-radius: 12px;
+  border: none;
+  background: #bb90dd;
+  color: #ffffff;
+  font-family: 'NanumSquare', 'NanumSquare Bold', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  cursor: not-allowed;
+  flex-shrink: 0;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
