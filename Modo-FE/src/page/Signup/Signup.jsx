@@ -188,42 +188,60 @@ export default function Signup() {
           </button>
 
           {/* 서비스 이용 약관 */}
-          <button 
-            className={styles.agreementCell}
-            onClick={() => handleAgreementChange("service")}
-          >
-            <div className={styles.agreementLeft}>
+          <div className={styles.agreementCell}>
+            <div 
+              className={styles.agreementLeft}
+              onClick={() => handleAgreementChange("service")}
+              style={{ cursor: "pointer" }}
+            >
               <img 
                 src={agreements.service ? checkSquareIcon : arrowSquareDownIcon} 
                 alt={agreements.service ? "체크됨" : "체크 안됨"} 
               />
             </div>
-            <div className={styles.agreementText}>
+            <div 
+              className={styles.agreementText}
+              onClick={() => navigate("/terms-of-service")}
+              style={{ cursor: "pointer", flex: 1 }}
+            >
               [필수] 서비스 이용 약관
             </div>
-            <div className={styles.agreementRight}>
+            <div 
+              className={styles.agreementRight}
+              onClick={() => navigate("/terms-of-service")}
+              style={{ cursor: "pointer" }}
+            >
               <img src={arrowRightIcon} alt="자세히 보기" />
             </div>
-          </button>
+          </div>
 
           {/* 마케팅 동의 */}
-          <button 
-            className={styles.agreementCell}
-            onClick={() => handleAgreementChange("marketing")}
-          >
-            <div className={styles.agreementLeft}>
+          <div className={styles.agreementCell}>
+            <div 
+              className={styles.agreementLeft}
+              onClick={() => handleAgreementChange("marketing")}
+              style={{ cursor: "pointer" }}
+            >
               <img 
                 src={agreements.marketing ? checkSquareIcon : arrowSquareDownIcon} 
                 alt={agreements.marketing ? "체크됨" : "체크 안됨"} 
               />
             </div>
-            <div className={styles.agreementText}>
+            <div 
+              className={styles.agreementText}
+              onClick={() => navigate("/marketing-agreement")}
+              style={{ cursor: "pointer", flex: 1 }}
+            >
               [선택] 마케팅 및 메시지 수신 동의
             </div>
-            <div className={styles.agreementRight}>
+            <div 
+              className={styles.agreementRight}
+              onClick={() => navigate("/marketing-agreement")}
+              style={{ cursor: "pointer" }}
+            >
               <img src={arrowRightIcon} alt="자세히 보기" />
             </div>
-          </button>
+          </div>
         </div>
       </div>
 
