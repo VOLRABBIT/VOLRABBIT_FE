@@ -17,6 +17,7 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const [passwordError, setPasswordError] = useState("");
   const [agreements, setAgreements] = useState({
     all: false,
     service: false,
@@ -104,7 +105,14 @@ export default function Signup() {
                 className={`${styles.input} ${focusedField === "password" ? styles.inputFocused : ""}`}
                 placeholder="비밀번호 입력"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (confirmPassword && e.target.value !== confirmPassword) {
+                    setPasswordError("비밀번호가 일치하지 않습니다.");
+                  } else if (confirmPassword && e.target.value === confirmPassword) {
+                    setPasswordError("");
+                  }
+                }}
                 onFocus={() => setFocusedField("password")}
                 onBlur={() => setFocusedField(null)}
               />
@@ -124,12 +132,26 @@ export default function Signup() {
             <div className={styles.passwordWrapper}>
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                className={`${styles.input} ${focusedField === "confirmPassword" ? styles.inputFocused : ""}`}
+                className={`${styles.input} ${focusedField === "confirmPassword" ? styles.inputFocused : ""} ${passwordError ? styles.inputError : ""}`}
                 placeholder="비밀번호 재입력"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  if (e.target.value && e.target.value !== password) {
+                    setPasswordError("비밀번호가 일치하지 않습니다.");
+                  } else {
+                    setPasswordError("");
+                  }
+                }}
                 onFocus={() => setFocusedField("confirmPassword")}
-                onBlur={() => setFocusedField(null)}
+                onBlur={() => {
+                  setFocusedField(null);
+                  if (confirmPassword && confirmPassword !== password) {
+                    setPasswordError("비밀번호가 일치하지 않습니다.");
+                  } else {
+                    setPasswordError("");
+                  }
+                }}
               />
               <button
                 className={styles.passwordToggle}
@@ -139,6 +161,11 @@ export default function Signup() {
                 <img src={showConfirmPassword ? eyeIcon : eyeSlashIcon} alt={showConfirmPassword ? "비밀번호 숨김" : "비밀번호 표시"} />
               </button>
             </div>
+            {passwordError && (
+              <div className={styles.errorMessage}>
+                {passwordError}
+              </div>
+            )}
           </div>
         </div>
 
