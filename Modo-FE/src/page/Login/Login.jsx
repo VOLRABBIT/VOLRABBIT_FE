@@ -3,14 +3,22 @@ import styles from "./Login.module.css";
 import logoImage from "../../assets/landing-logo.png";
 import kakaoLoginImage from "../../assets/kakao-login.png";
 import eyeSlashIcon from "../../assets/eye-slash.svg";
+import eyeIcon from "../../assets/eye.svg";
 
 export default function Login() {
   const [nickname, setNickname] = useState("");
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [focusedField, setFocusedField] = useState(null);
 
-  const handleLogin = () => {};
+  const isLoginButtonActive = nickname.trim() && id.trim() && password.trim();
+
+  const handleLogin = () => {
+    // error test
+    // setError("아이디 또는 비밀번호가 일치하지 않습니다");
+  };
 
   const handleKakaoLogin = () => {};
 
@@ -35,10 +43,12 @@ export default function Login() {
             <label className={styles.label}>닉네임</label>
             <input
               type="text"
-              className={styles.input}
+              className={`${styles.input} ${focusedField === "nickname" ? styles.inputFocused : ""}`}
               placeholder="닉네임 입력"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
+              onFocus={() => setFocusedField("nickname")}
+              onBlur={() => setFocusedField(null)}
             />
           </div>
 
@@ -47,10 +57,15 @@ export default function Login() {
             <label className={styles.label}>아이디</label>
             <input
               type="text"
-              className={styles.input}
+              className={`${styles.input} ${focusedField === "id" ? styles.inputFocused : ""} ${error ? styles.inputError : ""}`}
               placeholder="아이디 입력"
               value={id}
-              onChange={(e) => setId(e.target.value)}
+              onChange={(e) => {
+                setId(e.target.value);
+                setError("");
+              }}
+              onFocus={() => setFocusedField("id")}
+              onBlur={() => setFocusedField(null)}
             />
           </div>
 
@@ -60,24 +75,38 @@ export default function Login() {
             <div className={styles.passwordWrapper}>
               <input
                 type={showPassword ? "text" : "password"}
-                className={styles.input}
+                className={`${styles.input} ${focusedField === "password" ? styles.inputFocused : ""} ${error ? styles.inputError : ""}`}
                 placeholder="비밀번호 입력"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError("");
+                }}
+                onFocus={() => setFocusedField("password")}
+                onBlur={() => setFocusedField(null)}
               />
               <button
                 className={styles.passwordToggle}
                 onClick={() => setShowPassword(!showPassword)}
                 type="button"
               >
-                <img src={eyeSlashIcon} alt="비밀번호 표시/숨김" />
+                <img src={showPassword ? eyeIcon : eyeSlashIcon} alt={showPassword ? "비밀번호 숨김" : "비밀번호 표시"} />
               </button>
             </div>
+            {error && (
+              <div className={styles.errorMessage}>
+                {error}
+              </div>
+            )}
           </div>
         </div>
 
         {/* 로그인 버튼 */}
-        <button className={styles.loginButton} onClick={handleLogin}>
+        <button 
+          className={`${styles.loginButton} ${isLoginButtonActive ? styles.loginButtonActive : ""}`} 
+          onClick={handleLogin}
+          disabled={!isLoginButtonActive}
+        >
           로그인
         </button>
 
