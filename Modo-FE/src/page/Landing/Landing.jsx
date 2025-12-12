@@ -1,8 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import styles from "./Landing.module.css";
 import logoImage from "../../assets/landing-logo.png";
 
 export default function Landing() {
-  const handleLogin = () => {};
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate("/login");
+  };
 
   const handleSignup = () => {};
 
