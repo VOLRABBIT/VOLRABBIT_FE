@@ -9,7 +9,9 @@ export default function Landing() {
     navigate("/login");
   };
 
-  const handleSignup = () => {};
+  const handleSignup = () => {
+    navigate("/signup");
+  };
 
   return (
     <div className={styles.container}>
