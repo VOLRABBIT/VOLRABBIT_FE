@@ -1,0 +1,62 @@
+.statusBadge {
+  display: flex;
+  width: 34px;
+  height: 16px;
+  padding: 4px 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  border-radius: 99999px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.text {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.high {
+  background: #FFF0E5;
+}
+
+.high .dot {
+  background: #FDA069;
+}
+
+.high .text {
+  color: #FDA069;
+}
+
+.low {
+  background: #E4F2F9;
+}
+
+.low .dot {
+  background: #7DA7DB;
+}
+
+.low .text {
+  color: #7DA7DB;
+}
+
+.normal {
+  background: #CEFACB;
+}
+
+.normal .dot {
+  background: #40D132;
+}
+
+.normal .text {
+  color: #40D132;
+}
+

@@ -141,7 +141,6 @@
   box-shadow: 0 8px 18px rgba(142, 98, 204, 0.25);
 }
 
-/* 질문 페이지 스타일 */
 .questionWrapper {
   width: 100%;
   height: 100%;
@@ -331,7 +330,6 @@
   opacity: 0.6;
 }
 
-/* 모달 스타일 */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -350,7 +348,6 @@
   width: 320px;
   height: 196px;
   background: #ffffff;
-  border: 1px solid #E0D0FF;
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -481,7 +478,6 @@
   background-color: #C5C5C5;
 }
 
-/* 로딩 페이지 스타일 */
 .loadingWrapper {
   width: 100%;
   height: 100%;
@@ -506,6 +502,17 @@
   z-index: 0;
 }
 
+.loadingBackground::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+}
+
 .loadingCharacterContainer {
   position: relative;
   display: flex;
@@ -521,25 +528,21 @@
   animation: bounce 1s ease-in-out infinite, fadeIn 0.5s ease-in-out;
 }
 
-/* 모험가 (adventurer) - 인덱스 0 */
 .character0 {
   width: 151px;
   height: 241px;
 }
 
-/* 도굴 (grave robber) - 인덱스 1 */
 .character1 {
   width: 188px;
   height: 212px;
 }
 
-/* 로봇 (robot) - 인덱스 2 */
 .character2 {
   width: 159px;
   height: 228px;
 }
 
-/* 마법사 (wizard) - 인덱스 3 */
 .character3 {
   width: 142px;
   height: 247px;

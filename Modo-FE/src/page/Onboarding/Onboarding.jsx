@@ -1,13 +1,19 @@
 import { useState, useEffect } from "react";
+
 import styles from "./Onboarding.module.css";
+import ResultPage from "../Result/ResultPage";
+
 import onboardingBackground from "../../assets/image/onboarding_background.png";
 import resultBackground from "../../assets/image/Result_background.png";
 import arrowLeftIcon from "../../assets/icon/arrow-left.svg";
 import closeIcon from "../../assets/icon/close.svg";
 import adventurerCharacter from "../../assets/character/adventurer.png";
-import graveRobberCharacter from "../../assets/character/grave robber.png";
+import graveRobberCharacter from "../../assets/character/graverobber.png";
 import robotCharacter from "../../assets/character/robot.png";
 import wizardCharacter from "../../assets/character/wizard.png";
+
+import { matchPersona } from "../../utils/personaCalculator";
+import { PERSONA_DATA } from "../../data/personaData";
 
 const QUESTIONS = [
   "해야 할 일을 알지만 시작이 잘 되지 않는다.",
@@ -26,6 +32,13 @@ const CHARACTERS = [
   wizardCharacter,
 ];
 
+const ANSWER_OPTIONS = [
+  { value: "very-agree", label: "매우 그렇다." },
+  { value: "agree", label: "그렇다." },
+  { value: "disagree", label: "그렇지 않다." },
+  { value: "very-disagree", label: "매우 그렇지 않다." },
+];
+
 export default function Onboarding() {
   const [isIntro, setIsIntro] = useState(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -33,16 +46,22 @@ export default function Onboarding() {
   const [showSkipModal, setShowSkipModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [currentCharacterIndex, setCurrentCharacterIndex] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+  const [personaType, setPersonaType] = useState(null);
+  const [isSkipped, setIsSkipped] = useState(false);
 
   const currentQuestion = QUESTIONS[currentQuestionIndex];
   const selectedAnswer = answers[currentQuestionIndex] || "";
 
+  // 진단 검사 시작
   const handleStart = () => {
     setIsIntro(false);
     setCurrentQuestionIndex(0);
     setAnswers({});
+    setIsSkipped(false);
   };
 
+  // 이전 질문으로 이동 또는 인트로로 복귀
   const handleBack = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
@@ -51,45 +70,39 @@ export default function Onboarding() {
     }
   };
 
+  // 건너뛰기 모달 표시
   const handleSkip = () => {
     setShowSkipModal(true);
   };
 
+  // 모달 닫기
   const handleCloseModal = () => {
     setShowSkipModal(false);
   };
 
+  // 검사 중단 (인트로로 복귀)
   const handleStopTest = () => {
-    // 검사 중단 로직
-    console.log("검사 중단");
     setIsIntro(true);
     setShowSkipModal(false);
   };
 
-  const handleContinueTest = () => {
+  // 건너뛰기 확인 시 로봇 페르소나로 결과 표시
+  const handleSkipConfirm = () => {
+    setIsSkipped(true);
     setShowSkipModal(false);
+    setIsLoading(true);
   };
 
+  // 다음 질문으로 이동 또는 마지막 질문이면 로딩 시작
   const handleNext = () => {
     if (currentQuestionIndex < QUESTIONS.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      // 마지막 질문이면 로딩 페이지로
-      console.log("제출", answers);
       setIsLoading(true);
     }
   };
 
-  // 2초마다 캐릭터 전환
-  useEffect(() => {
-    if (isLoading) {
-      const interval = setInterval(() => {
-        setCurrentCharacterIndex((prev) => (prev + 1) % CHARACTERS.length);
-      }, 2000);
-      return () => clearInterval(interval);
-    }
-  }, [isLoading]);
-
+  // 사용자 답변 저장
   const handleAnswerChange = (value) => {
     setAnswers({
       ...answers,
@@ -97,6 +110,32 @@ export default function Onboarding() {
     });
   };
 
+  const handleStartAdventure = () => {
+    // 모험 시작 로직 구현 필요
+  };
+
+  // 로딩 화면 처리
+  useEffect(() => {
+    if (isLoading) {
+      const interval = setInterval(() => {
+        setCurrentCharacterIndex((prev) => (prev + 1) % CHARACTERS.length);
+      }, 2000);
+
+      const resultTimeout = setTimeout(() => {
+        const persona = isSkipped ? "Starter-Freeze Bot" : matchPersona(answers);
+        setPersonaType(persona);
+        setIsLoading(false);
+        setShowResult(true);
+      }, 5000);
+
+      return () => {
+        clearInterval(interval);
+        clearTimeout(resultTimeout);
+      };
+    }
+  }, [isLoading, answers, isSkipped]);
+
+  // 인트로 화면
   if (isIntro) {
     return (
       <div
@@ -104,6 +143,7 @@ export default function Onboarding() {
         style={{ backgroundImage: `url(${onboardingBackground})` }}
       >
         <div className={styles.gradientOverlay} />
+        {/* 인트로 콘텐츠 영역 */}
         <div className={styles.introContent}>
           <h1 className={styles.introTitle}>ADHD 진단 검사</h1>
           <div className={styles.introParagraphs}>
@@ -122,6 +162,7 @@ export default function Onboarding() {
           </div>
         </div>
 
+        {/* 인트로 하단 영역 (공지사항 및 시작 버튼) */}
         <div className={styles.introFooter}>
           <p className={styles.introNotice}>
             * Modo가 제공하는 진단 검사만으로 실제 ADHD 여부를 확인할 수 없어요.
@@ -134,21 +175,24 @@ export default function Onboarding() {
     );
   }
 
+  // 로딩 화면 (캐릭터 전환 애니메이션)
   if (isLoading) {
     return (
       <div className={styles.loadingWrapper}>
-        <div 
+        {/* 배경 이미지 */}
+        <div
           className={styles.loadingBackground}
           style={{ backgroundImage: `url(${resultBackground})` }}
         />
+        {/* 캐릭터 전환 영역 */}
         <div className={styles.loadingCharacterContainer}>
           <img
             src={CHARACTERS[currentCharacterIndex]}
-            alt="캐릭터"
             className={`${styles.loadingCharacter} ${styles[`character${currentCharacterIndex}`]}`}
             key={currentCharacterIndex}
           />
         </div>
+        {/* 로딩 텍스트 영역 */}
         <div className={styles.loadingTextContainer}>
           <p className={styles.loadingText}>loading<span className={styles.loadingDots}> &nbsp;</span></p>
           <p className={styles.loadingSubtext}>나의 캐릭터를 찾고 있어요!</p>
@@ -157,12 +201,25 @@ export default function Onboarding() {
     );
   }
 
+  // 결과 페이지
+  if (showResult && personaType) {
+    const personaData = PERSONA_DATA[personaType] || PERSONA_DATA["Starter-Freeze Bot"];
+    return (
+      <ResultPage
+        personaData={personaData}
+        onStartAdventure={handleStartAdventure}
+      />
+    );
+  }
+
+  // 질문 화면
   return (
     <>
       <div className={styles.questionWrapper}>
+        {/* 상단 바 (뒤로가기, 제목, 건너뛰기) */}
         <div className={styles.topBar}>
           <button className={styles.backButton} onClick={handleBack}>
-            <img src={arrowLeftIcon} alt="뒤로가기" className={styles.backIcon} />
+            <img src={arrowLeftIcon} className={styles.backIcon} />
           </button>
           <span className={styles.topTitle}>ADHD 진단 검사</span>
           <button className={styles.skipButton} onClick={handleSkip}>
@@ -170,7 +227,7 @@ export default function Onboarding() {
           </button>
         </div>
 
-        {/* 질문 영역 */}
+        {/* 질문 및 답변 선택 영역 */}
         <div className={styles.questionContent}>
           <div className={styles.questionContainer}>
             <h2 className={styles.question}>
@@ -178,57 +235,26 @@ export default function Onboarding() {
             </h2>
 
             <div className={styles.options}>
-              <label className={styles.option}>
-                <input
-                  type="radio"
-                  name={`answer-${currentQuestionIndex}`}
-                  value="very-agree"
-                  checked={selectedAnswer === "very-agree"}
-                  onChange={(e) => handleAnswerChange(e.target.value)}
-                  className={styles.radioInput}
-                />
-                <span className={styles.radioLabel}>매우 그렇다.</span>
-              </label>
-
-              <label className={styles.option}>
-                <input
-                  type="radio"
-                  name={`answer-${currentQuestionIndex}`}
-                  value="agree"
-                  checked={selectedAnswer === "agree"}
-                  onChange={(e) => handleAnswerChange(e.target.value)}
-                  className={styles.radioInput}
-                />
-                <span className={styles.radioLabel}>그렇다.</span>
-              </label>
-
-              <label className={styles.option}>
-                <input
-                  type="radio"
-                  name={`answer-${currentQuestionIndex}`}
-                  value="disagree"
-                  checked={selectedAnswer === "disagree"}
-                  onChange={(e) => handleAnswerChange(e.target.value)}
-                  className={styles.radioInput}
-                />
-                <span className={styles.radioLabel}>그렇지 않다.</span>
-              </label>
-
-              <label className={styles.option}>
-                <input
-                  type="radio"
-                  name={`answer-${currentQuestionIndex}`}
-                  value="very-disagree"
-                  checked={selectedAnswer === "very-disagree"}
-                  onChange={(e) => handleAnswerChange(e.target.value)}
-                  className={styles.radioInput}
-                />
-                <span className={styles.radioLabel}>매우 그렇지 않다.</span>
-              </label>
+              {ANSWER_OPTIONS.map((option) => (
+                <label key={option.value} className={styles.option}>
+                  <input
+                    type="radio"
+                    name={`answer-${currentQuestionIndex}`}
+                    value={option.value}
+                    checked={selectedAnswer === option.value}
+                    onChange={(e) => handleAnswerChange(e.target.value)}
+                    className={styles.radioInput}
+                  />
+                  <span className={styles.radioLabel}>
+                    {option.label}
+                  </span>
+                </label>
+              ))}
             </div>
           </div>
         </div>
 
+        {/* 하단 버튼 영역 (다음/완료) */}
         <div className={styles.bottomButtonContainer}>
           <button
             className={styles.nextButton}
@@ -245,19 +271,19 @@ export default function Onboarding() {
         <div className={styles.modalOverlay} onClick={handleCloseModal}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <button className={styles.modalClose} onClick={handleCloseModal}>
-              <img src={closeIcon} alt="닫기" className={styles.modalCloseIcon} />
+              <img src={closeIcon} className={styles.modalCloseIcon} />
             </button>
-            <h3 className={styles.modalTitle}>진단 검사를 중단하시겠습니까?</h3>
+            <h3 className={styles.modalTitle}>진단 검사를 건너뛰시겠습니까?</h3>
             <div className={styles.modalContent}>
               <p className={styles.modalContentText}>
-                검사를 중단하면, 자신의 유형을 확실히 파악할 수 없어요.
+                검사를 건너뛰면 기본 유형(로봇)으로 설정됩니다.
               </p>
             </div>
             <div className={styles.modalButtons}>
-              <button className={styles.modalButtonStop} onClick={handleStopTest}>
-                중단하기
+              <button className={styles.modalButtonStop} onClick={handleSkipConfirm}>
+                건너뛰기
               </button>
-              <button className={styles.modalButtonContinue} onClick={handleContinueTest}>
+              <button className={styles.modalButtonContinue} onClick={handleCloseModal}>
                 계속하기
               </button>
             </div>
