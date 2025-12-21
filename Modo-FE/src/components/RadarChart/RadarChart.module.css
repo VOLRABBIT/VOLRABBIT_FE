@@ -1,0 +1,27 @@
+.radarChartContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow: visible;
+}
+
+.radarChart {
+  width: 211.2px;
+  height: 211.2px;
+  overflow: visible;
+}
+
+.axisLabel {
+    color: #7A7A7A;
+    text-align: center;
+    font-family: NanumSquare;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px; 
+}
+
+.dataPolygon {
+  transition: stroke-dashoffset 1.5s ease-out;
+}

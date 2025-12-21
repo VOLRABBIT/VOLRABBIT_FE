@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'CulturalHeritageCare';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2104@1.0/Dolbomche_R.woff') format('woff');
+  font-weight: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CulturalHeritageCare';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2104@1.0/Dolbomche_B.woff') format('woff');
+  font-weight: 700;
+  font-display: swap;
+}
+
 .viewport-wrapper {
   width: 100vw;
   height: 100vh;
