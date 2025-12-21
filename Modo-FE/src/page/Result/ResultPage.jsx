@@ -39,6 +39,13 @@ const RADAR_CHART_COLORS = {
   },
 };
 
+const RECOMMENDATION_BOX_COLORS = {
+  "Time Wizard": "rgba(187, 144, 221, 0.20)", 
+  "Starter-Freeze Bot": "rgba(125, 167, 219, 0.20)",
+  "Attention-grave": "rgba(116, 179, 170, 0.20)", 
+  "Emotional Adventure": "rgba(253, 160, 105, 0.20)",
+};
+
 const ResultPage = ({ personaData, onStartAdventure }) => {
   const [expandedStats, setExpandedStats] = useState(false);
 
@@ -148,7 +155,12 @@ const ResultPage = ({ personaData, onStartAdventure }) => {
             <div className={styles.recommendationsList}>
               {personaData.recommendations.map((rec, index) => (
                 <div key={index} className={styles.recommendationItem}>
-                  <div className={styles.recommendationTitleBox}>
+                  <div 
+                    className={styles.recommendationTitleBox}
+                    style={{ 
+                      background: RECOMMENDATION_BOX_COLORS[personaData.id] || RECOMMENDATION_BOX_COLORS["Starter-Freeze Bot"]
+                    }}
+                  >
                     <div className={styles.recommendationTitle}>{rec.title}</div>
                   </div>
                   <p className={styles.recommendationDescription}>

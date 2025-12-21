@@ -276,7 +276,7 @@ export default function Onboarding() {
             <h3 className={styles.modalTitle}>진단 검사를 건너뛰시겠습니까?</h3>
             <div className={styles.modalContent}>
               <p className={styles.modalContentText}>
-                검사를 건너뛰면 기본 유형(로봇)으로 설정됩니다.
+                검사를 중단하면, 자신의 유형을 확실히 파악할 수 없어요.
               </p>
             </div>
             <div className={styles.modalButtons}>
