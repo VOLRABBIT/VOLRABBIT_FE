@@ -16,7 +16,9 @@ export default function Login() {
 
   const isLoginButtonActive = nickname.trim() && id.trim() && password.trim();
 
-  const handleLogin = () => {
+  const handleLogin = (e) => {
+    e?.preventDefault();
+    if (!isLoginButtonActive) return;
     // error test
     // setError("아이디 또는 비밀번호가 일치하지 않습니다");
   };
@@ -44,7 +46,7 @@ export default function Login() {
         </div>
 
         {/* 입력 필드 */}
-        <div className={styles.inputSection}>
+        <form className={styles.inputSection} onSubmit={handleLogin}>
           {/* 닉네임 */}
           <div className={styles.inputGroup}>
             <label className={styles.label}>닉네임</label>
@@ -106,16 +108,16 @@ export default function Login() {
               </div>
             )}
           </div>
-        </div>
 
-        {/* 로그인 버튼 */}
-        <button 
-          className={`${styles.loginButton} ${isLoginButtonActive ? styles.loginButtonActive : ""}`} 
-          onClick={handleLogin}
-          disabled={!isLoginButtonActive}
-        >
-          로그인
-        </button>
+          {/* 로그인 버튼 */}
+          <button 
+            type="submit"
+            className={`${styles.loginButton} ${isLoginButtonActive ? styles.loginButtonActive : ""}`} 
+            disabled={!isLoginButtonActive}
+          >
+            로그인
+          </button>
+        </form>
 
         {/* 카카오톡 로그인 버튼 */}
         {showKakaoSnack ? (

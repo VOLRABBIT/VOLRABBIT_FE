@@ -191,9 +191,9 @@ export default function Signup() {
           <div className={styles.agreementCell}>
             <div 
               className={styles.agreementLeft}
-              onClick={() => handleAgreementChange("service")}
+            onClick={() => handleAgreementChange("service")}
               style={{ cursor: "pointer" }}
-            >
+          >
               <img 
                 src={agreements.service ? checkSquareIcon : arrowSquareDownIcon} 
                 alt={agreements.service ? "체크됨" : "체크 안됨"} 
@@ -219,9 +219,9 @@ export default function Signup() {
           <div className={styles.agreementCell}>
             <div 
               className={styles.agreementLeft}
-              onClick={() => handleAgreementChange("marketing")}
+            onClick={() => handleAgreementChange("marketing")}
               style={{ cursor: "pointer" }}
-            >
+          >
               <img 
                 src={agreements.marketing ? checkSquareIcon : arrowSquareDownIcon} 
                 alt={agreements.marketing ? "체크됨" : "체크 안됨"} 
