@@ -1,0 +1,89 @@
+.container {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* 메인 콘텐츠 */
+.mainContent {
+  flex: 1;
+  position: absolute;
+  left: 50%;
+  top: 46px;
+  transform: translateX(-50%);
+  width: 390px;
+  height: 788px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  justify-content: center;
+  padding: 0 16px;
+  gap: 40px;
+}
+
+/* 로고 영역 */
+.logoSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 60px;
+}
+
+.logoImage {
+  width: 165px;
+  height: 141px;
+  object-fit: contain;
+  display: block;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+/* 버튼 영역 */
+.buttonSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 220px;
+  align-items: stretch;
+  flex-shrink: 0;
+}
+
+.loginButton,
+.signupButton {
+  width: 100%;
+  height: 48px;
+  border-radius: 999px;
+  border: none;
+  background: #f6f6f6;
+  color: #353d48;
+  font-family: 'NanumSquare', 'NanumSquare Bold', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  cursor: pointer;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.loginButton:hover,
+.signupButton:hover {
+  background: #e8e8e8;
+}
+
+.loginButton:active,
+.signupButton:active {
+  background: #e0e0e0;
+}
+
