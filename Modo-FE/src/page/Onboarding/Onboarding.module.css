@@ -228,13 +228,15 @@
 }
 
 .question {
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.6;
+  color: var(--color-text-primary, #393939);
+  text-align: center;
+  font-family: "NanumSquareOTF", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 22px; /* 137.5% */
   margin: 0;
   padding: 90px 0px 130px 0px;
-  color: #333;
-  text-align: center;
 }
 
 .options {
