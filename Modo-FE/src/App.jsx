@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Onboarding from "./page/Onboarding/Onboarding.jsx";
+import AdvancedDiagnosis from "./page/AdvancedDiagnosis/AdvancedDiagnosis.jsx";
 import Landing from "./page/Landing/Landing.jsx";
 import Login from "./page/Login/Login.jsx";
 import Signup from "./page/Signup/Signup.jsx";
@@ -14,6 +15,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/advanced-diagnosis" element={<AdvancedDiagnosis />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
