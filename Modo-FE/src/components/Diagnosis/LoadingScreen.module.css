@@ -1,0 +1,163 @@
+.loadingWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  overflow: hidden;
+  padding-top: 120px;
+}
+
+.loadingBackground {
+  position: absolute;
+  top: 0;
+  left: -61px;
+  width: 783px;
+  height: 1175px;
+  background-size: 783px 1175px;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.loadingBackground::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+}
+
+.loadingCharacterContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
+  width: 100%;
+  z-index: 1;
+  padding-top: 120px;
+}
+
+.loadingCharacter {
+  animation: bounce 1s ease-in-out infinite, fadeIn 0.5s ease-in-out;
+}
+
+.character0 {
+  width: 151px;
+  height: 241px;
+}
+
+.character1 {
+  width: 188px;
+  height: 212px;
+}
+
+.character2 {
+  width: 159px;
+  height: 228px;
+}
+
+.character3 {
+  width: 142px;
+  height: 247px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.loadingTextContainer {
+  position: absolute;
+  top: 490px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 65px;
+  width: 100%;
+  z-index: 1;
+}
+
+.loadingText {
+  width: 62px;
+  height: 22px;
+  font-family: "NanumSquare", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 22px;
+  letter-spacing: -0.408px;
+  color: #333;
+  text-align: center;
+  margin: 0;
+  text-transform: lowercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingDots {
+  display: inline-block;
+  width: 24px;
+  text-align: left;
+}
+
+.loadingDots::after {
+  content: "...";
+  animation: dotsAnimation 1.5s steps(4, end) infinite;
+}
+
+@keyframes dotsAnimation {
+  0% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75%, 100% {
+    content: "...";
+  }
+}
+
+.loadingSubtext {
+  width: 260px;
+  height: 22px;
+  font-family: "NanumSquareOTF", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 22px;
+  letter-spacing: -0.408px;
+  color: #333;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
