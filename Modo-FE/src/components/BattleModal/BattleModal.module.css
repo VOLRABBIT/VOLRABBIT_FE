@@ -8,7 +8,9 @@
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  pointer-events: none;
+  /* pointer-events: none; - 예시를 위해 주석처리 */
+  pointer-events: auto;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .modal {

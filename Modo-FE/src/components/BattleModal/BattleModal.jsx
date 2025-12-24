@@ -35,9 +35,22 @@ export default function BattleModal({ type = "fighting", characterIndex = 0, onC
     }
   }, [isVictory, onClose]);
 
+  const handleContainerClick = (e) => {
+    if (e.target === e.currentTarget && onClose) {
+      onClose();
+    }
+  };
+
+  const handleModalClick = (e) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className={styles.modalContainer}>
-      <div className={`${styles.modal} ${isVictory ? styles.victory : styles.fighting}`}>
+    <div className={styles.modalContainer} onClick={handleContainerClick}>
+      <div 
+        className={`${styles.modal} ${isVictory ? styles.victory : styles.fighting}`}
+        onClick={handleModalClick}
+      >
         <div className={styles.textContainer}>
           <p className={styles.text}>{text}</p>
         </div>
@@ -52,4 +65,5 @@ export default function BattleModal({ type = "fighting", characterIndex = 0, onC
     </div>
   );
 }
+
 
