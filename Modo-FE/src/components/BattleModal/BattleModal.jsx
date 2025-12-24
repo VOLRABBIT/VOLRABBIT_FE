@@ -1,15 +1,26 @@
 import { useEffect } from "react";
 import styles from "./BattleModal.module.css";
-import adventurerCharacter from "../../assets/character/adventurer.png";
-import graveRobberCharacter from "../../assets/character/graverobber.png";
-import robotCharacter from "../../assets/character/robot.png";
-import wizardCharacter from "../../assets/character/wizard.png";
+import CharacterFighting1 from "../../assets/Character_fighting1.png";
+import CharacterFighting2 from "../../assets/Character_fighting2.png";
+import CharacterFighting3 from "../../assets/Character_fighting3.png";
+import CharacterFighting4 from "../../assets/Character_fighting4.png";
+import CharacterWin1 from "../../assets/Character_win1.png";
+import CharacterWin2 from "../../assets/Character_win2.png";
+import CharacterWin3 from "../../assets/Character_win3.png";
+import CharacterWin4 from "../../assets/Character_win4.png";
 
-const CHARACTERS = [
-  adventurerCharacter,
-  graveRobberCharacter,
-  robotCharacter,
-  wizardCharacter,
+const FIGHTING_CHARACTERS = [
+  CharacterFighting1,
+  CharacterFighting2,
+  CharacterFighting3,
+  CharacterFighting4,
+];
+
+const WIN_CHARACTERS = [
+  CharacterWin1,
+  CharacterWin2,
+  CharacterWin3,
+  CharacterWin4,
 ];
 
 /**
@@ -20,8 +31,10 @@ const CHARACTERS = [
  * @param {Function} props.onClose - 모달 닫기 콜백 (victory 타입일 때 2초 후 자동 호출)
  */
 export default function BattleModal({ type = "fighting", characterIndex = 0, onClose }) {
-  const characterImage = CHARACTERS[characterIndex] || CHARACTERS[0];
   const isVictory = type === "victory";
+  const characterImage = isVictory 
+    ? (WIN_CHARACTERS[characterIndex] || WIN_CHARACTERS[0])
+    : (FIGHTING_CHARACTERS[characterIndex] || FIGHTING_CHARACTERS[0]);
   const text = isVictory ? "전투 승리!" : "전투 중...";
 
   // victory 모달은 2초 후 소멸
