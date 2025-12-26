@@ -1,0 +1,120 @@
+.container {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px 16px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.content {
+  width: 100%;
+  max-width: 358px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.title {
+  font-family: "CulturalHeritageCare", sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  text-align: center;
+  color: #000;
+  margin: 0;
+}
+
+.description {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionTitle {
+  font-family: "CulturalHeritageCare", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f1f1f1;
+}
+
+.buttonGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.modalButton {
+  padding: 16px 12px;
+  background-color: #f1f1f1;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.modalButton:hover {
+  background-color: #e5e5e5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modalButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.victoryButton {
+  background-color: #f9f5ff;
+  border-color: #BB90DD;
+}
+
+.victoryButton:hover {
+  background-color: #f0e6ff;
+}
+
+.buttonSubtext {
+  font-size: 12px;
+  font-weight: 400;
+  color: #666;
+  display: block;
+  margin-top: 4px;
+}
+
+.info {
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+  border-left: 4px solid #BB90DD;
+}
+
+.info p {
+  margin: 0 0 8px 0;
+}
+
+.info p:last-child {
+  margin-bottom: 0;
+}
+
