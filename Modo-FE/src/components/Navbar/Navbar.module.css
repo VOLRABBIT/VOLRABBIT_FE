@@ -1,0 +1,62 @@
+.navbar {
+  position: relative;
+  width: 100%;
+  height: 110px;
+  flex-shrink: 0;
+}
+
+.navbarBackground {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 2px -5px 17px 0px rgba(84, 87, 92, 0.1);
+}
+
+.menuContainer {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  padding: 0 40px;
+}
+
+.menuItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.icon {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.label {
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+  color: #a0a3b1;
+  white-space: nowrap;
+}
+
+.labelActive {
+  color: #353d48;
+}
+
