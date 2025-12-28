@@ -26,9 +26,8 @@ export default function Guild() {
   };
 
   const handleCreate = () => {
-    // 길드 생성 로직
-    console.log("길드 생성");
     setIsModalOpen(false);
+    navigate("/guild/create");
   };
 
   const handleJoin = () => {

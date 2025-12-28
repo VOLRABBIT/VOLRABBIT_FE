@@ -11,6 +11,7 @@ import Map from "./page/Map/Map.jsx";
 import Fight from "./page/Fight/Fight.jsx";
 import Guild from "./page/Guild/Guild.jsx";
 import GuildJoin from "./page/GuildJoin/GuildJoin.jsx";
+import GuildCreate from "./page/GuildCreate/GuildCreate.jsx";
 import MyPage from "./page/MyPage/MyPage.jsx";
 import "./App.css";
 
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/fight" element={<Fight />} />
             <Route path="/guild" element={<Guild />} />
             <Route path="/guild/join" element={<GuildJoin />} />
+            <Route path="/guild/create" element={<GuildCreate />} />
             <Route path="/mypage" element={<MyPage />} />
           </Routes>
         </div>

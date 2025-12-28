@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../components/Navbar/Navbar";
 import Toast from "../../components/Toast/Toast";
 import styles from "./GuildJoin.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
@@ -131,7 +130,6 @@ export default function GuildJoin() {
           확인
         </button>
       </div>
-      <Navbar activeItem="guild" />
       {showToast && (
         <Toast
           message={`${guildName}의 동료가 되었어요!`}
