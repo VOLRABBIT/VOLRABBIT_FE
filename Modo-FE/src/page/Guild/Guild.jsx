@@ -49,7 +49,12 @@ export default function Guild() {
       <div className={styles.content}>
         <div className={styles.guildList}>
           {GUILD_DATA.map((guild) => (
-            <div key={guild.id} className={styles.guildCard}>
+            <div
+              key={guild.id}
+              className={styles.guildCard}
+              onClick={() => navigate(`/guild/${guild.id}`)}
+              style={{ cursor: "pointer" }}
+            >
               <div className={styles.guildIconWrapper}>
                 <img src={groupIcon} alt="길드 배경" className={styles.groupIcon} />
                 <img src={guildIcon} alt="길드" className={styles.guildIcon} />

@@ -1,0 +1,330 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    rgba(125, 167, 219, 0.4) 0%,
+    rgba(241, 169, 211, 0.4) 44.712%,
+    rgba(183, 168, 215, 0.4) 69.231%,
+    rgba(116, 179, 170, 0.4) 100%
+  );
+  position: relative;
+  overflow: hidden;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  height: 64px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.backButton img {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #393939;
+  text-align: center;
+  margin: 0;
+}
+
+.addButton {
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #7a7a7a;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 22px;
+}
+
+.content {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.guildInfoSection {
+  position: relative;
+  width: 100%;
+  min-height: 175px;
+}
+
+.guildIconWrapper {
+  position: absolute;
+  left: 30px;
+  top: 0;
+  width: 72px;
+  height: 126px;
+}
+
+.groupIcon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.guildIcon {
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  width: 38px;
+  height: 38px;
+}
+
+.guildName {
+  position: absolute;
+  left: 112px;
+  top: 10px;
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+  text-align: left;
+  margin: 0;
+  line-height: 24px;
+  width: 92px;
+}
+
+.memberAvatars {
+  position: absolute;
+  left: 112px;
+  top: 38px;
+  display: flex;
+  gap: 13px;
+  align-items: center;
+}
+
+.memberAvatar {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.memberAvatarBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.memberAvatarImg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  height: 85%;
+  z-index: 2;
+  object-fit: contain;
+  object-position: center;
+}
+
+.lastScheduleDate {
+  position: absolute;
+  left: 113px;
+  top: 82px;
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: #7a7a7a;
+  text-align: left;
+  margin: 0;
+  line-height: 24px;
+  width: 170px;
+}
+
+.questSection {
+  position: relative;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.questSection:first-of-type {
+  margin-top: 229px;
+}
+
+.questSection:first-of-type .sectionTitle {
+  top: 0;
+}
+
+.questSection:first-of-type .questCard {
+  top: 35px;
+}
+
+.questSection:last-of-type {
+  margin-top: 189px;
+}
+
+.questSection:last-of-type .sectionTitle {
+  top: 0;
+}
+
+.questSection:last-of-type .questCard {
+  top: 41px;
+}
+
+.sectionTitle {
+  position: absolute;
+  left: 30px;
+  top: 0;
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+  text-align: left;
+  margin: 0;
+  line-height: 24px;
+  width: 144px;
+}
+
+.questCard {
+  position: absolute;
+  left: 30px;
+  top: 35px;
+  width: 330px;
+  min-height: 119px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  box-shadow: 2px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 15px 24px;
+  box-sizing: border-box;
+}
+
+.questCategory {
+  font-family: "Rubik", "Noto Sans KR", -apple-system, BlinkMacSystemFont,
+    sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #161717;
+  margin: 0 0 8px 0;
+  line-height: 24px;
+}
+
+.questItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+}
+
+.checkbox {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #b4b4b4;
+  border-radius: 4px;
+  background-color: transparent;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.checkboxIcon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.questTask {
+  font-family: "Rubik", "Noto Sans KR", -apple-system, BlinkMacSystemFont,
+    sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #161717;
+  margin: 0;
+  flex: 1;
+  line-height: normal;
+}
+
+.questMembers {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.questMemberAvatar {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.questMemberAvatarBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.questMemberAvatarImg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  height: 85%;
+  z-index: 2;
+  object-fit: contain;
+  object-position: center;
+}
+
