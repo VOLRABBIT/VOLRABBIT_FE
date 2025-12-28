@@ -32,9 +32,8 @@ export default function Guild() {
   };
 
   const handleJoin = () => {
-    // 길드 참가 로직
-    console.log("길드 참가");
     setIsModalOpen(false);
+    navigate("/guild/join");
   };
 
   return (

@@ -10,6 +10,7 @@ import BattleModalExample from "./page/BattleModalExample/BattleModalExample.jsx
 import Map from "./page/Map/Map.jsx";
 import Fight from "./page/Fight/Fight.jsx";
 import Guild from "./page/Guild/Guild.jsx";
+import GuildJoin from "./page/GuildJoin/GuildJoin.jsx";
 import MyPage from "./page/MyPage/MyPage.jsx";
 import "./App.css";
 
@@ -30,6 +31,7 @@ export default function App() {
             <Route path="/map" element={<Map />} />
             <Route path="/fight" element={<Fight />} />
             <Route path="/guild" element={<Guild />} />
+            <Route path="/guild/join" element={<GuildJoin />} />
             <Route path="/mypage" element={<MyPage />} />
           </Routes>
         </div>
