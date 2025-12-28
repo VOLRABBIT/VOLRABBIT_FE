@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
+import GuildAddModal from "../../components/GuildAddModal/GuildAddModal";
 import styles from "./Guild.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import plusIcon from "../../assets/icon/plus.svg";
@@ -9,14 +11,30 @@ import { GUILD_DATA } from "../../data/guildData";
 
 export default function Guild() {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleBack = () => {
     navigate(-1);
   };
 
   const handleAddGuild = () => {
-    // 길드 생성/추가 로직
-    console.log("길드 추가");
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCreate = () => {
+    // 길드 생성 로직
+    console.log("길드 생성");
+    setIsModalOpen(false);
+  };
+
+  const handleJoin = () => {
+    // 길드 참가 로직
+    console.log("길드 참가");
+    setIsModalOpen(false);
   };
 
   return (
@@ -48,6 +66,13 @@ export default function Guild() {
         </div>
       </div>
       <Navbar activeItem="guild" />
+      {isModalOpen && (
+        <GuildAddModal
+          onClose={handleCloseModal}
+          onCreate={handleCreate}
+          onJoin={handleJoin}
+        />
+      )}
     </div>
   );
 }
