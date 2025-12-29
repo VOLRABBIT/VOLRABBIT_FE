@@ -29,7 +29,7 @@ export default function GuildDetail() {
   };
 
   const handleAdd = () => {
-    console.log("task 추가");
+    navigate(`/guild/${id}/quest/register`);
   };
 
   const handleCheckboxClick = (questType, questId, questTask) => {
