@@ -1,0 +1,571 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    rgba(125, 167, 219, 0.4) 0%,
+    rgba(241, 169, 211, 0.4) 44.712%,
+    rgba(183, 168, 215, 0.4) 69.231%,
+    rgba(116, 179, 170, 0.4) 100%
+  );
+  position: relative;
+  overflow: hidden;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  height: 64px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.backButton img {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #393939;
+  text-align: center;
+  margin: 0;
+}
+
+.placeholder {
+  width: 24px;
+  height: 24px;
+}
+
+.content {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.content::-webkit-scrollbar {
+  display: none;
+}
+
+.stepCard {
+  position: relative;
+  width: 330px;
+  margin-left: 32px;
+  margin-bottom: 15px;
+  background-color: #f1f1f1;
+  border-radius: 12px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.step1 {
+  margin-top: 15px;
+  min-height: 174px;
+}
+
+.step1.stepCardSummary,
+.step2.stepCardSummary,
+.step3.stepCardSummary,
+.step4.stepCardSummary {
+  min-height: 57px;
+  height: 57px;
+}
+
+.step2 {
+  min-height: 188px;
+}
+
+.step3 {
+  min-height: 188px;
+}
+
+.step4 {
+  min-height: 202px;
+}
+
+.stepCard:not(.stepCardSummary):nth-of-type(1) {
+  box-shadow: none;
+}
+
+.stepCard:not(.stepCardSummary):nth-of-type(2),
+.stepCard:not(.stepCardSummary):nth-of-type(3) {
+  box-shadow: 2px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.stepCard:not(.stepCardSummary):nth-of-type(4) {
+  box-shadow: none;
+}
+
+/* 완료 상태 카드 스타일 */
+.stepCardSummary {
+  display: flex;
+  align-items: center;
+  box-shadow: 2px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+
+.stepSummaryHeader {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 0;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(100% - 20px);
+}
+
+.stepSummaryValue {
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+  line-height: 1;
+  margin: 0;
+}
+
+.stepHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 0;
+  position: absolute;
+  left: 10px;
+  top: 13px;
+}
+
+.stepNumber {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #7da7db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: white;
+  line-height: 1;
+}
+
+.stepInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.stepTitle {
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+  line-height: 1;
+  margin: 0;
+}
+
+.stepDescription {
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #7a7a7a;
+  line-height: 1;
+  margin: 0;
+}
+
+.inputWrapper {
+  position: absolute;
+  left: 10px;
+  top: 70px;
+  width: 310px;
+  height: 38px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.textInput {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+  outline: none;
+  padding: 0;
+  height: 24px;
+  line-height: 24px;
+}
+
+.textInput::placeholder {
+  color: #7a7a7a;
+}
+
+.tagContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex-wrap: nowrap;
+  align-items: center;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.stepCard:nth-of-type(2) .tagContainer,
+.stepCard:nth-of-type(3) .tagContainer {
+  top: 80px;
+}
+
+.tag {
+  background-color: rgba(125, 167, 219, 0.3);
+  border: none;
+  border-radius: 12px;
+  padding: 6px 8px;
+  font-family: "NanumSquareOTF", "NanumSquareOTF Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #8391dd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  line-height: normal;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.tag:hover {
+  opacity: 0.8;
+}
+
+.tagActive {
+  background-color: rgba(125, 167, 219, 0.7);
+  color: #52528f;
+}
+
+.stepCard:nth-of-type(2) .tag {
+  padding: 6px 10px;
+}
+
+.tagInputWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(125, 167, 219, 0.3);
+  border-radius: 12px;
+  padding: 6px 8px;
+  gap: 4px;
+  height: fit-content;
+  flex-shrink: 0;
+}
+
+.tagInputWrapper.tagInputActive,
+.durationInputWrapper.tagInputActive {
+  background-color: rgba(125, 167, 219, 0.7);
+}
+
+.tagInput {
+  background: transparent;
+  border: none;
+  font-family: "NanumSquareOTF", "NanumSquareOTF Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #8391dd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 40px;
+  outline: none;
+  text-align: center;
+  padding: 0;
+}
+
+.tagInput::placeholder,
+.durationInput::placeholder {
+  color: #8391dd;
+  text-transform: uppercase;
+}
+
+.tagInputActive {
+  color: #52528f;
+}
+
+.tagInputSuffix {
+  font-family: "NanumSquareOTF", "NanumSquareOTF Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #8391dd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.tagInputWrapper.tagInputActive .tagInputSuffix {
+  color: #52528f;
+}
+
+.durationInputWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(125, 167, 219, 0.3);
+  border-radius: 12px;
+  padding: 6px 8px;
+  gap: 4px;
+  min-width: fit-content;
+  flex-shrink: 0;
+  height: fit-content;
+}
+
+.durationInput {
+  background: transparent;
+  border: none;
+  font-family: "NanumSquareOTF", "NanumSquareOTF Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #8391dd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 30px;
+  outline: none;
+  text-align: center;
+  padding: 0;
+}
+
+.durationInputWrapper.tagInputActive .durationInput {
+  color: #52528f;
+}
+
+.durationInputWrapper.tagInputActive .durationInput::placeholder {
+  color: #52528f;
+}
+
+.durationUnitButtons {
+  display: flex;
+  gap: 2px;
+}
+
+.durationUnitButton {
+  background: transparent;
+  border: none;
+  font-family: "NanumSquareOTF", "NanumSquareOTF Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #8391dd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: all 0.2s;
+}
+
+.durationUnitButton:hover {
+  opacity: 0.8;
+}
+
+.durationUnitButtonActive {
+  color: #52528f;
+}
+
+.durationInputWrapper.tagInputActive .durationUnitButton {
+  color: #52528f;
+}
+
+.durationInputWrapper.tagInputActive .durationUnitButtonActive {
+  color: #52528f;
+  font-weight: 700;
+}
+
+.codeContainer {
+  position: absolute;
+  left: 23px;
+  top: 72px;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.codeBox {
+  width: 47.63px;
+  height: 47.63px;
+  border: 1px solid #7da7db;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #000;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.codeBox:empty {
+  border: 1px solid #7da7db;
+}
+
+.nextButton {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 310px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  background-color: #7da7db;
+  color: white;
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.stepCard:nth-of-type(1) .nextButton {
+  top: 122px;
+  left: 10px;
+  transform: none;
+  width: 310px;
+}
+
+.stepCard:nth-of-type(2) .nextButton,
+.stepCard:nth-of-type(3) .nextButton {
+  top: 136px;
+  left: 10px;
+  transform: none;
+  width: 310px;
+}
+
+.stepCard:nth-of-type(4) .nextButton {
+  top: 150px;
+  left: 10px;
+  transform: none;
+  width: 310px;
+}
+
+.nextButton:hover,
+.createButton:hover {
+  opacity: 0.9;
+}
+
+.nextButton:active,
+.createButton:active {
+  opacity: 0.8;
+}
+
+.nextButton:disabled,
+.nextButtonDisabled,
+.createButton:disabled,
+.createButtonDisabled {
+  background-color: #dadada;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.nextButtonDisabled:hover,
+.nextButtonDisabled:active {
+  opacity: 1;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  height: 80px;
+  position: relative;
+}
+
+.createButton {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 358px;
+  height: 56px;
+  border-radius: 999px;
+  border: none;
+  background-color: #7da7db;
+  color: white;
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+
+.createButtonDisabled:hover,
+.createButtonDisabled:active {
+  opacity: 1;
+}
+

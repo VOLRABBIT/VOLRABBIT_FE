@@ -1,0 +1,210 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    rgba(125, 167, 219, 0.4) 0%,
+    rgba(241, 169, 211, 0.4) 44.712%,
+    rgba(183, 168, 215, 0.4) 69.231%,
+    rgba(116, 179, 170, 0.4) 100%
+  );
+  position: relative;
+  overflow: hidden;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  height: 64px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.backButton img {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #393939;
+  text-align: center;
+  margin: 0;
+}
+
+.placeholder {
+  width: 24px;
+  height: 24px;
+}
+
+.content {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.description {
+  position: absolute;
+  left: 50%;
+  top: 200px;
+  transform: translateX(-50%) translateY(-50%);
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+  text-align: center;
+  margin: 0;
+  line-height: 24px;
+  width: 240px;
+  padding: 0;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.codeInputContainer {
+  position: absolute;
+  left: 50%;
+  top: 315px;
+  transform: translateX(-50%) translateY(-50%);
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  width: 322px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.codeInput {
+  width: 54px;
+  height: 54px;
+  border: 1px solid #7da7db;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #000;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.codeInput:focus {
+  border-color: #7da7db;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.codeInputError {
+  border-color: #ff0000;
+}
+
+.errorMessage {
+  position: absolute;
+  left: 50%;
+  top: 369px;
+  transform: translateX(-50%);
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 20px;
+  color: #ff4242;
+  text-align: center;
+  margin: 0;
+  width: 338px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  height: 80px;
+  position: relative;
+}
+
+.confirmButton {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 358px;
+  height: 56px;
+  border-radius: 999px;
+  border: none;
+  background-color: #7da7db;
+  color: white;
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.confirmButton:hover {
+  opacity: 0.9;
+}
+
+.confirmButton:active {
+  opacity: 0.8;
+}
+
+.confirmButton:disabled {
+  background-color: #dadada;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.confirmButtonDisabled {
+  background-color: #dadada;
+  cursor: not-allowed;
+}
+
+.confirmButtonDisabled:hover,
+.confirmButtonDisabled:active {
+  opacity: 1;
+}
+

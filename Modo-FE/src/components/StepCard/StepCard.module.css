@@ -1,0 +1,132 @@
+.stepCard {
+  position: relative;
+  width: 330px;
+  margin-left: 29px;
+  margin-bottom: 15px;
+  background-color: #f1f1f1;
+  border-radius: 12px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.step1 {
+  margin-top: 15px;
+  min-height: 174px;
+}
+
+.step2 {
+  min-height: 188px;
+}
+
+.step3 {
+  min-height: 180px;
+}
+
+.step3WithCalendar {
+  min-height: 470px;
+}
+
+.step4 {
+  min-height: 180px;
+}
+
+.step4WithDropdown {
+  min-height: 250px;
+}
+
+.step5 {
+  min-height: 180px;
+}
+
+.step5WithDropdown {
+  min-height: 250px;
+}
+
+.step6 {
+  min-height: 247px;
+}
+
+.step7 {
+  min-height: 247px;
+}
+
+.stepCardSummary {
+  min-height: 57px;
+  height: 57px;
+  margin-bottom: 15px;
+}
+
+.stepHeader {
+  position: absolute;
+  left: 10px;
+  top: 13px;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+.step1 .stepHeader {
+  left: 10px;
+  top: 13px;
+}
+
+.stepNumber {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #7da7db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.stepInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stepTitle {
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000000;
+  margin: 0;
+  line-height: 16px;
+}
+
+.stepDescription {
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #7a7a7a;
+  margin: 0;
+  line-height: 10px;
+}
+
+.stepSummary {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.stepSummaryValue {
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000000;
+  margin: 0;
+}

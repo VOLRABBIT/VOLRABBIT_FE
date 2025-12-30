@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Navbar from "../../components/Navbar/Navbar";
 import styles from "./Map.module.css";
 import mapBackground from "../../assets/map/map.png";
 import shopIcon from "../../assets/map/assets.png";
@@ -34,7 +35,6 @@ export default function Map() {
 
   return (
     <div className={styles.container}>
-      
       <div className={styles.mapContainer}>
         <img 
           src={mapBackground} 
@@ -82,7 +82,7 @@ export default function Map() {
           <img src={roomIcon} alt="환영의 방" className={styles.locationIcon} />
         </button>
       </div>
+      <Navbar activeItem="map" />
     </div>
   );
 }
-
