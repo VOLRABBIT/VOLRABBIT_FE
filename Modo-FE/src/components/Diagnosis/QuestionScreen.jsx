@@ -1,4 +1,4 @@
-import arrowLeftIcon from "../../assets/icon/arrow-left.svg";
+import TopBar from "../TopBar/TopBar";
 
 // 답변 선택지 옵션
 const ANSWER_OPTIONS = [
@@ -33,15 +33,12 @@ export default function QuestionScreen({
   return (
     <div className={customStyles.questionWrapper}>
       {/* 상단 바: 뒤로가기, 제목, 건너뛰기 */}
-      <div className={customStyles.topBar}>
-        <button className={customStyles.backButton} onClick={onBack}>
-          <img src={arrowLeftIcon} className={customStyles.backIcon} alt="뒤로가기" />
-        </button>
-        <span className={customStyles.topTitle}>{title}</span>
-        <button className={customStyles.skipButton} onClick={onSkip}>
-          건너뛰기
-        </button>
-      </div>
+      <TopBar
+        title={title}
+        onBack={onBack}
+        onSkip={onSkip}
+        showSkip={true}
+      />
 
       {/* 질문 및 답변 영역 */}
       <div className={customStyles.questionContent}>

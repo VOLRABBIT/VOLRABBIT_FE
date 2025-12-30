@@ -3,35 +3,122 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #fff;
   position: relative;
+  background: #fff;
   overflow: hidden;
 }
 
-.content {
+.mapContainer {
+  position: relative;
   flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  overflow-y: auto;
 }
 
-.title {
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
-  font-weight: 700;
-  font-size: 24px;
-  color: #353d48;
-  margin-bottom: 12px;
+.mapBackground {
+  width: 390px;
+  height: 806px;
+  object-fit: cover;
+  object-position: -100px calc(50% + 20px);
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  
 }
 
-.description {
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  color: #a0a3b1;
+.locationButton {
+  position: absolute;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.locationButton:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.locationButton:active {
+  transform: translate(-50%, -50%) scale(0.95);
+}
+
+.locationIcon {
+  width: 90px;
+  height: 84px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.shopButton,
+.dungeonButton,
+.gorgeButton,
+.castleButton,
+.roomButton {
+  transform: none;
+}
+
+.shopButton:hover,
+.dungeonButton:hover,
+.gorgeButton:hover,
+.castleButton:hover,
+.roomButton:hover {
+  transform: scale(1.1);
+}
+
+.shopButton:active,
+.dungeonButton:active,
+.gorgeButton:active,
+.castleButton:active,
+.roomButton:active {
+  transform: scale(0.95);
+}
+
+.shopButton {
+  top: 10px;
+  left: 15px;
+}
+
+.shopIcon {
+  width: 42.38px;
+  height: 39px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.dungeonButton {
+  top: 72px;
+  left: 133px;
+}
+
+.dungeonIcon {
+  width: 92px;
+  height: 92px;
+}
+
+.gorgeButton {
+  top: 253px;
+  left: 105px;
+}
+
+.castleButton {
+  top: 407px;
+  left: 206px;
+}
+
+.roomButton {
+  top: 566px;
+  left: 151px;
 }
 
