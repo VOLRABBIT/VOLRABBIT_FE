@@ -8,6 +8,11 @@ import TermsOfService from "./page/TermsOfService/TermsOfService.jsx";
 import MarketingAgreement from "./page/MarketingAgreement/MarketingAgreement.jsx";
 import BattleModalExample from "./page/BattleModalExample/BattleModalExample.jsx";
 import Map from "./page/Map/Map.jsx";
+import Shop from "./page/Shop/Shop.jsx";
+import Dungeon from "./page/Map/Dungeon/Dungeon.jsx";
+import Gorge from "./page/Map/Gorge/Gorge.jsx";
+import Castle from "./page/Map/Castle/Castle.jsx";
+import Room from "./page/Map/Room/Room.jsx";
 import Fight from "./page/Fight/Fight.jsx";
 import Guild from "./page/Guild/Guild.jsx";
 import GuildJoin from "./page/GuildJoin/GuildJoin.jsx";
@@ -32,6 +37,11 @@ export default function App() {
             <Route path="/marketing-agreement" element={<MarketingAgreement />} />
             <Route path="/battle-modal-example" element={<BattleModalExample />} />
             <Route path="/map" element={<Map />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/dungeon" element={<Dungeon />} />
+            <Route path="/gorge" element={<Gorge />} />
+            <Route path="/castle" element={<Castle />} />
+            <Route path="/room" element={<Room />} />
             <Route path="/fight" element={<Fight />} />
             <Route path="/guild" element={<Guild />} />
             <Route path="/guild/:id" element={<GuildDetail />} />
