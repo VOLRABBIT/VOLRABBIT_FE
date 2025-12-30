@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import QuestCompleteModal from "../../components/QuestCompleteModal/QuestCompleteModal";
+import MemberAvatar from "../../components/MemberAvatar/MemberAvatar";
 import styles from "./GuildDetail.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import groupIcon from "../../assets/guild/Group.svg";
 import guildIcon from "../../assets/guild/guild.svg";
-import profileBg from "../../assets/guild/profile-bg.svg";
 import checkedIcon from "../../assets/checked.svg";
 import { getGuildDetailData } from "../../data/guildDetailData";
 
@@ -113,20 +113,7 @@ export default function GuildDetail() {
           <h2 className={styles.guildName}>{guildData.name}</h2>
           <div className={styles.memberAvatars}>
             {guildData.members.map((member) => (
-              <div key={member.id} className={styles.memberAvatar}>
-                <img
-                  src={profileBg}
-                  alt="프로필 배경"
-                  className={styles.memberAvatarBg}
-                />
-                {member.avatar && (
-                  <img
-                    src={member.avatar}
-                    alt={`멤버 ${member.id}`}
-                    className={styles.memberAvatarImg}
-                  />
-                )}
-              </div>
+              <MemberAvatar key={member.id} member={member} size="medium" />
             ))}
           </div>
           <p className={styles.lastScheduleDate}>
@@ -162,23 +149,11 @@ export default function GuildDetail() {
                       (m) => m.id === memberId
                     );
                     return (
-                      <div
+                      <MemberAvatar
                         key={memberId}
-                        className={styles.questMemberAvatar}
-                      >
-                        <img
-                          src={profileBg}
-                          alt="프로필 배경"
-                          className={styles.questMemberAvatarBg}
-                        />
-                        {member?.avatar && (
-                          <img
-                            src={member.avatar}
-                            alt={`멤버 ${memberId}`}
-                            className={styles.questMemberAvatarImg}
-                          />
-                        )}
-                      </div>
+                        member={member}
+                        size="small"
+                      />
                     );
                   })}
                 </div>
@@ -215,23 +190,11 @@ export default function GuildDetail() {
                       (m) => m.id === memberId
                     );
                     return (
-                      <div
+                      <MemberAvatar
                         key={memberId}
-                        className={styles.questMemberAvatar}
-                      >
-                        <img
-                          src={profileBg}
-                          alt="프로필 배경"
-                          className={styles.questMemberAvatarBg}
-                        />
-                        {member?.avatar && (
-                          <img
-                            src={member.avatar}
-                            alt={`멤버 ${memberId}`}
-                            className={styles.questMemberAvatarImg}
-                          />
-                        )}
-                      </div>
+                        member={member}
+                        size="small"
+                      />
                     );
                   })}
                 </div>

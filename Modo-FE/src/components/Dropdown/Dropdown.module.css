@@ -1,0 +1,97 @@
+.step3 .dropdownWrapper {
+  position: absolute;
+  left: 30px;
+  top: 60px;
+  right: 30px;
+  z-index: 10;
+}
+
+.step4 .dropdownWrapper {
+  position: absolute;
+  left: 30px;
+  top: 60px;
+  right: 30px;
+  z-index: 10;
+}
+
+.step5 .dropdownWrapper {
+  position: absolute;
+  left: 30px;
+  top: 60px;
+  right: 30px;
+  z-index: 10;
+}
+
+.dropdownWrapper {
+  position: relative;
+}
+
+.dropdownButton {
+  width: 100%;
+  height: 44px;
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.dropdownPlaceholder {
+  font-family: "NanumSquareOTF", "NanumSquareOTF Regular", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #666666;
+}
+
+.dropdownButton.selected .dropdownPlaceholder {
+  color: #333333;
+}
+
+.dropdownArrow {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.dropdownList {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.1);
+  overflow: visible;
+  z-index: 20;
+}
+
+.dropdownItem {
+  width: 100%;
+  height: 44px;
+  background-color: white;
+  border: none;
+  border-bottom: 1px solid #f1f1f1;
+  padding: 0 16px;
+  text-align: left;
+  font-family: "NanumSquareOTF", "NanumSquareOTF Regular", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #333333;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.dropdownItem:hover {
+  background-color: #f9f9f9;
+}
+
+.dropdownItem:last-child {
+  border-bottom: none;
+}
