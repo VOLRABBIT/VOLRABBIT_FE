@@ -8,7 +8,6 @@
   overflow: hidden;
 }
 
-
 .mapContainer {
   position: relative;
   flex: 1;
@@ -22,12 +21,13 @@
 
 .mapBackground {
   width: 390px;
-  height: 916px;
+  height: 806px;
   object-fit: cover;
-  object-position: center;
+  object-position: -100px calc(50% + 20px);
   position: absolute;
   left: 0;
   z-index: 1;
+  
 }
 
 .locationButton {
@@ -99,7 +99,7 @@
 
 .dungeonButton {
   top: 72px;
-  left: 163px;
+  left: 133px;
 }
 
 .dungeonIcon {
@@ -108,17 +108,17 @@
 }
 
 .gorgeButton {
-  top: 273px;
-  left: 130px;
+  top: 253px;
+  left: 105px;
 }
 
 .castleButton {
-  top: 447px;
-  left: 246px;
+  top: 407px;
+  left: 206px;
 }
 
 .roomButton {
-  top: 616px;
-  left: 171px;
+  top: 566px;
+  left: 151px;
 }
 
