@@ -5,8 +5,7 @@ import eyeSlashIcon from "../../assets/eye-slash.svg";
 import eyeIcon from "../../assets/eye.svg";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import arrowRightIcon from "../../assets/arrow-right.svg";
-import arrowSquareDownIcon from "../../assets/arrow-square-down.svg";
-import checkSquareIcon from "../../assets/check-square.svg";
+import checkedIcon from "../../assets/checked.svg";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -177,10 +176,15 @@ export default function Signup() {
             onClick={() => handleAgreementChange("all")}
           >
             <div className={styles.agreementLeft}>
-              <img 
-                src={agreements.all ? checkSquareIcon : arrowSquareDownIcon} 
-                alt={agreements.all ? "체크됨" : "체크 안됨"} 
-              />
+              {agreements.all ? (
+                <img 
+                  src={checkedIcon} 
+                  alt="체크됨"
+                  className={styles.checkboxIcon}
+                />
+              ) : (
+                <div className={styles.checkbox}></div>
+              )}
             </div>
             <div className={styles.agreementText}>
               전체 동의(선택 정보 포함)
@@ -194,10 +198,15 @@ export default function Signup() {
             onClick={() => handleAgreementChange("service")}
               style={{ cursor: "pointer" }}
           >
-              <img 
-                src={agreements.service ? checkSquareIcon : arrowSquareDownIcon} 
-                alt={agreements.service ? "체크됨" : "체크 안됨"} 
-              />
+              {agreements.service ? (
+                <img 
+                  src={checkedIcon} 
+                  alt="체크됨"
+                  className={styles.checkboxIcon}
+                />
+              ) : (
+                <div className={styles.checkbox}></div>
+              )}
             </div>
             <div 
               className={styles.agreementText}
@@ -222,10 +231,15 @@ export default function Signup() {
             onClick={() => handleAgreementChange("marketing")}
               style={{ cursor: "pointer" }}
           >
-              <img 
-                src={agreements.marketing ? checkSquareIcon : arrowSquareDownIcon} 
-                alt={agreements.marketing ? "체크됨" : "체크 안됨"} 
-              />
+              {agreements.marketing ? (
+                <img 
+                  src={checkedIcon} 
+                  alt="체크됨"
+                  className={styles.checkboxIcon}
+                />
+              ) : (
+                <div className={styles.checkbox}></div>
+              )}
             </div>
             <div 
               className={styles.agreementText}

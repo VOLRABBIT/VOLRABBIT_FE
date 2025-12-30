@@ -1,0 +1,64 @@
+.modalOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 52px;
+  align-items: center;
+  width: 100%;
+  max-width: 210px;
+}
+
+.createButton,
+.joinButton {
+  width: 157px;
+  height: 56px;
+  border-radius: 999px;
+  border: none;
+  background-color: #7da7db;
+  color: white;
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.createButton:hover,
+.joinButton:hover {
+  opacity: 0.9;
+}
+
+.createButton:active,
+.joinButton:active {
+  opacity: 0.8;
+}
+
