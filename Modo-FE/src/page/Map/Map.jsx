@@ -17,16 +17,10 @@ export default function Map() {
         navigate("/shop");
         break;
       case "dungeon":
-        navigate("/dungeon");
-        break;
       case "gorge":
-        navigate("/gorge");
-        break;
       case "castle":
-        navigate("/castle");
-        break;
       case "room":
-        navigate("/room");
+        navigate(`/location/${location}`);
         break;
       default:
         break;
@@ -42,7 +36,6 @@ export default function Map() {
           className={styles.mapBackground}
         />
         
-        {/* 상점 아이콘 */}
         <button 
           className={`${styles.locationButton} ${styles.shopButton}`}
           onClick={() => handleLocationClick("shop")}
@@ -50,7 +43,6 @@ export default function Map() {
           <img src={shopIcon} alt="상점" className={styles.shopIcon} />
         </button>
 
-        {/* 환각의 던전 아이콘 */}
         <button 
           className={`${styles.locationButton} ${styles.dungeonButton}`}
           onClick={() => handleLocationClick("dungeon")}
@@ -58,7 +50,6 @@ export default function Map() {
           <img src={dungeonIcon} alt="환각의 던전" className={styles.dungeonIcon} />
         </button>
 
-        {/* 혼돈의 협곡 아이콘 */}
         <button 
           className={`${styles.locationButton} ${styles.gorgeButton}`}
           onClick={() => handleLocationClick("gorge")}
@@ -66,7 +57,6 @@ export default function Map() {
           <img src={gorgeIcon} alt="혼돈의 협곡" className={styles.locationIcon} />
         </button>
 
-        {/* 지연의 성 아이콘 */}
         <button 
           className={`${styles.locationButton} ${styles.castleButton}`}
           onClick={() => handleLocationClick("castle")}
@@ -74,7 +64,6 @@ export default function Map() {
           <img src={castleIcon} alt="지연의 성" className={styles.locationIcon} />
         </button>
 
-        {/* 환영의 방 아이콘 */}
         <button 
           className={`${styles.locationButton} ${styles.roomButton}`}
           onClick={() => handleLocationClick("room")}
