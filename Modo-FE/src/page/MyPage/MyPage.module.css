@@ -3,35 +3,120 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: linear-gradient(180deg, rgba(125, 167, 219, 0.40) 0%, rgba(241, 169, 211, 0.40) 44.71%, rgba(183, 168, 215, 0.40) 69.23%, rgba(116, 179, 170, 0.40) 100%);
   position: relative;
   overflow: hidden;
 }
+
 
 .content {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px 16px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* 프로필 섹션 */
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 42px;
+  position: relative;
+}
+
+.avatarContainer {
+  position: relative;
+  display: flex;
+  width: 100px;
+  height: 100px;
   justify-content: center;
-  padding: 20px;
-  overflow-y: auto;
+  align-items: flex-end;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  margin-bottom: 16px;
+  overflow: hidden;
+  border-radius: 50%;
 }
 
-.title {
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
-  font-weight: 700;
-  font-size: 24px;
-  color: #353d48;
-  margin-bottom: 12px;
+.avatar {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
 }
 
-.description {
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
-  font-weight: 400;
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.identity {
+  color: #1F2024;
+  text-align: center;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 16px;
-  color: #a0a3b1;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: 0.08px;
+  margin: 0 0 8px 0;
 }
 
+.subtitle {
+  color: #71727A;
+  text-align: center;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px; /* 133.333% */
+  letter-spacing: 0.12px;
+  margin: 0;
+}
+
+/* 메뉴 리스트 */
+.menuList {
+  display: flex;
+  width: 328px;
+  padding: 24px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.menuItem {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.menuItem:last-child {
+  border-bottom: none;
+}
+
+.menuLabel {
+  color: var(--Neutral-Dark-Darkest, #1F2024);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 142.857% */
+}
+
+.menuArrow {
+  width: 20px;
+  height: 20px;
+  opacity: 0.5;
+}
