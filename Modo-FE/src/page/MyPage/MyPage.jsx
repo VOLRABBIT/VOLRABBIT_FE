@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import TopBar from "../../components/TopBar/TopBar";
 import Navbar from "../../components/Navbar/Navbar";
 import CharacterChangeModal from "../../components/CharacterChangeModal/CharacterChangeModal";
+import SkipModal from "../../components/Diagnosis/SkipModal";
 import styles from "./MyPage.module.css";
 import adventurerCharacter from "../../assets/character/adventurer.png";
 import graveRobberCharacter from "../../assets/character/graverobber.png";
@@ -31,8 +32,9 @@ const PERSONA_TYPES = {
 
 export default function MyPage() {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentCharacterId, setCurrentCharacterId] = useState(3); // 기본값: 모험가
+  const [showSkipModal, setShowSkipModal] = useState(false);
+  const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
+  const [currentCharacterId, setCurrentCharacterId] = useState(3); // 기본값: 마법사
   const [nickname, setNickname] = useState("identity"); // 기본 닉네임
 
   const handleBack = () => {
@@ -40,12 +42,21 @@ export default function MyPage() {
   };
 
   const handleProfileClick = () => {
-    setIsModalOpen(true);
+    setShowSkipModal(true);
+  };
+
+  const handleSkipModalClose = () => {
+    setShowSkipModal(false);
+  };
+
+  const handleChangeConfirm = () => {
+    setShowSkipModal(false);
+    setIsCharacterModalOpen(true);
   };
 
   const handleCharacterSelect = (characterId) => {
     setCurrentCharacterId(characterId);
-    setIsModalOpen(false);
+    setIsCharacterModalOpen(false);
   };
 
   const currentCharacter = CHARACTERS.find((char) => char.id === currentCharacterId) || CHARACTERS[0];
@@ -115,9 +126,20 @@ export default function MyPage() {
 
       <Navbar activeItem="mypage" />
 
-      {isModalOpen && (
+      {showSkipModal && (
+        <SkipModal
+          title="선택권을 사용하시겠습니까?"
+          content="캐릭터 변경권을 1개 소진하여,<br></br> 원하는 캐릭터로 변경을 진행합니다."
+          stopButtonText="변경하기"
+          continueButtonText="취소"
+          onClose={handleSkipModalClose}
+          onStop={handleChangeConfirm}
+        />
+      )}
+
+      {isCharacterModalOpen && (
         <CharacterChangeModal
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setIsCharacterModalOpen(false)}
           onSelect={handleCharacterSelect}
           currentCharacterId={currentCharacterId}
         />
