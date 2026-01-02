@@ -6,7 +6,18 @@ import QuestionScreen from "../../components/Diagnosis/QuestionScreen";
 import SkipModal from "../../components/Diagnosis/SkipModal";
 import { matchPersona } from "../../utils/personaCalculator";
 import { PERSONA_DATA } from "../../data/personaData";
+import robotButtonIcon from "../../assets/icon/Button-robot.svg";
+import adventurerButtonIcon from "../../assets/icon/Button-adventurer.svg";
+import graveButtonIcon from "../../assets/icon/Button-grave robber.svg";
+import wizardButtonIcon from "../../assets/icon/Button-wizard.svg";
 import styles from "./Onboarding.module.css";
+
+const BUTTON_ICONS = {
+  "Time Wizard": wizardButtonIcon,
+  "Starter-Freeze Bot": robotButtonIcon,
+  "Attention-grave": graveButtonIcon,
+  "Emotional Adventure": adventurerButtonIcon,
+};
 
 const QUESTIONS = [
   "해야 할 일을 알지만 시작이 잘 되지 않는다.",
@@ -66,10 +77,12 @@ export default function Onboarding() {
 
   if (showResult && personaType) {
     const personaData = PERSONA_DATA[personaType] || PERSONA_DATA["Starter-Freeze Bot"];
+    const buttonIcon = BUTTON_ICONS[personaData.id] || robotButtonIcon;
     return (
       <ResultPage
         personaData={personaData}
-        onStartAdventure={handleStartAdventure}
+        buttonImage={buttonIcon}
+        onButtonClick={handleStartAdventure}
       />
     );
   }

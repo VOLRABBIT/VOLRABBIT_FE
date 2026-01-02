@@ -4,6 +4,8 @@ import TopBar from "../../components/TopBar/TopBar";
 import Navbar from "../../components/Navbar/Navbar";
 import CharacterChangeModal from "../../components/CharacterChangeModal/CharacterChangeModal";
 import SkipModal from "../../components/Diagnosis/SkipModal";
+import ResultPage from "../Result/ResultPage";
+import { PERSONA_DATA } from "../../data/personaData";
 import styles from "./MyPage.module.css";
 import adventurerCharacter from "../../assets/character/adventurer.png";
 import graveRobberCharacter from "../../assets/character/graverobber.png";
@@ -30,10 +32,19 @@ const PERSONA_TYPES = {
   3: "시간이 사라지는 마법사",
 };
 
+// 캐릭터 ID를 페르소나 타입으로 매핑
+const CHARACTER_TO_PERSONA = {
+  0: "Emotional Adventure", // 모험가
+  1: "Attention-grave", // 도굴꾼
+  2: "Starter-Freeze Bot", // 로봇
+  3: "Time Wizard", // 마법사
+};
+
 export default function MyPage() {
   const navigate = useNavigate();
   const [showSkipModal, setShowSkipModal] = useState(false);
   const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
+  const [showResultPage, setShowResultPage] = useState(false);
   const [currentCharacterId, setCurrentCharacterId] = useState(3); // 기본값: 마법사
   const [nickname, setNickname] = useState("identity"); // 기본 닉네임
 
@@ -60,6 +71,8 @@ export default function MyPage() {
   };
 
   const currentCharacter = CHARACTERS.find((char) => char.id === currentCharacterId) || CHARACTERS[0];
+  const personaType = CHARACTER_TO_PERSONA[currentCharacterId];
+  const personaData = PERSONA_DATA[personaType] || PERSONA_DATA["Starter-Freeze Bot"];
 
   const menuItems = [
     { id: "type", label: "나의 유형 확인하기", path: "/result" },
@@ -71,9 +84,28 @@ export default function MyPage() {
     { id: "nfc", label: "NFC 태그 설정하기", path: "/nfc" },
   ];
 
-  const handleMenuClick = (path) => {
-    navigate(path);
+  const handleMenuClick = (path, id) => {
+    if (id === "type") {
+      // 나의 유형 확인하기 클릭 시 결과 페이지 표시
+      setShowResultPage(true);
+    } else {
+      navigate(path);
+    }
   };
+
+  const handleResultPageClose = () => {
+    setShowResultPage(false);
+  };
+
+  // 결과 페이지가 표시되면 ResultPage만 렌더링
+  if (showResultPage) {
+    return (
+      <ResultPage
+        personaData={personaData}
+        onClose={handleResultPageClose}
+      />
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -111,7 +143,7 @@ export default function MyPage() {
             <div
               key={item.id}
               className={styles.menuItem}
-              onClick={() => handleMenuClick(item.path)}
+              onClick={() => handleMenuClick(item.path, item.id)}
             >
               <span className={styles.menuLabel}>{item.label}</span>
               <img 

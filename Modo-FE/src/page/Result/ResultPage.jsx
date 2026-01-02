@@ -10,6 +10,7 @@ import robotButtonIcon from "../../assets/icon/Button-robot.svg";
 import adventurerButtonIcon from "../../assets/icon/Button-adventurer.svg";
 import graveButtonIcon from "../../assets/icon/Button-grave robber.svg";
 import wizardButtonIcon from "../../assets/icon/Button-wizard.svg";
+import closeIcon from "../../assets/icon/close.svg";
 
 // 캐릭터별 버튼 아이콘 매핑
 const BUTTON_ICONS = {
@@ -46,7 +47,7 @@ const RECOMMENDATION_BOX_COLORS = {
   "Emotional Adventure": "rgba(253, 160, 105, 0.20)",
 };
 
-const ResultPage = ({ personaData, onStartAdventure }) => {
+const ResultPage = ({ personaData, buttonImage, onButtonClick, onClose }) => {
   const [expandedStats, setExpandedStats] = useState(false);
 
   // 스탯별 분석 섹션 확장/축소 토글
@@ -54,7 +55,8 @@ const ResultPage = ({ personaData, onStartAdventure }) => {
     setExpandedStats(!expandedStats);
   };
 
-  const buttonIcon = BUTTON_ICONS[personaData.id] || robotButtonIcon;
+  // buttonImage가 없으면 기본 버튼 아이콘 사용 (하위 호환성)
+  const buttonIcon = buttonImage || BUTTON_ICONS[personaData.id] || robotButtonIcon;
   const radarChartColor = RADAR_CHART_COLORS[personaData.id] || RADAR_CHART_COLORS["Starter-Freeze Bot"];
 
   // 캐릭터별 사이즈 매핑
@@ -173,13 +175,23 @@ const ResultPage = ({ personaData, onStartAdventure }) => {
         </div>
       </div>
 
-      {/* 하단 버튼 영역 (모험 시작) */}
+      {/* 하단 버튼 영역 */}
       <div className={styles.bottomButtonContainer}>
-        <img
-          src={buttonIcon}
-          className={styles.adventureButton}
-          onClick={onStartAdventure}
-        />
+        {buttonImage ? (
+          <img
+            src={buttonIcon}
+            className={styles.adventureButton}
+            onClick={onButtonClick}
+            alt="버튼"
+          />
+        ) : (
+          <button
+            className={styles.closeButton}
+            onClick={onClose}
+          >
+            닫기
+          </button>
+        )}
       </div>
     </div>
   );

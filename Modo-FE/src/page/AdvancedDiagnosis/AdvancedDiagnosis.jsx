@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useDiagnosisFlow } from "../../hooks/useDiagnosisFlow";
 import ResultPage from "../Result/ResultPage";
 import IntroScreen from "../../components/Diagnosis/IntroScreen";
@@ -6,7 +7,18 @@ import QuestionScreen from "../../components/Diagnosis/QuestionScreen";
 import SkipModal from "../../components/Diagnosis/SkipModal";
 import { matchAdvancedPersona } from "../../utils/personaCalculator";
 import { PERSONA_DATA } from "../../data/personaData";
+import robotButtonIcon from "../../assets/icon/Button-robot.svg";
+import adventurerButtonIcon from "../../assets/icon/Button-adventurer.svg";
+import graveButtonIcon from "../../assets/icon/Button-grave robber.svg";
+import wizardButtonIcon from "../../assets/icon/Button-wizard.svg";
 import styles from "./AdvancedDiagnosis.module.css";
+
+const BUTTON_ICONS = {
+  "Time Wizard": wizardButtonIcon,
+  "Starter-Freeze Bot": robotButtonIcon,
+  "Attention-grave": graveButtonIcon,
+  "Emotional Adventure": adventurerButtonIcon,
+};
 
 const QUESTIONS = [
   "일의 세부 사항에 주의를 기울이지 못하거나,\n부주의한 실수를 한다.",
@@ -30,6 +42,7 @@ const QUESTIONS = [
 ];
 
 export default function AdvancedDiagnosis() {
+  const navigate = useNavigate();
   const {
     isIntro,
     currentQuestionIndex,
@@ -44,7 +57,7 @@ export default function AdvancedDiagnosis() {
     handleBack,
     handleSkip,
     handleCloseModal,
-    handleSkipConfirm,
+    handleSkipConfirm: originalHandleSkipConfirm,
     handleNext,
     handleAnswerChange,
     questionsLength,
@@ -52,6 +65,12 @@ export default function AdvancedDiagnosis() {
 
   const handleStartAdventure = () => {
     // 모험 시작 로직 구현 필요
+  };
+
+  // 심화진단에서 skip 시 이전 페이지로 돌아가기
+  const handleSkipConfirm = () => {
+    handleCloseModal();
+    navigate(-1);
   };
 
   if (isIntro) {
@@ -77,10 +96,12 @@ export default function AdvancedDiagnosis() {
 
   if (showResult && personaType) {
     const personaData = PERSONA_DATA[personaType] || PERSONA_DATA["Starter-Freeze Bot"];
+    const buttonIcon = BUTTON_ICONS[personaData.id] || robotButtonIcon;
     return (
       <ResultPage
         personaData={personaData}
-        onStartAdventure={handleStartAdventure}
+        buttonImage={buttonIcon}
+        onButtonClick={handleStartAdventure}
       />
     );
   }
