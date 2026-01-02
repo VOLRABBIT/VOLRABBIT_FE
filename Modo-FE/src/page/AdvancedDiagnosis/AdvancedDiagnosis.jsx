@@ -107,7 +107,6 @@ export default function AdvancedDiagnosis() {
           continueButtonText="계속하기"
           onClose={handleCloseModal}
           onStop={handleSkipConfirm}
-          styles={styles}
         />
       )}
     </>

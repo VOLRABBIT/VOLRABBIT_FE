@@ -1,4 +1,5 @@
 import closeIcon from "../../assets/icon/close.svg";
+import styles from "./SkipModal.module.css";
 
 // 건너뛰기 확인 모달
 export default function SkipModal({
@@ -8,17 +9,16 @@ export default function SkipModal({
   continueButtonText,
   onClose,
   onStop,
-  styles: customStyles,
 }) {
   return (
-    <div className={customStyles.modalOverlay} onClick={onClose}>
-      <div className={customStyles.modal} onClick={(e) => e.stopPropagation()}>
-        <button className={customStyles.modalClose} onClick={onClose}>
-          <img src={closeIcon} className={customStyles.modalCloseIcon} alt="닫기" />
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <button className={styles.modalClose} onClick={onClose}>
+          <img src={closeIcon} className={styles.modalCloseIcon} alt="닫기" />
         </button>
-        <h3 className={customStyles.modalTitle}>{title}</h3>
-        <div className={customStyles.modalContent}>
-          <p className={customStyles.modalContentText}>
+        <h3 className={styles.modalTitle}>{title}</h3>
+        <div className={styles.modalContent}>
+          <p className={styles.modalContentText}>
             {content.split('<br></br>').map((line, i, arr) => (
               <span key={i}>
                 {line}
@@ -27,11 +27,11 @@ export default function SkipModal({
             ))}
           </p>
         </div>
-        <div className={customStyles.modalButtons}>
-          <button className={customStyles.modalButtonStop} onClick={onStop}>
+        <div className={styles.modalButtons}>
+          <button className={styles.modalButtonStop} onClick={onStop}>
             {stopButtonText}
           </button>
-          <button className={customStyles.modalButtonContinue} onClick={onClose}>
+          <button className={styles.modalButtonContinue} onClick={onClose}>
             {continueButtonText}
           </button>
         </div>

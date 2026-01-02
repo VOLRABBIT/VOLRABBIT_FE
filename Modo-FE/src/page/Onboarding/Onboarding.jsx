@@ -96,7 +96,6 @@ export default function Onboarding() {
           continueButtonText="계속하기"
           onClose={handleCloseModal}
           onStop={handleSkipConfirm}
-          styles={styles}
         />
       )}
     </>
