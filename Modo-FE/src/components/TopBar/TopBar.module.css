@@ -1,7 +1,7 @@
 .topBar {
   position: sticky;
   top: 0;
-  height: 24px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: space-between;
