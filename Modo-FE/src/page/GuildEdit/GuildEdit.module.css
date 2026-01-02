@@ -1,0 +1,501 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    rgba(125, 167, 219, 0.4) 0%,
+    rgba(241, 169, 211, 0.4) 44.712%,
+    rgba(183, 168, 215, 0.4) 69.231%,
+    rgba(116, 179, 170, 0.4) 100%
+  );
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  height: 64px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.backButton img {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #393939;
+  text-align: center;
+  margin: 0;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.closeButton img {
+  width: 100%;
+  height: 100%;
+}
+
+.content {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.content::-webkit-scrollbar {
+  display: none;
+}
+
+/* 길드 정보 섹션 */
+.guildInfoSection {
+  position: relative;
+  width: 100%;
+  min-height: 175px;
+}
+
+.guildIconWrapper {
+  position: absolute;
+  left: 30px;
+  top: 0;
+  width: 72px;
+  height: 126px;
+}
+
+.groupIcon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.guildIcon {
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  width: 38px;
+  height: 38px;
+}
+
+.guildNameWrapper {
+  position: absolute;
+  left: 112px;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guildNameInput {
+  border: none;
+  background: transparent;
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+  outline: none;
+  padding: 0;
+  width: 92px;
+  line-height: 24px;
+}
+
+.editIconButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.editIcon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.memberAvatars {
+  position: absolute;
+  left: 112px;
+  top: 38px;
+  display: flex;
+  gap: 13px;
+  align-items: center;
+}
+
+.memberAvatarButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 설정 카드 */
+.settingCard {
+  position: relative;
+  width: 330px;
+  margin-left: 30px;
+  margin-bottom: 12px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 16px;
+  box-sizing: border-box;
+  min-height: 188px;
+}
+
+.settingCard:first-of-type {
+  margin-top: 229px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  margin-bottom: 16px;
+}
+
+.cardNumber {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #7da7db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: white;
+  line-height: 1;
+}
+
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.cardTitle {
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+  line-height: 1;
+  margin: 0;
+}
+
+.cardDescription {
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #7a7a7a;
+  line-height: 1;
+  margin: 0;
+}
+
+.tagContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 33px;
+  justify-content: center;
+}
+
+.inputSection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.tag {
+  background-color: rgba(125, 167, 219, 0.3);
+  border: none;
+  border-radius: 12px;
+  padding: 6px 10px;
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #8391dd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  line-height: normal;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.tag:hover {
+  opacity: 0.8;
+}
+
+.tagActive {
+  background-color: rgba(125, 167, 219, 0.7);
+  color: #52528f;
+}
+
+.tagInputWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(125, 167, 219, 0.3);
+  border-radius: 12px;
+  padding: 6px 8px;
+  gap: 4px;
+  height: fit-content;
+  flex-shrink: 0;
+}
+
+.tagInputWrapper.tagInputActive,
+.durationInputWrapper.tagInputActive {
+  background-color: rgba(125, 167, 219, 0.7);
+}
+
+.tagInput {
+  background: transparent;
+  border: none;
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #8391dd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 40px;
+  outline: none;
+  text-align: center;
+  padding: 0;
+}
+
+.tagInput::placeholder,
+.durationInput::placeholder {
+  color: #8391dd;
+  text-transform: uppercase;
+}
+
+.tagInputWrapper.tagInputActive .tagInput {
+  color: #52528f;
+}
+
+.tagInputSuffix {
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #8391dd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.tagInputWrapper.tagInputActive .tagInputSuffix {
+  color: #52528f;
+}
+
+.durationInputWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(125, 167, 219, 0.3);
+  border-radius: 12px;
+  padding: 6px 8px;
+  gap: 4px;
+  min-width: fit-content;
+  flex-shrink: 0;
+  height: fit-content;
+}
+
+.durationInput {
+  background: transparent;
+  border: none;
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #8391dd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 30px;
+  outline: none;
+  text-align: center;
+  padding: 0;
+}
+
+.durationInputWrapper.tagInputActive .durationInput {
+  color: #52528f;
+}
+
+.durationInputWrapper.tagInputActive .durationInput::placeholder {
+  color: #52528f;
+}
+
+.durationUnitButtons {
+  display: flex;
+  gap: 2px;
+}
+
+.durationUnitButton {
+  background: transparent;
+  border: none;
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: #8391dd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.durationUnitCircle {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: white;
+  flex-shrink: 0;
+}
+
+.durationUnitCircleFilled {
+  background-color: #BB90DD;
+}
+
+.durationUnitButton:hover {
+  opacity: 0.8;
+}
+
+.durationUnitButtonActive {
+  color: #52528f;
+}
+
+.durationInputWrapper.tagInputActive .durationUnitButton {
+  color: #52528f;
+}
+
+.durationInputWrapper.tagInputActive .durationUnitButtonActive {
+  color: #52528f;
+  font-weight: 700;
+}
+
+.modifyButton {
+  width: 100%;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  background-color: #7da7db;
+  color: white;
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.modifyButton:hover {
+  opacity: 0.9;
+}
+
+.modifyButton:active {
+  opacity: 0.8;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  height: 80px;
+  position: relative;
+}
+
+.saveButton {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 358px;
+  height: 56px;
+  border-radius: 999px;
+  border: none;
+  background-color: #BB90DD;
+  color: white;
+  font-family: "NanumSquare", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.saveButton:hover {
+  opacity: 0.9;
+}
+
+.saveButton:active {
+  opacity: 0.8;
+}
+

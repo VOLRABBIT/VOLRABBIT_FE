@@ -1,0 +1,104 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(125, 167, 219, 0.40) 0%, rgba(241, 169, 211, 0.40) 44.71%, rgba(183, 168, 215, 0.40) 69.23%, rgba(116, 179, 170, 0.40) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.section {
+  margin-bottom: 32px;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.sectionTitle {
+  font-family: "NanumSquare", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 8px 0;
+}
+
+.sectionDescription {
+  font-family: "NanumSquare", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #71727A;
+  line-height: 20px;
+  margin: 0 0 16px 0;
+}
+
+.guildList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.guildCard {
+  display: flex;
+  width: 343px;
+  height: 54px;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: 8px;
+  border: 1px solid #7DA7DB;
+  background: rgba(255, 255, 255, 0.80);
+  box-sizing: border-box;
+}
+
+.guildName {
+  font-family: "NanumSquare", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.guildActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.editButton,
+.deleteButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.endDate {
+  font-family: "NanumSquare", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #71727A;
+}
+

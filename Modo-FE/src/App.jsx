@@ -16,6 +16,8 @@ import GuildJoin from "./page/GuildJoin/GuildJoin.jsx";
 import GuildCreate from "./page/GuildCreate/GuildCreate.jsx";
 import GuildDetail from "./page/GuildDetail/GuildDetail.jsx";
 import GuildQuestRegister from "./page/GuildQuestRegister/GuildQuestRegister.jsx";
+import GuildManage from "./page/GuildManage/GuildManage.jsx";
+import GuildEdit from "./page/GuildEdit/GuildEdit.jsx";
 import MyPage from "./page/MyPage/MyPage.jsx";
 import Pause from "./page/Pause/Pause.jsx";
 import "./App.css";
@@ -43,6 +45,8 @@ export default function App() {
             <Route path="/guild/:id/quest/register" element={<GuildQuestRegister />} />
             <Route path="/guild/join" element={<GuildJoin />} />
             <Route path="/guild/create" element={<GuildCreate />} />
+            <Route path="/guild/manage" element={<GuildManage />} />
+            <Route path="/guild/:id/edit" element={<GuildEdit />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/pause" element={<Pause />} />
           </Routes>
