@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "./ThingsToDo.module.css";
 import checkedIcon from "../../assets/checked.svg";
 import modifyIcon from "../../assets/modify.svg";
+import TaskCompleteModal from "../TaskCompleteModal/TaskCompleteModal";
 
 export default function ThingsToDo({ tasks = [] }) {
   const [taskStates, setTaskStates] = useState(() => {
@@ -30,14 +31,50 @@ export default function ThingsToDo({ tasks = [] }) {
 
   const [editingTask, setEditingTask] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    categoryId: null,
+    taskId: null,
+    taskTitle: "",
+  });
 
-  const handleTaskClick = (categoryId, taskId) => {
+  const handleTaskClick = (categoryId, taskId, taskTitle) => {
     if (editingTask === `task-${categoryId}-${taskId}`) return;
     const key = `task-${categoryId}-${taskId}`;
-    setTaskStates((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
+    if (!taskStates[key]) {
+      setModalState({
+        isOpen: true,
+        categoryId,
+        taskId,
+        taskTitle,
+      });
+    } else {
+      setTaskStates((prev) => ({
+        ...prev,
+        [key]: false,
+      }));
+    }
+  };
+
+  const handleModalClose = () => {
+    setModalState({
+      isOpen: false,
+      categoryId: null,
+      taskId: null,
+      taskTitle: "",
+    });
+  };
+
+  const handleModalConfirm = () => {
+    const { categoryId, taskId } = modalState;
+    if (categoryId && taskId) {
+      const key = `task-${categoryId}-${taskId}`;
+      setTaskStates((prev) => ({
+        ...prev,
+        [key]: true,
+      }));
+    }
+    handleModalClose();
   };
 
   const handleSubtaskClick = (categoryId, taskId, subtaskId) => {
@@ -95,7 +132,13 @@ export default function ThingsToDo({ tasks = [] }) {
                 <div className={styles.taskItem}>
                   <button
                     className={styles.checkbox}
-                    onClick={() => handleTaskClick(category.id, task.id)}
+                    onClick={() =>
+                      handleTaskClick(
+                        category.id,
+                        task.id,
+                        taskTitles[taskKey] || task.title
+                      )
+                    }
                     disabled={isEditing}
                   >
                     {taskStates[taskKey] ? (
@@ -155,6 +198,13 @@ export default function ThingsToDo({ tasks = [] }) {
           })}
         </div>
       ))}
+      {modalState.isOpen && (
+        <TaskCompleteModal
+          taskTitle={modalState.taskTitle}
+          onClose={handleModalClose}
+          onConfirm={handleModalConfirm}
+        />
+      )}
     </div>
   );
 }
