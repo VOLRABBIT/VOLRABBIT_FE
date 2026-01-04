@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
+import ThingsToDo from "../../components/ThingsToDo/ThingsToDo";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import addIcon from "../../assets/map/add.svg";
 import fightTaskIcon from "../../assets/map/fight-task.svg";
 import mapBackground from "../../assets/map/MAP-1.png";
+import { FIGHT_TASK_DATA } from "../../data/fightTaskData";
 import styles from "./Fight.module.css";
 
 export default function Fight() {
@@ -110,13 +112,9 @@ export default function Fight() {
           <img src={addIcon} alt="추가" className={styles.plusIcon} />
         </div>
 
-        {/* 빈 상태 카드 */}
-        <div className={styles.emptyStateCard}>
-          <div className={styles.emptyStateIcon}>
-            <img src={fightTaskIcon} alt="전투 Task" />
-          </div>
-          <p className={styles.emptyStateText1}>등록된 전투가 없어요.</p>
-          <p className={styles.emptyStateText2}>+를 눌러 전투를 추가해보세요!</p>
+        {/* 전투 Task 목록 */}
+        <div className={styles.taskListContainer}>
+          <ThingsToDo tasks={FIGHT_TASK_DATA} />
         </div>
       </div>
       <Navbar activeItem="fight" />
