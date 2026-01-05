@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import styles from "./TaskCompleteModal.module.css";
 import closeIcon from "../../assets/icon/close.svg";
 
@@ -6,6 +7,8 @@ export default function TaskCompleteModal({
   onClose,
   onConfirm,
 }) {
+  const navigate = useNavigate();
+
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -17,6 +20,11 @@ export default function TaskCompleteModal({
       onConfirm();
     }
     onClose();
+  };
+
+  const handleGiveUp = () => {
+    onClose();
+    navigate("/task-give-up", { state: { taskTitle } });
   };
 
   return (
@@ -43,7 +51,7 @@ export default function TaskCompleteModal({
             <button className={styles.confirmButton} onClick={handleConfirm}>
               인증하기
             </button>
-            <button className={styles.cancelButton} onClick={onClose}>
+            <button className={styles.cancelButton} onClick={handleGiveUp}>
               포기하기
             </button>
           </div>

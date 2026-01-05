@@ -17,6 +17,7 @@ import GuildCreate from "./page/GuildCreate/GuildCreate.jsx";
 import GuildDetail from "./page/GuildDetail/GuildDetail.jsx";
 import GuildQuestRegister from "./page/GuildQuestRegister/GuildQuestRegister.jsx";
 import MyPage from "./page/MyPage/MyPage.jsx";
+import TaskGiveUp from "./page/TaskGiveUp/TaskGiveUp.jsx";
 import "./App.css";
 
 export default function App() {
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="/guild/join" element={<GuildJoin />} />
             <Route path="/guild/create" element={<GuildCreate />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/task-give-up" element={<TaskGiveUp />} />
           </Routes>
         </div>
       </div>
