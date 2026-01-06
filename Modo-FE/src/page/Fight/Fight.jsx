@@ -3,7 +3,6 @@ import Navbar from "../../components/Navbar/Navbar";
 import ThingsToDo from "../../components/ThingsToDo/ThingsToDo";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import addIcon from "../../assets/map/add.svg";
-import fightTaskIcon from "../../assets/map/fight-task.svg";
 import mapBackground from "../../assets/map/MAP-1.png";
 import { FIGHT_TASK_DATA } from "../../data/fightTaskData";
 import styles from "./Fight.module.css";
@@ -16,7 +15,9 @@ export default function Fight() {
   };
 
   const handleDateClick = (day) => {
-    console.log(`날짜 ${day}일 클릭됨 - 전투 Task 작성 페이지로 이동`);
+    const pad = (n) => String(n).padStart(2, "0");
+    const dateParam = `${year}-${pad(month)}-${pad(day)}`;
+    navigate(`/task-detail/${dateParam}`);
   };
 
   const now = new Date();

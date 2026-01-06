@@ -20,6 +20,8 @@ import MyPage from "./page/MyPage/MyPage.jsx";
 import TaskGiveUp from "./page/TaskGiveUp/TaskGiveUp.jsx";
 import TaskPhotoAuth from "./page/TaskPhotoAuth/TaskPhotoAuth.jsx";
 import TaskCreate from "./page/TaskCreate/TaskCreate.jsx";
+import TaskDetail from "./page/TaskDetail/TaskDetail.jsx";
+import TaskRebuild from "./page/TaskRebuild/TaskRebuild.jsx";
 import "./App.css";
 
 export default function App() {
@@ -49,6 +51,8 @@ export default function App() {
             <Route path="/task-give-up" element={<TaskGiveUp />} />
             <Route path="/task-photo-auth" element={<TaskPhotoAuth />} />
             <Route path="/task-create" element={<TaskCreate />} />
+            <Route path="/task-detail/:date" element={<TaskDetail />} />
+            <Route path="/task-rebuild/:date" element={<TaskRebuild />} />
           </Routes>
         </div>
       </div>

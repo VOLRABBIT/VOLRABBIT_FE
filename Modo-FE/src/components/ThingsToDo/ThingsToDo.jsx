@@ -4,7 +4,7 @@ import checkedIcon from "../../assets/checked.svg";
 import modifyIcon from "../../assets/modify.svg";
 import TaskCompleteModal from "../TaskCompleteModal/TaskCompleteModal";
 
-export default function ThingsToDo({ tasks = [] }) {
+export default function ThingsToDo({ tasks = [], hideModify = false }) {
   const [taskStates, setTaskStates] = useState(() => {
     const initialState = {};
     tasks.forEach((category) => {
@@ -164,13 +164,15 @@ export default function ThingsToDo({ tasks = [] }) {
                       {taskTitles[taskKey] || task.title}
                     </p>
                   )}
-                  <button
-                    className={styles.modifyButton}
-                    onClick={(e) => handleModifyClick(e, category.id, task.id)}
-                    disabled={isEditing}
-                  >
-                    <img src={modifyIcon} alt="수정" />
-                  </button>
+                  {!hideModify && (
+                    <button
+                      className={styles.modifyButton}
+                      onClick={(e) => handleModifyClick(e, category.id, task.id)}
+                      disabled={isEditing}
+                    >
+                      <img src={modifyIcon} alt="수정" />
+                    </button>
+                  )}
                 </div>
                 {task.subtasks.map((subtask) => (
                   <div key={subtask.id} className={styles.subtaskItem}>

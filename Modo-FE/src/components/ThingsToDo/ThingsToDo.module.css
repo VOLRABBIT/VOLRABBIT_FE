@@ -42,11 +42,11 @@
 
 .taskItem {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
   padding: 8px;
   box-sizing: border-box;
-  width: 255px;
+  width: auto;
 }
 
 .checkbox {
