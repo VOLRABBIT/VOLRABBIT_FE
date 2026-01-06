@@ -18,6 +18,8 @@ import GuildDetail from "./page/GuildDetail/GuildDetail.jsx";
 import GuildQuestRegister from "./page/GuildQuestRegister/GuildQuestRegister.jsx";
 import MyPage from "./page/MyPage/MyPage.jsx";
 import TaskGiveUp from "./page/TaskGiveUp/TaskGiveUp.jsx";
+import TaskPhotoAuth from "./page/TaskPhotoAuth/TaskPhotoAuth.jsx";
+import TaskCreate from "./page/TaskCreate/TaskCreate.jsx";
 import "./App.css";
 
 export default function App() {
@@ -45,6 +47,8 @@ export default function App() {
             <Route path="/guild/create" element={<GuildCreate />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/task-give-up" element={<TaskGiveUp />} />
+            <Route path="/task-photo-auth" element={<TaskPhotoAuth />} />
+            <Route path="/task-create" element={<TaskCreate />} />
           </Routes>
         </div>
       </div>

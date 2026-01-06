@@ -107,10 +107,10 @@ export default function Fight() {
         </div>
 
         {/* 전투 Task 작성하기 */}
-        <div className={styles.taskPrompt}>
+        <button className={styles.taskPrompt} onClick={() => navigate("/task-create")}>
           <span>전투 Task 작성하기</span>
           <img src={addIcon} alt="추가" className={styles.plusIcon} />
-        </div>
+        </button>
 
         {/* 전투 Task 목록 */}
         <div className={styles.taskListContainer}>

@@ -16,10 +16,8 @@ export default function TaskCompleteModal({
   };
 
   const handleConfirm = () => {
-    if (onConfirm) {
-      onConfirm();
-    }
     onClose();
+    navigate("/task-photo-auth", { state: { taskTitle } });
   };
 
   const handleGiveUp = () => {
