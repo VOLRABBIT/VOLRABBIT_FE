@@ -20,6 +20,8 @@ export const FIGHT_TASK_DATA_BY_DATE = {
           isCompleted: false,
           priority: "긴급·중요",
           subtasks: [],
+          startTime: 6,
+          duration: 4,
         },
         {
           id: 2,
@@ -53,6 +55,8 @@ export const FIGHT_TASK_DATA_BY_DATE = {
           title: "파리바게트",
           isCompleted: false,
           priority: "중요",
+          startTime: 18,
+          duration: 5,
           subtasks: [
             {
               id: 1,
@@ -161,20 +165,8 @@ export const FIGHT_TASK_DATA_BY_DATE = {
           title: "선형대수학2 복습하기",
           isCompleted: false,
           priority: "중요",
-          subtasks: [],
-        },
-        {
-          id: 2,
-          title: "알고리즘 문제 풀이",
-          isCompleted: false,
-          priority: "중요",
-          subtasks: [],
-        },
-        {
-          id: 3,
-          title: "컴퓨터구조 시험 공부",
-          isCompleted: false,
-          priority: "긴급·중요",
+          startTime: 6,
+          duration: 4,
           subtasks: [],
         },
       ],
@@ -184,83 +176,12 @@ export const FIGHT_TASK_DATA_BY_DATE = {
       category: "알바",
       tasks: [
         {
-          id: 4,
-          title: "파리바게트 알바",
-          isCompleted: false,
-          priority: "중요",
-          subtasks: [
-            {
-              id: 1,
-              title: "오픈 재고 체크",
-              isCompleted: false,
-            },
-          ],
-        },
-        {
           id: 5,
-          title: "카페 서빙",
+          title: "파리바게트 마감 알바",
           isCompleted: false,
           priority: "중요",
-          subtasks: [],
-        },
-      ],
-    },
-    {
-      id: 3,
-      category: "건강",
-      tasks: [
-        {
-          id: 6,
-          title: "조깅하기",
-          isCompleted: false,
-          priority: "중요",
-          subtasks: [],
-        },
-        {
-          id: 7,
-          title: "물 마시기 체크",
-          isCompleted: false,
-          priority: "중요",
-          subtasks: [],
-        },
-      ],
-    },
-    {
-      id: 4,
-      category: "집안일",
-      tasks: [
-        {
-          id: 8,
-          title: "화장실 청소",
-          isCompleted: false,
-          priority: "긴급",
-          subtasks: [],
-        },
-        {
-          id: 9,
-          title: "설거지하기",
-          isCompleted: false,
-          priority: "긴급",
-          subtasks: [],
-        },
-      ],
-    },
-    {
-      id: 5,
-      category: "기타",
-      tasks: [
-        {
-          id: 10,
-          title: "도서관 책 반납",
-          isCompleted: false,
-          priority: "긴급",
-          subtasks: [],
-        },
-        {
-          id: 11,
-          title: "약속 시간 확인",
-          isCompleted: false,
-          priority: "중요",
+          startTime: 18,
+          duration: 5,
           subtasks: [],
         },
       ],

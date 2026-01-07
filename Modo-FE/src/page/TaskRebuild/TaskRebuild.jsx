@@ -1,100 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import TaskActionBar from "../../components/TaskActionBar/TaskActionBar";
-import TaskCompleteModal from "../../components/TaskCompleteModal/TaskCompleteModal";
-import styles from "./TaskRebuild.module.css";
-import arrowLeftIcon from "../../assets/arrow-left.svg";
-import mapBackground from "../../assets/map/MAP-1.png";
 import { getTasksByDate, CATEGORY_PRIORITY_MAP } from "../../data/fightTaskData";
-import checkedIcon from "../../assets/checked.svg";
-import slideIcon from "../../assets/slide.svg";
-
-function TaskItem({ 
-  task, 
-  index, 
-  onCheckboxClick, 
-  getPriorityClass,
-  onDragStart,
-  onDragOver,
-  onDragEnd,
-  isDragging,
-  dragOverIndex
-}) {
-  const handleDragStart = (e) => {
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/plain", index.toString());
-    onDragStart(index);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.dropEffect = "move";
-    onDragOver(index);
-  };
-
-  const handleDragEnd = () => {
-    onDragEnd();
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    if (dragOverIndex === index) {
-      onDragOver(null);
-    }
-  };
-
-  return (
-    <div
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      className={`${styles.taskItem} ${isDragging ? styles.dragging : ""} ${dragOverIndex === index ? styles.dragOver : ""}`}
-      style={{
-        opacity: isDragging ? 0.5 : 1,
-      }}
-    >
-      {/* 드래그 핸들 */}
-      <div 
-        className={styles.dragHandle}
-        draggable
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <img src={slideIcon} alt="드래그" className={styles.dragIcon} />
-      </div>
-
-      {/* 체크박스 */}
-      <button
-        className={styles.checkbox}
-        onClick={() => onCheckboxClick(task.id, task.title)}
-      >
-        {task.isCompleted ? (
-          <img
-            src={checkedIcon}
-            alt="체크됨"
-            className={styles.checkboxIcon}
-          />
-        ) : null}
-      </button>
-
-      {/* Task 제목 */}
-      <p className={styles.taskTitle}>
-        {index + 1}. {task.title}
-      </p>
-
-      {/* 우선순위 태그 */}
-      <div
-        className={`${styles.priorityTag} ${getPriorityClass(task.priority)}`}
-      >
-        {task.priority}
-      </div>
-    </div>
-  );
-}
+import robotStyles from "./layouts/RobotLayout.module.css";
+import GraveRobberLayout from "./layouts/GraveRobberLayout";
+import WizardLayout from "./layouts/WizardLayout";
+import RobotLayout from "./layouts/RobotLayout";
 
 export default function TaskRebuild() {
   const navigate = useNavigate();
-  const { date } = useParams();
+  const { date, character } = useParams();
+  
+  // 캐릭터 경로를 타입으로 변환
+  const getCharacterType = () => {
+    if (character) {
+      const characterMap = {
+        robot: "Starter-Freeze Bot",
+        graverobber: "Attention-grave",
+        wizard: "Time Wizard",
+        adventurer: "Emotional Adventure",
+      };
+      return characterMap[character] || "Starter-Freeze Bot";
+    }
+    
+    const savedPersona = localStorage.getItem("personaType");
+    return savedPersona || "Starter-Freeze Bot";
+  };
+  
+  const characterType = getCharacterType();
 
   const getTodayDateString = () => {
     const today = new Date();
@@ -107,6 +39,9 @@ export default function TaskRebuild() {
   const dateStr = date || getTodayDateString();
   const [year, month, day] = dateStr.split("-");
   const formattedDate = `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`;
+
+  const isGraveRobber = characterType === "Attention-grave";
+  const isWizard = characterType === "Time Wizard";
 
   const tasksForDate = getTasksByDate(dateStr);
 
@@ -130,6 +65,8 @@ export default function TaskRebuild() {
             category: categoryGroup.category,
             priority,
             isCompleted: false,
+            startTime: task.startTime ?? null,
+            duration: task.duration ?? null, 
           });
         }
       });
@@ -137,6 +74,11 @@ export default function TaskRebuild() {
     
     // 우선순위에 따라 정렬
     return allTasks.sort((a, b) => {
+      if (a.startTime !== null && b.startTime !== null) {
+        return a.startTime - b.startTime;
+      }
+      if (a.startTime !== null) return -1;
+      if (b.startTime !== null) return 1;
       const priorityOrder = { "긴급·중요": 1, "긴급": 2, "중요": 3 };
       return (priorityOrder[a.priority] || 4) - (priorityOrder[b.priority] || 4);
     });
@@ -148,6 +90,75 @@ export default function TaskRebuild() {
     taskTitle: "",
     taskId: null,
   });
+  const [battleStartModalOpen, setBattleStartModalOpen] = useState(false);
+  const [selectedBattleTask, setSelectedBattleTask] = useState(null);
+
+  // 타이머
+  const TOTAL_TIMER_SECONDS = 25 * 60;
+  const TIMER_RADIUS = 108;
+  const TIMER_CIRCUMFERENCE = 2 * Math.PI * TIMER_RADIUS;
+  const [timerSeconds, setTimerSeconds] = useState(TOTAL_TIMER_SECONDS);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  // 타이머 동작
+  useEffect(() => {
+    if (!isTimerRunning) return;
+
+    const intervalId = setInterval(() => {
+      setTimerSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(intervalId);
+          return 0;
+        }
+        return prev - 1;
+      });
+      setElapsedSeconds((prev) => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [isTimerRunning]);
+
+  const handleCardClick = () => {
+    setBattleStartModalOpen(true);
+  };
+
+  const handleTimerToggle = (e) => {
+    e.stopPropagation();
+    
+    if (!currentTask) {
+      return;
+    }
+    
+    // 플레이/일시정지 버튼 클릭 시에만 타이머 토글
+    setIsTimerRunning((prev) => {
+      // 리셋
+      if (!prev && timerSeconds === 0) {
+        setTimerSeconds(TOTAL_TIMER_SECONDS);
+      }
+      return !prev;
+    });
+  };
+
+  const handleBattleStart = (task) => {
+    setSelectedBattleTask(task);
+    setIsTimerRunning(true);
+  };
+
+  const formatTime = (totalSeconds) => {
+    const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+    const seconds = String(totalSeconds % 60).padStart(2, "0");
+    return `${minutes}:${seconds}`;
+  };
+
+  const formatElapsedTime = (totalSeconds) => {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    return {
+      hours: String(hours).padStart(2, "0"),
+      minutes: String(minutes).padStart(2, "0")
+    };
+  };
 
   // 드래그 정렬
   const [draggedIndex, setDraggedIndex] = useState(null);
@@ -224,81 +235,85 @@ export default function TaskRebuild() {
   const getPriorityClass = (priority) => {
     switch (priority) {
       case "긴급·중요":
-        return styles.priorityUrgentImportant;
+        return robotStyles.priorityUrgentImportant;
       case "긴급":
-        return styles.priorityUrgent;
+        return robotStyles.priorityUrgent;
       case "중요":
-        return styles.priorityImportant;
+        return robotStyles.priorityImportant;
       default:
-        return styles.priorityImportant;
+        return robotStyles.priorityImportant;
     }
   };
 
   const activeTasks = tasks.filter((task) => !task.isCompleted);
+  const currentTask = selectedBattleTask || null;
+
+  // 캐릭터별 레이아웃 렌더링
+  if (isGraveRobber) {
+    return (
+      <GraveRobberLayout
+        formattedDate={formattedDate}
+        handleBack={handleBack}
+        timerSeconds={timerSeconds}
+        isTimerRunning={isTimerRunning}
+        handleTimerToggle={handleTimerToggle}
+        currentTask={currentTask}
+        handleCheckboxClick={handleCheckboxClick}
+        dateStr={dateStr}
+        modalState={modalState}
+        handleModalClose={handleModalClose}
+        handleModalConfirm={handleModalConfirm}
+        TOTAL_TIMER_SECONDS={TOTAL_TIMER_SECONDS}
+        TIMER_RADIUS={TIMER_RADIUS}
+        TIMER_CIRCUMFERENCE={TIMER_CIRCUMFERENCE}
+        formatTime={formatTime}
+        activeTasks={activeTasks}
+        battleStartModalOpen={battleStartModalOpen}
+        setBattleStartModalOpen={setBattleStartModalOpen}
+        handleBattleStart={handleBattleStart}
+      />
+    );
+  }
+
+  if (isWizard) {
+    return (
+      <WizardLayout
+        formattedDate={formattedDate}
+        handleBack={handleBack}
+        activeTasks={activeTasks}
+        currentTask={currentTask}
+        isTimerRunning={isTimerRunning}
+        handleTimerToggle={handleTimerToggle}
+        handleCardClick={handleCardClick}
+        dateStr={dateStr}
+        modalState={modalState}
+        handleModalClose={handleModalClose}
+        handleModalConfirm={handleModalConfirm}
+        battleStartModalOpen={battleStartModalOpen}
+        setBattleStartModalOpen={setBattleStartModalOpen}
+        handleBattleStart={handleBattleStart}
+        elapsedSeconds={elapsedSeconds}
+        formatElapsedTime={formatElapsedTime}
+      />
+    );
+  }
 
   return (
-    <div className={styles.container}>
-      {/* 배경 이미지 */}
-      <div className={styles.backgroundImage}>
-        <img src={mapBackground} alt="배경" />
-      </div>
-
-      <div className={styles.content}>
-        {/* 헤더 */}
-        <div className={styles.header}>
-          <button className={styles.backButton} onClick={handleBack}>
-            <img src={arrowLeftIcon} alt="뒤로가기" />
-          </button>
-          <h1 className={styles.headerTitle}>{formattedDate} 전투</h1>
-        </div>
-
-        {/* 날짜 텍스트 */}
-        <div className={styles.dateText}>{formattedDate} 전투 task</div>
-
-        {/* 우선순위 전투 목록 */}
-        <div className={styles.priorityListContainer}>
-          <div className={styles.priorityListHeader}>
-            <h2 className={styles.priorityListTitle}>우선순위 전투 목록</h2>
-            <p className={styles.priorityListDescription}>
-              드래그하여 순서를 변경할 수 있습니다.
-            </p>
-          </div>
-
-          <div className={styles.taskList}>
-            {activeTasks.length > 0 ? (
-              activeTasks.map((task, index) => (
-                <TaskItem
-                  key={task.id}
-                  task={task}
-                  index={index}
-                  onCheckboxClick={handleCheckboxClick}
-                  getPriorityClass={getPriorityClass}
-                  onDragStart={handleDragStart}
-                  onDragOver={handleDragOver}
-                  onDragEnd={handleDragEnd}
-                  isDragging={draggedIndex === index}
-                  dragOverIndex={dragOverIndex}
-                />
-              ))
-            ) : (
-              <div className={styles.emptyState}>
-                <p>등록된 task가 없습니다.</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <TaskActionBar currentDate={dateStr} />
-
-      {/* Task 완료 모달 */}
-      {modalState.isOpen && (
-        <TaskCompleteModal
-          taskTitle={modalState.taskTitle}
-          onClose={handleModalClose}
-          onConfirm={handleModalConfirm}
-        />
-      )}
-    </div>
+    <RobotLayout
+      formattedDate={formattedDate}
+      handleBack={handleBack}
+      activeTasks={activeTasks}
+      handleCheckboxClick={handleCheckboxClick}
+      getPriorityClass={getPriorityClass}
+      handleDragStart={handleDragStart}
+      handleDragOver={handleDragOver}
+      handleDragEnd={handleDragEnd}
+      draggedIndex={draggedIndex}
+      dragOverIndex={dragOverIndex}
+      dateStr={dateStr}
+      modalState={modalState}
+      handleModalClose={handleModalClose}
+      handleModalConfirm={handleModalConfirm}
+    />
   );
 }

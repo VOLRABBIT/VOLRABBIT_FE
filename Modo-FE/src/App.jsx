@@ -52,6 +52,7 @@ export default function App() {
             <Route path="/task-photo-auth" element={<TaskPhotoAuth />} />
             <Route path="/task-create" element={<TaskCreate />} />
             <Route path="/task-detail/:date" element={<TaskDetail />} />
+            <Route path="/task-rebuild/:character/:date" element={<TaskRebuild />} />
             <Route path="/task-rebuild/:date" element={<TaskRebuild />} />
           </Routes>
         </div>

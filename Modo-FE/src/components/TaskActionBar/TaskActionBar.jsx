@@ -7,15 +7,28 @@ import reportIcon from "../../assets/navbar/report.svg";
 export default function TaskActionBar({ currentDate }) {
   const navigate = useNavigate();
 
+  const getCharacterPath = () => {
+    const savedPersona = localStorage.getItem("personaType");
+    const characterMap = {
+      "Starter-Freeze Bot": "robot",
+      "Attention-grave": "graverobber",
+      "Time Wizard": "wizard",
+      "Emotional Adventure": "adventurer",
+    };
+    return characterMap[savedPersona] || "robot";
+  };
+
   const handleItemClick = (itemId) => {
     switch (itemId) {
-      case "task-rebuild":
+      case "task-rebuild": {
         const dateStr = currentDate || (() => {
           const today = new Date();
           return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
         })();
-        navigate(`/task-rebuild/${dateStr}`);
+        const characterPath = getCharacterPath();
+        navigate(`/task-rebuild/${characterPath}/${dateStr}`);
         break;
+      }
       case "task-add":
         navigate("/task-create");
         break;
