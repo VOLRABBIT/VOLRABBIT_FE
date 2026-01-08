@@ -1,13 +1,15 @@
 .topBar {
   position: sticky;
   top: 0;
-  height: 44px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-left: 14px;
   padding-right: 16px;
   padding-top: 20px;
+  padding-bottom: 20px;
+  box-sizing: border-box;
   z-index: 100;
   background: transparent;
 }
