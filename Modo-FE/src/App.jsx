@@ -22,6 +22,7 @@ import MyPage from "./page/MyPage/MyPage.jsx";
 import Pause from "./page/Pause/Pause.jsx";
 import Report from "./page/Report/Report.jsx";
 import AllTypesPage from "./page/AllTypes/AllTypesPage.jsx";
+import CharacterSelectPage from "./page/CharacterSelect/CharacterSelectPage.jsx";
 import "./App.css";
 
 export default function App() {
@@ -53,6 +54,7 @@ export default function App() {
             <Route path="/pause" element={<Pause />} />
             <Route path="/report" element={<Report />} />
             <Route path="/all-types" element={<AllTypesPage />} />
+            <Route path="/character-select" element={<CharacterSelectPage />} />
           </Routes>
         </div>
       </div>

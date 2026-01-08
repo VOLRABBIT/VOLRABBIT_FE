@@ -1,0 +1,29 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(125, 167, 219, 0.40) 0%, rgba(241, 169, 211, 0.40) 44.71%, rgba(183, 168, 215, 0.40) 69.23%, rgba(116, 179, 170, 0.40) 100%);
+  overflow-y: auto;
+}
+
+.content {
+  flex: 1;
+  padding: 24px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.characterGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 170px);
+  gap: 16px;
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+}
+

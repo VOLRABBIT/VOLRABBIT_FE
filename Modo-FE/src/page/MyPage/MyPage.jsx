@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../../components/TopBar/TopBar";
 import Navbar from "../../components/Navbar/Navbar";
-import CharacterChangeModal from "../../components/CharacterChangeModal/CharacterChangeModal";
 import SkipModal from "../../components/Diagnosis/SkipModal";
 import ResultPage from "../Result/ResultPage";
 import { PERSONA_DATA } from "../../data/personaData";
@@ -55,7 +54,6 @@ const CHARACTER_TO_OVERALL_TYPE_ICON = {
 export default function MyPage() {
   const navigate = useNavigate();
   const [showSkipModal, setShowSkipModal] = useState(false);
-  const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
   const [showResultPage, setShowResultPage] = useState(false);
   const [currentCharacterId, setCurrentCharacterId] = useState(3); // 기본값: 마법사
   const [nickname, setNickname] = useState("identity"); // 기본 닉네임
@@ -74,12 +72,7 @@ export default function MyPage() {
 
   const handleChangeConfirm = () => {
     setShowSkipModal(false);
-    setIsCharacterModalOpen(true);
-  };
-
-  const handleCharacterSelect = (characterId) => {
-    setCurrentCharacterId(characterId);
-    setIsCharacterModalOpen(false);
+    navigate("/character-select");
   };
 
   const currentCharacter = CHARACTERS.find((char) => char.id === currentCharacterId) || CHARACTERS[0];
@@ -180,14 +173,6 @@ export default function MyPage() {
           continueButtonText="취소"
           onClose={handleSkipModalClose}
           onStop={handleChangeConfirm}
-        />
-      )}
-
-      {isCharacterModalOpen && (
-        <CharacterChangeModal
-          onClose={() => setIsCharacterModalOpen(false)}
-          onSelect={handleCharacterSelect}
-          currentCharacterId={currentCharacterId}
         />
       )}
     </div>
