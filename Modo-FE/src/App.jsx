@@ -23,6 +23,7 @@ import Pause from "./page/Pause/Pause.jsx";
 import Report from "./page/Report/Report.jsx";
 import AllTypesPage from "./page/AllTypes/AllTypesPage.jsx";
 import CharacterSelectPage from "./page/CharacterSelect/CharacterSelectPage.jsx";
+import CategorySettings from "./page/CategorySettings/CategorySettings.jsx";
 import "./App.css";
 
 export default function App() {
@@ -55,6 +56,7 @@ export default function App() {
             <Route path="/report" element={<Report />} />
             <Route path="/all-types" element={<AllTypesPage />} />
             <Route path="/character-select" element={<CharacterSelectPage />} />
+            <Route path="/category-settings" element={<CategorySettings />} />
           </Routes>
         </div>
       </div>

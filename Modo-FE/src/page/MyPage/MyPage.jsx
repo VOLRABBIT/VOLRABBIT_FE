@@ -84,7 +84,7 @@ export default function MyPage() {
     { id: "diagnosis", label: "심화 진단하기", path: "/advanced-diagnosis" },
     { id: "guild", label: "길드 관리하기", path: "/guild/manage" },
     { id: "report", label: "나의 리포트", path: "/report" },
-    { id: "category", label: "카테고리 설정하기", path: "/category" },
+    { id: "category", label: "카테고리 설정하기", path: "/category-settings" },
     { id: "pause", label: "일시정지", path: "/pause" },
     { id: "nfc", label: "NFC 태그 설정하기", path: "/nfc" },
   ];
