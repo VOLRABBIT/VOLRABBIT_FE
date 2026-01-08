@@ -29,17 +29,17 @@ export default function App() {
     <div className="viewport-wrapper">
       <div className="app-frame">
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/advanced-diagnosis" element={<AdvancedDiagnosis />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/marketing-agreement" element={<MarketingAgreement />} />
-          <Route path="/battle-modal-example" element={<BattleModalExample />} />
-          <Route path="/map" element={<Map />} />
-          <Route path="/shop" element={<Shop />} />
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/advanced-diagnosis" element={<AdvancedDiagnosis />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/marketing-agreement" element={<MarketingAgreement />} />
+            <Route path="/battle-modal-example" element={<BattleModalExample />} />
+            <Route path="/map" element={<Map />} />
+            <Route path="/shop" element={<Shop />} />
             <Route path="/location/:type" element={<LocationIntro />} />
             <Route path="/fight" element={<Fight />} />
             <Route path="/guild" element={<Guild />} />
@@ -53,7 +53,7 @@ export default function App() {
             <Route path="/pause" element={<Pause />} />
             <Route path="/report" element={<Report />} />
             <Route path="/all-types" element={<AllTypesPage />} />
-        </Routes>
+          </Routes>
         </div>
       </div>
     </div>
