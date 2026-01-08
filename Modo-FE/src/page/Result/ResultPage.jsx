@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import styles from "./ResultPage.module.css";
 import StatusBadge from "../../components/StatusBadge/StatusBadge";
@@ -10,7 +11,6 @@ import robotButtonIcon from "../../assets/icon/Button-robot.svg";
 import adventurerButtonIcon from "../../assets/icon/Button-adventurer.svg";
 import graveButtonIcon from "../../assets/icon/Button-grave robber.svg";
 import wizardButtonIcon from "../../assets/icon/Button-wizard.svg";
-import closeIcon from "../../assets/icon/close.svg";
 
 // 캐릭터별 버튼 아이콘 매핑
 const BUTTON_ICONS = {
@@ -47,8 +47,19 @@ const RECOMMENDATION_BOX_COLORS = {
   "Emotional Adventure": "rgba(253, 160, 105, 0.20)",
 };
 
-const ResultPage = ({ personaData, buttonImage, onButtonClick, onClose }) => {
+const ResultPage = ({ personaData: propPersonaData, buttonImage, onButtonClick }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [expandedStats, setExpandedStats] = useState(false);
+
+  // location state에서 personaData를 가져오거나 props에서 가져옴
+  const personaData = location.state?.personaData || propPersonaData;
+
+  // personaData가 없으면 이전 페이지로 이동
+  if (!personaData) {
+    navigate(-1);
+    return null;
+  }
 
   // 스탯별 분석 섹션 확장/축소 토글
   const toggleStats = () => {
@@ -177,21 +188,12 @@ const ResultPage = ({ personaData, buttonImage, onButtonClick, onClose }) => {
 
       {/* 하단 버튼 영역 */}
       <div className={styles.bottomButtonContainer}>
-        {buttonImage ? (
-          <img
-            src={buttonIcon}
-            className={styles.adventureButton}
-            onClick={onButtonClick}
-            alt="버튼"
-          />
-        ) : (
-          <button
-            className={styles.closeButton}
-            onClick={onClose}
-          >
-            닫기
-          </button>
-        )}
+        <img
+          src={buttonIcon}
+          className={styles.adventureButton}
+          onClick={onButtonClick || (() => navigate("/all-types"))}
+          alt="버튼"
+        />
       </div>
     </div>
   );

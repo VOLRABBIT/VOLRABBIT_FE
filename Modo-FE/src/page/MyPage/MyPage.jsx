@@ -17,6 +17,10 @@ import robotProfile from "../../assets/character/robot_profile.svg";
 import wizardProfile from "../../assets/character/wizard_profile.svg";
 import profileOutline from "../../assets/character/profile_outline.png";
 import arrowRightIcon from "../../assets/arrow-right.svg";
+import adventurerOverallType from "../../assets/icon/OverallType-adventurer.svg";
+import graverobberOverallType from "../../assets/icon/OverallType-graverobber.svg";
+import robotOverallType from "../../assets/icon/OverallType-robot.svg";
+import wizardOverallType from "../../assets/icon/OverallType-wizard.svg";
 
 const CHARACTERS = [
   { id: 0, name: "모험가", image: adventurerCharacter, profile: adventurerProfile, transform: "translateX(2px) translateY(3px)" },
@@ -38,6 +42,14 @@ const CHARACTER_TO_PERSONA = {
   1: "Attention-grave", // 도굴꾼
   2: "Starter-Freeze Bot", // 로봇
   3: "Time Wizard", // 마법사
+};
+
+// 캐릭터 ID를 OverallType 아이콘으로 매핑
+const CHARACTER_TO_OVERALL_TYPE_ICON = {
+  0: adventurerOverallType, // 모험가
+  1: graverobberOverallType, // 도굴꾼
+  2: robotOverallType, // 로봇
+  3: wizardOverallType, // 마법사
 };
 
 export default function MyPage() {
@@ -99,10 +111,12 @@ export default function MyPage() {
 
   // 결과 페이지가 표시되면 ResultPage만 렌더링
   if (showResultPage) {
+    const overallTypeIcon = CHARACTER_TO_OVERALL_TYPE_ICON[currentCharacterId];
     return (
       <ResultPage
         personaData={personaData}
-        onClose={handleResultPageClose}
+        buttonImage={overallTypeIcon}
+        onButtonClick={() => navigate("/all-types")}
       />
     );
   }
