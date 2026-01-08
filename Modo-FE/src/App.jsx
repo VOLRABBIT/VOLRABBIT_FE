@@ -22,6 +22,7 @@ import TaskPhotoAuth from "./page/TaskPhotoAuth/TaskPhotoAuth.jsx";
 import TaskCreate from "./page/TaskCreate/TaskCreate.jsx";
 import TaskDetail from "./page/TaskDetail/TaskDetail.jsx";
 import TaskRebuild from "./page/TaskRebuild/TaskRebuild.jsx";
+import TaskFailedReview from "./page/TaskFailedReview/TaskFailedReview.jsx";
 import "./App.css";
 
 export default function App() {
@@ -49,6 +50,7 @@ export default function App() {
             <Route path="/guild/create" element={<GuildCreate />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/task-give-up" element={<TaskGiveUp />} />
+            <Route path="/task-failed-review" element={<TaskFailedReview />} />
             <Route path="/task-photo-auth" element={<TaskPhotoAuth />} />
             <Route path="/task-create" element={<TaskCreate />} />
             <Route path="/task-detail/:date" element={<TaskDetail />} />
