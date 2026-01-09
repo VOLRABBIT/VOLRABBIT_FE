@@ -24,6 +24,8 @@ import Report from "./page/Report/Report.jsx";
 import AllTypesPage from "./page/AllTypes/AllTypesPage.jsx";
 import CharacterSelectPage from "./page/CharacterSelect/CharacterSelectPage.jsx";
 import CategorySettings from "./page/CategorySettings/CategorySettings.jsx";
+import NFCSettings from "./page/NFCSettings/NFCSettings.jsx";
+import NFCRegister from "./page/NFCRegister/NFCRegister.jsx";
 import "./App.css";
 
 export default function App() {
@@ -57,6 +59,8 @@ export default function App() {
             <Route path="/all-types" element={<AllTypesPage />} />
             <Route path="/character-select" element={<CharacterSelectPage />} />
             <Route path="/category-settings" element={<CategorySettings />} />
+            <Route path="/nfc-settings" element={<NFCSettings />} />
+            <Route path="/nfc-register" element={<NFCRegister />} />
           </Routes>
         </div>
       </div>
