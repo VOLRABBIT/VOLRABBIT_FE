@@ -1,7 +1,6 @@
 .statusBadge {
   display: flex;
-  width: 34px;
-  height: 16px;
+  height: 24px;
   padding: 4px 10px;
   justify-content: center;
   align-items: center;

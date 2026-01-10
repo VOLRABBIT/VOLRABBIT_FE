@@ -1,0 +1,114 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(125, 167, 219, 0.40) 0%, rgba(241, 169, 211, 0.40) 44.71%, rgba(183, 168, 215, 0.40) 69.23%, rgba(116, 179, 170, 0.40) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.toggleSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 16px;
+  background: transparent;
+  margin-bottom: 24px;
+}
+
+.toggleTitle {
+  color: #000;
+  text-align: center;
+  font-family: NanumSquare;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; 
+  margin: 0;
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.toggleWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  height: 24px;
+}
+
+.toggleInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggleSlider {
+  display: flex;
+  width: 40px;
+  height: 24px;
+  padding: 4px 20px 4px 4px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-shrink: 0;
+  border-radius: 24px;
+  background: var(--text-dark-grey, #7A7A7A);
+  position: relative;
+  transition: background-color 0.3s, padding 0.3s;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.toggleKnob {
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 50%;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 12px rgba(51, 51, 51, 0.15));
+}
+
+.toggleInput:checked + .toggleSlider {
+  background-color: #BB90DD;
+  padding: 4px 4px 4px 20px;
+  justify-content: flex-end;
+}
+
+.descriptionSection {
+  padding: 20px 16px;
+  background: transparent;
+}
+
+.descriptionTitle {
+  color: #000;
+  font-family: NanumSquare;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; 
+  margin: 0 0 12px 0;
+}
+
+.descriptionText {
+  color: #000;
+  font-family: NanumSquare;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 18px; 
+  margin: 0;
+  white-space: pre-line;
+}
+

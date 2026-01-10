@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import styles from "./ResultPage.module.css";
 import StatusBadge from "../../components/StatusBadge/StatusBadge";
@@ -46,15 +47,27 @@ const RECOMMENDATION_BOX_COLORS = {
   "Emotional Adventure": "rgba(253, 160, 105, 0.20)",
 };
 
-const ResultPage = ({ personaData, onStartAdventure }) => {
+const ResultPage = ({ personaData: propPersonaData, buttonImage, onButtonClick }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [expandedStats, setExpandedStats] = useState(false);
+
+  // location state에서 personaData를 가져오거나 props에서 가져옴
+  const personaData = location.state?.personaData || propPersonaData;
+
+  // personaData가 없으면 이전 페이지로 이동
+  if (!personaData) {
+    navigate(-1);
+    return null;
+  }
 
   // 스탯별 분석 섹션 확장/축소 토글
   const toggleStats = () => {
     setExpandedStats(!expandedStats);
   };
 
-  const buttonIcon = BUTTON_ICONS[personaData.id] || robotButtonIcon;
+  // buttonImage가 없으면 기본 버튼 아이콘 사용 (하위 호환성)
+  const buttonIcon = buttonImage || BUTTON_ICONS[personaData.id] || robotButtonIcon;
   const radarChartColor = RADAR_CHART_COLORS[personaData.id] || RADAR_CHART_COLORS["Starter-Freeze Bot"];
 
   // 캐릭터별 사이즈 매핑
@@ -173,12 +186,13 @@ const ResultPage = ({ personaData, onStartAdventure }) => {
         </div>
       </div>
 
-      {/* 하단 버튼 영역 (모험 시작) */}
+      {/* 하단 버튼 영역 */}
       <div className={styles.bottomButtonContainer}>
         <img
           src={buttonIcon}
           className={styles.adventureButton}
-          onClick={onStartAdventure}
+          onClick={onButtonClick || (() => navigate("/all-types"))}
+          alt="버튼"
         />
       </div>
     </div>

@@ -1,0 +1,188 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    rgba(125, 167, 219, 0.4) 0%,
+    rgba(241, 169, 211, 0.4) 44.71%,
+    rgba(183, 168, 215, 0.4) 69.23%,
+    rgba(116, 179, 170, 0.4) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.tabs {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding-left: 12px;
+  position: relative;
+}
+
+.tab {
+  padding: 6px 16px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(187, 144, 221, 0.50);
+  text-align: center;
+  font-family: "NanumSquareOTF", sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: rgba(187, 144, 221, 0.50);
+  cursor: pointer;
+  transition: all 0.2s;
+  
+}
+
+.tabActive {
+  background-color: #BB90DD;
+  color: #52528F;
+  text-align: center;
+  font-family: "NanumSquareOTF", sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.categoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 0;
+  align-items: center;
+}
+
+.categoryItem {
+  display: flex;
+  width: 343px;
+  height: 54px;
+  padding: 0 16px;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px;
+  border: 1px solid #DEDEDE;
+  background: rgba(255, 255, 255, 0.80);
+  box-sizing: border-box;
+}
+
+.categoryName {
+  flex: 1;
+  font-family: "NanumSquare", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000;
+  cursor: pointer;
+  user-select: none;
+}
+
+.deleteButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.deleteIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.addButton {
+  display: flex;
+  width: 343px;
+  height: 26px;
+  padding: 0 16px 0 171px;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px;
+  border: 1px solid #DEDEDE;
+  background: rgba(187, 144, 221, 0.50);
+  cursor: pointer;
+  margin: 12px auto 0 auto;
+  box-sizing: border-box;
+}
+
+.addIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.categoryInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: "NanumSquare", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000;
+  padding: 0;
+}
+
+.categoryInput::placeholder {
+  color: #999;
+}
+
+.addActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.confirmButton,
+.cancelButton {
+  padding: 4px 12px;
+  border: none;
+  border-radius: 4px;
+  font-family: "NanumSquare", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.confirmButton {
+  background: rgba(187, 144, 221, 0.8);
+  color: #fff;
+}
+
+.confirmButton:disabled {
+  background: rgba(187, 144, 221, 0.3);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+}
+
+.cancelButton {
+  background: transparent;
+  color: #999;
+}
+
