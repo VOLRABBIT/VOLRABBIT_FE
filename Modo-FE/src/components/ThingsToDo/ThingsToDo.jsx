@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./ThingsToDo.module.css";
 import checkedIcon from "../../assets/checked.svg";
 import modifyIcon from "../../assets/modify.svg";
 import TaskCompleteModal from "../TaskCompleteModal/TaskCompleteModal";
 
 export default function ThingsToDo({ tasks = [], hideModify = false }) {
+  const navigate = useNavigate();
   const [taskStates, setTaskStates] = useState(() => {
     const initialState = {};
     tasks.forEach((category) => {
@@ -85,11 +87,24 @@ export default function ThingsToDo({ tasks = [], hideModify = false }) {
     }));
   };
 
-  const handleModifyClick = (e, categoryId, taskId) => {
+  const handleModifyClick = (e, categoryId, taskId, task) => {
     e.stopPropagation();
-    const key = `task-${categoryId}-${taskId}`;
-    setEditingTask(key);
-    setEditValue(taskTitles[key] || "");
+    // TaskCreate 페이지로 이동하면서 task 데이터 전달
+    const category = tasks.find((cat) => cat.id === categoryId);
+    const taskData = category?.tasks.find((t) => t.id === taskId);
+    
+    if (taskData) {
+      navigate("/task-create", {
+        state: {
+          isEditMode: true,
+          task: {
+            ...taskData,
+            category: category.category,
+            categoryId: categoryId,
+          },
+        },
+      });
+    }
   };
 
   const handleSaveEdit = (categoryId, taskId) => {
@@ -167,7 +182,7 @@ export default function ThingsToDo({ tasks = [], hideModify = false }) {
                   {!hideModify && (
                     <button
                       className={styles.modifyButton}
-                      onClick={(e) => handleModifyClick(e, category.id, task.id)}
+                      onClick={(e) => handleModifyClick(e, category.id, task.id, task)}
                       disabled={isEditing}
                     >
                       <img src={modifyIcon} alt="수정" />

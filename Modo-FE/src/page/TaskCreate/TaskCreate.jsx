@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import StepCard from "../../components/StepCard/StepCard";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import TaskActionBar from "../../components/TaskActionBar/TaskActionBar";
@@ -10,6 +10,10 @@ import taskFightIcon from "../../assets/task-fight.svg";
 
 export default function TaskCreate() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const editTaskData = location.state?.task;
+  const isEditMode = location.state?.isEditMode || false;
+  
   const [currentStep, setCurrentStep] = useState(1);
   const [taskName, setTaskName] = useState("");
   const [category, setCategory] = useState(null);
@@ -20,6 +24,15 @@ export default function TaskCreate() {
   const [subdivision, setSubdivision] = useState(null);
   const [verification, setVerification] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
+
+  // 수정 모드일 때 기존 데이터 로드
+  useEffect(() => {
+    if (isEditMode && editTaskData) {
+      setTaskName(editTaskData.title || "");
+      setCategory(editTaskData.category || null);
+      // 기존 데이터에 없는 필드들은 기본값 유지
+    }
+  }, [isEditMode, editTaskData]);
 
   // 드롭다운 상태
   const [deadlineDropdownOpen, setDeadlineDropdownOpen] = useState(false);
@@ -191,7 +204,9 @@ export default function TaskCreate() {
           >
             <img src={arrowLeftIcon} alt="뒤로가기" />
           </button>
-          <h1 className={styles.headerTitle}>전투 task 작성하기</h1>
+          <h1 className={styles.headerTitle}>
+            {isEditMode ? "전투 task 수정하기" : "전투 task 작성하기"}
+          </h1>
         </div>
 
         <div className={`${styles.content} ${styles.completeContent}`}>
@@ -227,7 +242,9 @@ export default function TaskCreate() {
                 {deadline === "직접 입력" ? customDeadline : deadline}
               </p>
               <p className={styles.modalTaskInfo}>{verification}</p>
-              <p className={styles.modalQuestion}>전투를 추가하시겠습니까?</p>
+              <p className={styles.modalQuestion}>
+                {isEditMode ? "전투를 수정하시겠습니까?" : "전투를 추가하시겠습니까?"}
+              </p>
             </div>
           </div>
 
@@ -236,7 +253,7 @@ export default function TaskCreate() {
               className={styles.registerButton}
               onClick={handleComplete}
             >
-              추가하기
+              {isEditMode ? "수정하기" : "추가하기"}
             </button>
           </div>
         </div>
@@ -259,7 +276,9 @@ export default function TaskCreate() {
           <button className={styles.backButton} onClick={handleBack}>
             <img src={arrowLeftIcon} alt="뒤로가기" />
           </button>
-          <h1 className={styles.headerTitle}>전투 task 작성하기</h1>
+          <h1 className={styles.headerTitle}>
+            {isEditMode ? "전투 task 수정하기" : "전투 task 작성하기"}
+          </h1>
         </div>
 
         {/* Step 1: 전투 내용 입력하기 */}
