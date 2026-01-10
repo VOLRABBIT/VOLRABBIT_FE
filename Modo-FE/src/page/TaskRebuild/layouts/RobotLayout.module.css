@@ -1,5 +1,5 @@
 .priorityListContainer {
-  margin-top: 0;
+  margin-top: calc(60px);
   margin-left: 21px;
   margin-right: 21px;
   width: calc(100% - 42px);
@@ -42,22 +42,20 @@
 .taskList {
   display: flex;
   flex-direction: column;
-  gap: 12.75px;
-  min-height: 382px;
+  gap: 8px;
 }
 
 .taskItem {
   background: white;
   border: 0.8px solid #e5e7eb;
   border-radius: 17.425px;
-  padding: 0;
   margin-bottom: 0;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1),
     0px 1px 2px -1px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 19.75px 17px;
+  padding: 14px 17px;
   box-sizing: border-box;
   position: relative;
   cursor: move;
@@ -110,7 +108,7 @@
     BlinkMacSystemFont, sans-serif;
   font-weight: 400;
   font-size: 14px;
-  line-height: 25.5px;
+  line-height: 20px;
   color: #1e2939;
   margin: 0;
   flex: 1;
