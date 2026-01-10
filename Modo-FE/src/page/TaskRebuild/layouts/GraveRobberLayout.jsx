@@ -37,7 +37,7 @@ export default function GraveRobberLayout({
         <img src={mapBackground} alt="배경" />
       </div>
 
-      <div className={commonStyles.content}>
+      <div className={`${commonStyles.content} ${styles.content}`}>
         {/* 헤더 */}
         <div className={commonStyles.header}>
           <button className={commonStyles.backButton} onClick={handleBack}>
