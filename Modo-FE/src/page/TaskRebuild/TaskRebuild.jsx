@@ -11,7 +11,7 @@ export default function TaskRebuild() {
   const location = useLocation();
   const { date, character, locationType: locationTypeParam } = useParams();
   
-  const locationType = locationTypeParam || location.state?.locationType;
+  const locationType = locationTypeParam || location.state?.locationType || "gorge";
   
   // 캐릭터 경로를 타입으로 변환
   const getCharacterType = () => {
@@ -95,6 +95,7 @@ export default function TaskRebuild() {
   });
   const [battleStartModalOpen, setBattleStartModalOpen] = useState(false);
   const [selectedBattleTask, setSelectedBattleTask] = useState(null);
+  const [timerFinishedModalOpen, setTimerFinishedModalOpen] = useState(false);
 
   // 타이머
   const TOTAL_TIMER_SECONDS = 25 * 60;
@@ -112,6 +113,11 @@ export default function TaskRebuild() {
       setTimerSeconds((prev) => {
         if (prev <= 1) {
           clearInterval(intervalId);
+          setIsTimerRunning(false);
+          // 타이머 종료 시 모달 표시
+          if (isGraveRobber) {
+            setTimerFinishedModalOpen(true);
+          }
           return 0;
         }
         return prev - 1;
@@ -120,7 +126,7 @@ export default function TaskRebuild() {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [isTimerRunning]);
+  }, [isTimerRunning, isGraveRobber]);
 
   const handleCardClick = () => {
     setBattleStartModalOpen(true);
@@ -251,6 +257,12 @@ export default function TaskRebuild() {
   const activeTasks = tasks.filter((task) => !task.isCompleted);
   const currentTask = selectedBattleTask || null;
 
+  const handleTimerFinishedConfirm = () => {
+    // 타이머 리셋
+    setTimerSeconds(TOTAL_TIMER_SECONDS);
+    setIsTimerRunning(false);
+  };
+
   // 캐릭터별 레이아웃 렌더링
   if (isGraveRobber) {
     return (
@@ -275,6 +287,9 @@ export default function TaskRebuild() {
         setBattleStartModalOpen={setBattleStartModalOpen}
         handleBattleStart={handleBattleStart}
         locationType={locationType}
+        timerFinishedModalOpen={timerFinishedModalOpen}
+        setTimerFinishedModalOpen={setTimerFinishedModalOpen}
+        handleTimerFinishedConfirm={handleTimerFinishedConfirm}
       />
     );
   }

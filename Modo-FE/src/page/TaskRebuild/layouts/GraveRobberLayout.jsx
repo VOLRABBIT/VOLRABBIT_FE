@@ -7,6 +7,7 @@ import pauseIcon from "../../../assets/pause.svg";
 import TaskActionBar from "../../../components/TaskActionBar/TaskActionBar";
 import TaskCompleteModal from "../../../components/TaskCompleteModal/TaskCompleteModal";
 import BattleStartModal from "../../../components/BattleStartModal/BattleStartModal";
+import TimerFinishedModal from "../../../components/TimerFinishedModal/TimerFinishedModal";
 import { getLocationBackground, getLocationButtonColor } from "../../../utils/locationTheme";
 
 export default function GraveRobberLayout({
@@ -30,6 +31,9 @@ export default function GraveRobberLayout({
   setBattleStartModalOpen,
   handleBattleStart,
   locationType = "gorge",
+  timerFinishedModalOpen,
+  setTimerFinishedModalOpen,
+  handleTimerFinishedConfirm,
 }) {
   const mapBackground = getLocationBackground(locationType);
   const buttonColor = getLocationButtonColor(locationType);
@@ -140,6 +144,16 @@ export default function GraveRobberLayout({
           tasks={activeTasks}
           onClose={() => setBattleStartModalOpen(false)}
           onStart={handleBattleStart}
+          locationType={locationType}
+        />
+      )}
+
+      {/* 타이머 종료 모달 */}
+      {timerFinishedModalOpen && (
+        <TimerFinishedModal
+          taskTitle={currentTask?.title}
+          onClose={() => setTimerFinishedModalOpen(false)}
+          onConfirm={handleTimerFinishedConfirm}
           locationType={locationType}
         />
       )}
