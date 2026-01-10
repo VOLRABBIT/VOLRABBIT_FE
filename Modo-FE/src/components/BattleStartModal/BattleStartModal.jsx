@@ -1,12 +1,15 @@
 import { useState } from "react";
 import styles from "./BattleStartModal.module.css";
+import { getLocationButtonColor } from "../../utils/locationTheme";
 
 export default function BattleStartModal({
   tasks = [],
   onClose,
   onStart,
+  locationType = "dungeon",
 }) {
   const [selectedTaskId, setSelectedTaskId] = useState(tasks.length > 0 ? tasks[0].id : null);
+  const buttonColor = getLocationButtonColor(locationType);
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -49,9 +52,18 @@ export default function BattleStartModal({
                 key={task.id}
                 className={`${styles.taskButton} ${isSelected ? styles.taskButtonSelected : ""}`}
                 onClick={() => setSelectedTaskId(task.id)}
-                style={{ top: `${topPosition}px` }}
+                style={{ 
+                  top: `${topPosition}px`,
+                  borderColor: isSelected ? buttonColor : 'transparent'
+                }}
               >
-                <div className={`${styles.radioButton} ${isSelected ? styles.radioButtonSelected : ""}`}>
+                <div 
+                  className={`${styles.radioButton} ${isSelected ? styles.radioButtonSelected : ""}`}
+                  style={{
+                    backgroundColor: isSelected ? buttonColor : 'white',
+                    borderColor: isSelected ? buttonColor : '#dadada'
+                  }}
+                >
                   {isSelected && <div className={styles.radioButtonInner} />}
                 </div>
                 <div className={styles.taskText}>
@@ -64,10 +76,21 @@ export default function BattleStartModal({
 
         {/* 버튼 */}
         <div className={styles.footer}>
-          <button className={styles.startButton} onClick={handleStart}>
+          <button 
+            className={styles.startButton} 
+            onClick={handleStart}
+            style={{ backgroundColor: buttonColor }}
+          >
             <span className={styles.buttonText}>시작하기</span>
           </button>
-          <button className={styles.cancelButton} onClick={handleCancel}>
+          <button 
+            className={styles.cancelButton} 
+            onClick={handleCancel}
+            style={{ 
+              color: buttonColor,
+              borderColor: `${buttonColor}99`
+            }}
+          >
             <span className={styles.buttonText}>취소</span>
           </button>
         </div>

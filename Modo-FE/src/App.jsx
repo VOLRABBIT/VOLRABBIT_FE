@@ -51,6 +51,7 @@ export default function App() {
             <Route path="/map" element={<Map />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/location/:type" element={<LocationIntro />} />
+            <Route path="/fight/:locationType" element={<Fight />} />
             <Route path="/fight" element={<Fight />} />
             <Route path="/guild" element={<Guild />} />
             <Route path="/guild/:id" element={<GuildDetail />} />
@@ -65,8 +66,8 @@ export default function App() {
             <Route path="/task-photo-auth" element={<TaskPhotoAuth />} />
             <Route path="/task-create" element={<TaskCreate />} />
             <Route path="/task-detail/:date" element={<TaskDetail />} />
-            <Route path="/task-rebuild/:character/:date" element={<TaskRebuild />} />
-            <Route path="/task-rebuild/:date" element={<TaskRebuild />} />
+            <Route path="/task-rebuild/:character/:date/:locationType?" element={<TaskRebuild />} />
+            <Route path="/task-rebuild/:date/:locationType?" element={<TaskRebuild />} />
             <Route path="/pause" element={<Pause />} />
             <Route path="/report" element={<Report />} />
             <Route path="/all-types" element={<AllTypesPage />} />

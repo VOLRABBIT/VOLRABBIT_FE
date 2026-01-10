@@ -3,12 +3,16 @@ import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./TaskPhotoAuth.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import uploadIcon from "../../assets/map/upload.svg";
-import mapBackground from "../../assets/map/MAP-1.png";
+import { getLocationBackground, getLocationButtonColor, getLocationTitle } from "../../utils/locationTheme";
 
 export default function TaskPhotoAuth() {
   const navigate = useNavigate();
   const location = useLocation();
   const taskTitle = location.state?.taskTitle || "";
+  const locationType = location.state?.locationType || "dungeon";
+  const mapBackground = getLocationBackground(locationType);
+  const buttonColor = getLocationButtonColor(locationType);
+  const locationTitle = getLocationTitle(locationType);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -51,7 +55,7 @@ export default function TaskPhotoAuth() {
           <button className={styles.backButton} onClick={handleBack}>
             <img src={arrowLeftIcon} alt="뒤로가기" />
           </button>
-          <h1 className={styles.headerTitle}>환각의 던전</h1>
+          <h1 className={styles.headerTitle}>{locationTitle}</h1>
         </div>
 
         {/* 사진 인증하기 제목 */}
@@ -97,6 +101,7 @@ export default function TaskPhotoAuth() {
           className={styles.authButton}
           onClick={handleAuthClick}
           disabled={!selectedImage}
+          style={{ backgroundColor: buttonColor }}
         >
           인증하기
         </button>

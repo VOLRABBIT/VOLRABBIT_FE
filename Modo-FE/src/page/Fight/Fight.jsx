@@ -1,14 +1,21 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import ThingsToDo from "../../components/ThingsToDo/ThingsToDo";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import addIcon from "../../assets/map/add.svg";
-import mapBackground from "../../assets/map/MAP-1.png";
 import { FIGHT_TASK_DATA } from "../../data/fightTaskData";
+import { getLocationBackground, getLocationTitle } from "../../utils/locationTheme";
 import styles from "./Fight.module.css";
 
 export default function Fight() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { locationType } = useParams();
+  
+  // URL 파라미터 또는 location state에서 locationType 가져오기
+  const currentLocationType = locationType || location.state?.locationType || "gorge";
+  const mapBackground = getLocationBackground(currentLocationType);
+  const locationTitle = getLocationTitle(currentLocationType);
 
   const handleBack = () => {
     navigate(-1);
@@ -17,7 +24,9 @@ export default function Fight() {
   const handleDateClick = (day) => {
     const pad = (n) => String(n).padStart(2, "0");
     const dateParam = `${year}-${pad(month)}-${pad(day)}`;
-    navigate(`/task-detail/${dateParam}`);
+    navigate(`/task-detail/${dateParam}`, {
+      state: { locationType: currentLocationType }
+    });
   };
 
   const now = new Date();
@@ -70,7 +79,7 @@ export default function Fight() {
           <button className={styles.backButton} onClick={handleBack}>
             <img src={arrowLeftIcon} alt="뒤로가기" />
           </button>
-          <h1 className={styles.headerTitle}>혼돈의 협곡</h1>
+          <h1 className={styles.headerTitle}>{locationTitle}</h1>
         </div>
 
         {/* 월/년 표시 */}
@@ -108,14 +117,16 @@ export default function Fight() {
         </div>
 
         {/* 전투 Task 작성하기 */}
-        <button className={styles.taskPrompt} onClick={() => navigate("/task-create")}>
+        <button className={styles.taskPrompt} onClick={() => navigate("/task-create", {
+          state: { locationType: currentLocationType }
+        })}>
           <span>전투 Task 작성하기</span>
           <img src={addIcon} alt="추가" className={styles.plusIcon} />
         </button>
 
         {/* 전투 Task 목록 */}
         <div className={styles.taskListContainer}>
-          <ThingsToDo tasks={FIGHT_TASK_DATA} />
+          <ThingsToDo tasks={FIGHT_TASK_DATA} locationType={currentLocationType} />
         </div>
       </div>
       <Navbar activeItem="fight" />

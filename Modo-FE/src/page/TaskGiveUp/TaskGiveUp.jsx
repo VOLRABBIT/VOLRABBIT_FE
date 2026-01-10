@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./TaskGiveUp.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
-import mapBackground from "../../assets/map/MAP-1.png";
+import { getLocationBackground, getLocationButtonColor } from "../../utils/locationTheme";
 import TaskGiveUpConfirmModal from "../../components/TaskGiveUpConfirmModal/TaskGiveUpConfirmModal";
 import TaskGiveUpRetryModal from "../../components/TaskGiveUpRetryModal/TaskGiveUpRetryModal";
 
@@ -19,6 +19,9 @@ export default function TaskGiveUp() {
   const navigate = useNavigate();
   const location = useLocation();
   const taskTitle = location.state?.taskTitle || "";
+  const locationType = location.state?.locationType || "dungeon";
+  const mapBackground = getLocationBackground(locationType);
+  const buttonColor = getLocationButtonColor(locationType);
 
   const [selectedReason, setSelectedReason] = useState(null);
   const [customReason, setCustomReason] = useState("");
@@ -156,6 +159,7 @@ export default function TaskGiveUp() {
               !selectedReason ||
               (selectedReason === "입력하기" && !customReason.trim())
             }
+            style={{ backgroundColor: buttonColor }}
           >
             포기하기
           </button>
@@ -176,6 +180,7 @@ export default function TaskGiveUp() {
           onClose={handleRetryModalClose}
           onRetry={handleRetryModalRetry}
           onGiveUp={handleRetryModalGiveUp}
+          locationType={locationType}
         />
       )}
     </div>

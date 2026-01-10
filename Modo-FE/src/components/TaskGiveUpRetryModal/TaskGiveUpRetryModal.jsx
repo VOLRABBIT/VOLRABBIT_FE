@@ -1,7 +1,9 @@
 import styles from "./TaskGiveUpRetryModal.module.css";
 import closeIcon from "../../assets/icon/close.svg";
+import { getLocationButtonColor } from "../../utils/locationTheme";
 
-export default function TaskGiveUpRetryModal({ onClose, onRetry, onGiveUp }) {
+export default function TaskGiveUpRetryModal({ onClose, onRetry, onGiveUp, locationType = "dungeon" }) {
+  const buttonColor = getLocationButtonColor(locationType);
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -41,7 +43,11 @@ export default function TaskGiveUpRetryModal({ onClose, onRetry, onGiveUp }) {
         </div>
         <div className={styles.footer}>
           <div className={styles.actions}>
-            <button className={styles.confirmButton} onClick={handleRetry}>
+            <button 
+              className={styles.confirmButton} 
+              onClick={handleRetry}
+              style={{ backgroundColor: buttonColor }}
+            >
               내일 진행하기
             </button>
             <button className={styles.cancelButton} onClick={handleGiveUp}>

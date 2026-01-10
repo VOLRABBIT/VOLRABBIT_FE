@@ -229,7 +229,7 @@
 
 /* StepCard stepNumber 색상 오버라이드 */
 .container :global(.stepCard .stepNumber) {
-  background-color: #3e6f77 !important;
+  background-color: var(--button-color, #3e6f77) !important;
 }
 
 /* StepCard 높이 오버라이드 */
@@ -426,7 +426,7 @@
     BlinkMacSystemFont, sans-serif;
   font-weight: 700;
   font-size: 14px;
-  color: #3e6f77;
+  color: var(--button-color, #3e6f77);
   text-align: center;
   margin: 0;
   margin-top: 8px;

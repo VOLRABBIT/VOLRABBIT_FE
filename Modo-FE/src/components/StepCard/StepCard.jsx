@@ -9,6 +9,7 @@ export default function StepCard({
   summaryValue,
   stepClass,
   children,
+  buttonColor,
 }) {
   const stepClassNames = stepClass
     ? stepClass
@@ -23,7 +24,12 @@ export default function StepCard({
     <div className={`${styles.stepCard} ${stepClassNames} ${summaryClass}`}>
       {!isCompleted && (
         <div className={styles.stepHeader}>
-          <div className={styles.stepNumber}>{stepNumber}</div>
+          <div 
+            className={styles.stepNumber}
+            style={buttonColor ? { backgroundColor: buttonColor } : {}}
+          >
+            {stepNumber}
+          </div>
           <div className={styles.stepInfo}>
             <h3 className={styles.stepTitle}>{title}</h3>
             <p className={styles.stepDescription}>{description}</p>
@@ -32,7 +38,12 @@ export default function StepCard({
       )}
       {isCompleted ? (
         <div className={styles.stepSummary}>
-          <div className={styles.stepNumber}>{stepNumber}</div>
+          <div 
+            className={styles.stepNumber}
+            style={buttonColor ? { backgroundColor: buttonColor } : {}}
+          >
+            {stepNumber}
+          </div>
           <p className={styles.stepSummaryValue}>{summaryValue}</p>
         </div>
       ) : (

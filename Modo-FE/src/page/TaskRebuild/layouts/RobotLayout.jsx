@@ -1,10 +1,10 @@
 import commonStyles from "../TaskRebuild.module.css";
 import styles from "./RobotLayout.module.css";
 import arrowLeftIcon from "../../../assets/arrow-left.svg";
-import mapBackground from "../../../assets/map/MAP-1.png";
 import TaskActionBar from "../../../components/TaskActionBar/TaskActionBar";
 import TaskCompleteModal from "../../../components/TaskCompleteModal/TaskCompleteModal";
 import TaskItem from "../TaskItem";
+import { getLocationBackground } from "../../../utils/locationTheme";
 
 export default function RobotLayout({
   formattedDate,
@@ -21,7 +21,9 @@ export default function RobotLayout({
   modalState,
   handleModalClose,
   handleModalConfirm,
+  locationType = "gorge",
 }) {
+  const mapBackground = getLocationBackground(locationType);
   return (
     <div className={commonStyles.container}>
       {/* 배경 이미지 */}
@@ -83,6 +85,7 @@ export default function RobotLayout({
           taskTitle={modalState.taskTitle}
           onClose={handleModalClose}
           onConfirm={handleModalConfirm}
+          locationType={locationType}
         />
       )}
     </div>

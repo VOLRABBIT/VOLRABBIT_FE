@@ -5,14 +5,18 @@ import Dropdown from "../../components/Dropdown/Dropdown";
 import TaskActionBar from "../../components/TaskActionBar/TaskActionBar";
 import styles from "./TaskCreate.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
-import mapBackground from "../../assets/map/MAP-1.png";
 import taskFightIcon from "../../assets/task-fight.svg";
+import { getLocationBackground, getLocationButtonColor } from "../../utils/locationTheme";
 
 export default function TaskCreate() {
   const navigate = useNavigate();
   const location = useLocation();
   const editTaskData = location.state?.task;
   const isEditMode = location.state?.isEditMode || false;
+  
+  const locationType = location.state?.locationType;
+  const mapBackground = getLocationBackground(locationType);
+  const buttonColor = getLocationButtonColor(locationType);
   
   const [currentStep, setCurrentStep] = useState(1);
   const [taskName, setTaskName] = useState("");
@@ -149,7 +153,7 @@ export default function TaskCreate() {
       verification,
       selectedTag,
     });
-    navigate(-1);
+    navigate(-1, { state: { locationType } });
   };
 
   const canProceedStep1 = taskName.length > 0;
@@ -219,6 +223,7 @@ export default function TaskCreate() {
                   isCompleted={true}
                   summaryValue={getStepSummary(step)}
                   stepClass="summaryMode"
+                  buttonColor={buttonColor}
                 />
               ))
             : [1, 2, 3, 4, 5, 6].map((step) => (
@@ -228,6 +233,7 @@ export default function TaskCreate() {
                   isCompleted={true}
                   summaryValue={getStepSummary(step)}
                   stepClass="summaryMode"
+                  buttonColor={buttonColor}
                 />
               ))}
 
@@ -252,6 +258,7 @@ export default function TaskCreate() {
             <button
               className={styles.registerButton}
               onClick={handleComplete}
+              style={{ backgroundColor: buttonColor }}
             >
               {isEditMode ? "수정하기" : "추가하기"}
             </button>
@@ -264,7 +271,7 @@ export default function TaskCreate() {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ '--button-color': buttonColor }}>
       {/* 배경 이미지 */}
       <div className={styles.backgroundImage}>
         <img src={mapBackground} alt="배경" />
@@ -290,6 +297,7 @@ export default function TaskCreate() {
           isActive={isStepActive(1)}
           summaryValue={getStepSummary(1)}
           stepClass="step1"
+          buttonColor={buttonColor}
         >
           <div className={styles.inputWrapper}>
             <input
@@ -305,6 +313,7 @@ export default function TaskCreate() {
             className={`${styles.nextButton} ${!canProceedStep1 || !isStepActive(1) ? styles.nextButtonDisabled : ""}`}
             onClick={() => handleNext(1)}
             disabled={!canProceedStep1 || !isStepActive(1)}
+            style={{ backgroundColor: buttonColor }}
           >
             다음
           </button>
@@ -320,22 +329,55 @@ export default function TaskCreate() {
             isActive={isStepActive(2)}
             summaryValue={getStepSummary(2)}
             stepClass="step2"
+            buttonColor={buttonColor}
           >
           <div className={styles.categoryTags}>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                className={`${styles.categoryTag} ${category === cat ? styles.categoryTagSelected : ""}`}
-                onClick={() => handleCategorySelect(cat)}
-              >
-                {cat}
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const isSelected = category === cat;
+              let bgColor, textColor;
+              
+              if (locationType === "gorge") {
+                // 혼돈의 협곡
+                bgColor = isSelected ? "#D6999AB2" : "#D6999A4D";
+                textColor = isSelected ? buttonColor : `${buttonColor}B3`;
+              } else if (locationType === "dungeon") {
+                // 환각의 던전
+                bgColor = isSelected ? "#74B3AA80" : "#B3CECA80";
+                textColor = isSelected ? buttonColor : "#7CA7A1";
+              } else if (locationType === "castle") {
+                // 지연의 성
+                bgColor = isSelected ? "#404062B2" : "#4040624D";
+                textColor = isSelected ? buttonColor : "#404062B2";
+              } else if (locationType === "room") {
+                // 환영의 방
+                bgColor = isSelected ? "#3E6F7799" : "#3E6F774D";
+                textColor = isSelected ? buttonColor : "#3E6F7799";
+              } else {
+                // 기본값
+                bgColor = isSelected ? `${buttonColor}99` : `${buttonColor}4D`;
+                textColor = isSelected ? buttonColor : `${buttonColor}99`;
+              }
+              
+              return (
+                <button
+                  key={cat}
+                  className={`${styles.categoryTag} ${isSelected ? styles.categoryTagSelected : ""}`}
+                  onClick={() => handleCategorySelect(cat)}
+                  style={{
+                    backgroundColor: bgColor,
+                    color: textColor
+                  }}
+                >
+                  {cat}
+                </button>
+              );
+            })}
           </div>
           <button
             className={`${styles.nextButton} ${!canProceedStep2 || !isStepActive(2) ? styles.nextButtonDisabled : ""}`}
             onClick={() => handleNext(2)}
             disabled={!canProceedStep2 || !isStepActive(2)}
+            style={{ backgroundColor: buttonColor }}
           >
             다음
           </button>
@@ -352,6 +394,7 @@ export default function TaskCreate() {
             isActive={isStepActive(3)}
             summaryValue={getStepSummary(3)}
             stepClass={`step3 ${deadline === "직접 입력" && !isStepCompleted(3) ? "step3WithCalendar" : ""}`}
+            buttonColor={buttonColor}
           >
             <Dropdown
               placeholder="마감 기한"
@@ -411,6 +454,7 @@ export default function TaskCreate() {
               className={`${styles.nextButton} ${!canProceedStep3 || !isStepActive(3) ? styles.nextButtonDisabled : ""}`}
               onClick={() => handleNext(3)}
               disabled={!canProceedStep3 || !isStepActive(3)}
+              style={{ backgroundColor: buttonColor }}
             >
               다음
             </button>
@@ -427,6 +471,7 @@ export default function TaskCreate() {
             isActive={isStepActive(4)}
             summaryValue={getStepSummary(4)}
             stepClass={`step4 ${repeatDropdownOpen && !isStepCompleted(4) ? "step4WithDropdown" : ""}`}
+            buttonColor={buttonColor}
           >
             <Dropdown
               placeholder="반복 주기"
@@ -445,6 +490,7 @@ export default function TaskCreate() {
               className={`${styles.nextButton} ${!canProceedStep4 || !isStepActive(4) ? styles.nextButtonDisabled : ""}`}
               onClick={() => handleNext(4)}
               disabled={!canProceedStep4 || !isStepActive(4)}
+              style={{ backgroundColor: buttonColor }}
             >
               다음
             </button>
@@ -461,6 +507,7 @@ export default function TaskCreate() {
             isActive={isStepActive(5)}
             summaryValue={getStepSummary(5)}
             stepClass={`step5 ${subdivisionDropdownOpen && !isStepCompleted(5) ? "step5WithDropdown" : ""}`}
+            buttonColor={buttonColor}
           >
             <Dropdown
               placeholder="단계별 세분화"
@@ -479,6 +526,7 @@ export default function TaskCreate() {
               className={`${styles.nextButton} ${!canProceedStep5 || !isStepActive(5) ? styles.nextButtonDisabled : ""}`}
               onClick={() => handleNext(5)}
               disabled={!canProceedStep5 || !isStepActive(5)}
+              style={{ backgroundColor: buttonColor }}
             >
               다음
             </button>
@@ -495,22 +543,55 @@ export default function TaskCreate() {
             isActive={isStepActive(6)}
             summaryValue={getStepSummary(6)}
             stepClass="step6"
+            buttonColor={buttonColor}
           >
             <div className={styles.verificationTags}>
-              {verificationOptions.map((option) => (
-                <button
-                  key={option}
-                  className={`${styles.verificationTag} ${verification === option ? styles.verificationTagSelected : ""}`}
-                  onClick={() => handleVerificationSelect(option)}
-                >
-                  {option}
-                </button>
-              ))}
+              {verificationOptions.map((option) => {
+                const isSelected = verification === option;
+                let bgColor, textColor;
+                
+                if (locationType === "gorge") {
+                  // 혼돈의 협곡
+                  bgColor = isSelected ? "#D6999AB2" : "#D6999A4D";
+                  textColor = isSelected ? buttonColor : `${buttonColor}B3`;
+                } else if (locationType === "dungeon") {
+                  // 환각의 던전
+                  bgColor = isSelected ? "#74B3AA80" : "#B3CECA80";
+                  textColor = isSelected ? buttonColor : "#7CA7A1";
+                } else if (locationType === "castle") {
+                  // 지연의 성
+                  bgColor = isSelected ? "#404062B2" : "#4040624D";
+                  textColor = isSelected ? buttonColor : "#404062B2";
+                } else if (locationType === "room") {
+                  // 환영의 방
+                  bgColor = isSelected ? "#3E6F7799" : "#3E6F774D";
+                  textColor = isSelected ? buttonColor : "#3E6F7799";
+                } else {
+                  // 기본값
+                  bgColor = isSelected ? `${buttonColor}99` : `${buttonColor}4D`;
+                  textColor = isSelected ? buttonColor : `${buttonColor}99`;
+                }
+                
+                return (
+                  <button
+                    key={option}
+                    className={`${styles.verificationTag} ${isSelected ? styles.verificationTagSelected : ""}`}
+                    onClick={() => handleVerificationSelect(option)}
+                    style={{
+                      backgroundColor: bgColor,
+                      color: textColor
+                    }}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
             </div>
             <button
               className={`${styles.nextButton} ${!canProceedStep6 || !isStepActive(6) ? styles.nextButtonDisabled : ""}`}
               onClick={() => handleNext(6)}
               disabled={!canProceedStep6 || !isStepActive(6)}
+              style={{ backgroundColor: buttonColor }}
             >
               {verification === "태깅" ? "다음" : "완료"}
             </button>
@@ -527,19 +608,51 @@ export default function TaskCreate() {
             isActive={isStepActive(7)}
             summaryValue={getStepSummary(7)}
             stepClass="step7"
+            buttonColor={buttonColor}
           >
             <div className={styles.verificationTags}>
-              {tagOptions.map((tag) => (
-                <button
-                  key={tag}
-                  className={`${styles.verificationTag} ${
-                    selectedTag === tag ? styles.verificationTagSelected : ""
-                  }`}
-                  onClick={() => handleTagSelect(tag)}
-                >
-                  {tag}
-                </button>
-              ))}
+              {tagOptions.map((tag) => {
+                const isSelected = selectedTag === tag;
+                let bgColor, textColor;
+                
+                if (locationType === "gorge") {
+                  // 혼돈의 협곡
+                  bgColor = isSelected ? "#D6999AB2" : "#D6999A4D";
+                  textColor = isSelected ? buttonColor : `${buttonColor}B3`;
+                } else if (locationType === "dungeon") {
+                  // 환각의 던전
+                  bgColor = isSelected ? "#74B3AA80" : "#B3CECA80";
+                  textColor = isSelected ? buttonColor : "#7CA7A1";
+                } else if (locationType === "castle") {
+                  // 지연의 성
+                  bgColor = isSelected ? "#404062B2" : "#4040624D";
+                  textColor = isSelected ? buttonColor : "#404062B2";
+                } else if (locationType === "room") {
+                  // 환영의 방
+                  bgColor = isSelected ? "#3E6F7799" : "#3E6F774D";
+                  textColor = isSelected ? buttonColor : "#3E6F7799";
+                } else {
+                  // 기본값
+                  bgColor = isSelected ? `${buttonColor}99` : `${buttonColor}4D`;
+                  textColor = isSelected ? buttonColor : `${buttonColor}99`;
+                }
+                
+                return (
+                  <button
+                    key={tag}
+                    className={`${styles.verificationTag} ${
+                      isSelected ? styles.verificationTagSelected : ""
+                    }`}
+                    onClick={() => handleTagSelect(tag)}
+                    style={{
+                      backgroundColor: bgColor,
+                      color: textColor
+                    }}
+                  >
+                    {tag}
+                  </button>
+                );
+              })}
             </div>
             <button
               className={`${styles.nextButton} ${
@@ -549,6 +662,7 @@ export default function TaskCreate() {
               }`}
               onClick={() => handleNext(7)}
               disabled={!canProceedStep7 || !isStepActive(7)}
+              style={{ backgroundColor: buttonColor }}
             >
               완료
             </button>

@@ -1,13 +1,13 @@
 import commonStyles from "../TaskRebuild.module.css";
 import styles from "./GraveRobberLayout.module.css";
 import arrowLeftIcon from "../../../assets/arrow-left.svg";
-import mapBackground from "../../../assets/map/MAP-1.png";
 import checkedIcon from "../../../assets/checked.svg";
 import playIcon from "../../../assets/play.svg";
 import pauseIcon from "../../../assets/pause.svg";
 import TaskActionBar from "../../../components/TaskActionBar/TaskActionBar";
 import TaskCompleteModal from "../../../components/TaskCompleteModal/TaskCompleteModal";
 import BattleStartModal from "../../../components/BattleStartModal/BattleStartModal";
+import { getLocationBackground, getLocationButtonColor } from "../../../utils/locationTheme";
 
 export default function GraveRobberLayout({
   formattedDate,
@@ -29,7 +29,10 @@ export default function GraveRobberLayout({
   battleStartModalOpen,
   setBattleStartModalOpen,
   handleBattleStart,
+  locationType = "gorge",
 }) {
+  const mapBackground = getLocationBackground(locationType);
+  const buttonColor = getLocationButtonColor(locationType);
   return (
     <div className={commonStyles.container}>
       {/* 배경 이미지 */}
@@ -60,14 +63,18 @@ export default function GraveRobberLayout({
                 cy="114"
                 r={TIMER_RADIUS}
                 fill="none"
-                stroke="#40625d"
+                stroke={buttonColor}
                 strokeWidth="12"
                 strokeDasharray={`${(timerSeconds / TOTAL_TIMER_SECONDS) * TIMER_CIRCUMFERENCE} ${TIMER_CIRCUMFERENCE}`}
                 strokeLinecap="round"
               />
             </svg>
             <div className={styles.timerText}>{formatTime(timerSeconds)}</div>
-            <button className={styles.playButton} onClick={handleTimerToggle}>
+            <button 
+              className={styles.playButton} 
+              onClick={handleTimerToggle}
+              style={{ backgroundColor: buttonColor }}
+            >
               <img
                 src={isTimerRunning ? pauseIcon : playIcon}
                 alt={isTimerRunning ? "일시정지" : "재생"}
@@ -123,6 +130,7 @@ export default function GraveRobberLayout({
           taskTitle={modalState.taskTitle}
           onClose={handleModalClose}
           onConfirm={handleModalConfirm}
+          locationType={locationType}
         />
       )}
 
@@ -132,6 +140,7 @@ export default function GraveRobberLayout({
           tasks={activeTasks}
           onClose={() => setBattleStartModalOpen(false)}
           onStart={handleBattleStart}
+          locationType={locationType}
         />
       )}
     </div>

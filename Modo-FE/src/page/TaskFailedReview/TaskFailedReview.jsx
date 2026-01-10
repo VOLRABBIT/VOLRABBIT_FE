@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./TaskFailedReview.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
-import mapBackground from "../../assets/map/MAP-1.png";
+import { getLocationBackground, getLocationButtonColor } from "../../utils/locationTheme";
 
 const FAILURE_REASONS = [
   "뭐부터 해야 할지 모르겠어요.",
@@ -129,6 +129,7 @@ export default function TaskFailedReview() {
               !selectedReason ||
               (selectedReason === "입력하기" && !customReason.trim())
             }
+            style={{ backgroundColor: buttonColor }}
           >
             저장
           </button>

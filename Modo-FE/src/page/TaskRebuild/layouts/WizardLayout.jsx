@@ -1,12 +1,12 @@
 import commonStyles from "../TaskRebuild.module.css";
 import styles from "./WizardLayout.module.css";
 import arrowLeftIcon from "../../../assets/arrow-left.svg";
-import mapBackground from "../../../assets/map/MAP-1.png";
 import playIcon from "../../../assets/play.svg";
 import pauseIcon from "../../../assets/pause.svg";
 import TaskActionBar from "../../../components/TaskActionBar/TaskActionBar";
 import TaskCompleteModal from "../../../components/TaskCompleteModal/TaskCompleteModal";
 import BattleStartModal from "../../../components/BattleStartModal/BattleStartModal";
+import { getLocationBackground, getLocationButtonColor } from "../../../utils/locationTheme";
 
 export default function WizardLayout({
   formattedDate,
@@ -25,7 +25,10 @@ export default function WizardLayout({
   handleBattleStart,
   elapsedSeconds,
   formatElapsedTime,
+  locationType = "gorge",
 }) {
+  const mapBackground = getLocationBackground(locationType);
+  const buttonColor = getLocationButtonColor(locationType);
   const timelineLabels = ["00", "02", "04", "06", "08", "10", "12", "14", "16", "18", "20", "22", "24"];
   const lineTop = 42;
   const labelGap = 36;
@@ -150,8 +153,14 @@ export default function WizardLayout({
           {/* 타임라인 카드 */}
           <div className={styles.timelineCard}>
             <div className={styles.timelineWrapper}>
-              <div className={styles.timelineLine} />
-              <div className={styles.timelineLabels}>
+              <div 
+                className={styles.timelineLine}
+                style={{ backgroundColor: buttonColor }}
+              />
+              <div 
+                className={styles.timelineLabels}
+                style={{ color: buttonColor }}
+              >
                 {timelineLabels.map((label) => (
                   <span key={label}>{label}</span>
                 ))}
@@ -168,8 +177,17 @@ export default function WizardLayout({
                         height: `${task.height}px`
                       }}
                     >
-                      <div className={styles.timelineDot} />
-                      <div className={styles.timelineTaskBox} style={{ height: `${task.height}px` }}>
+                      <div 
+                        className={styles.timelineDot}
+                        style={{ backgroundColor: buttonColor }}
+                      />
+                      <div 
+                        className={styles.timelineTaskBox} 
+                        style={{ 
+                          height: `${task.height}px`,
+                          borderColor: buttonColor
+                        }}
+                      >
                         <p className={styles.timelineTaskTitle}>{task.title}</p>
                       </div>
                     </div>
@@ -199,7 +217,11 @@ export default function WizardLayout({
                 </div>
               )}
             </div>
-            <button className={styles.wizardPlayButton} onClick={handleTimerToggle}>
+            <button 
+              className={styles.wizardPlayButton} 
+              onClick={handleTimerToggle}
+              style={{ backgroundColor: buttonColor }}
+            >
               <img
                 src={isTimerRunning ? pauseIcon : playIcon}
                 alt={isTimerRunning ? "일시정지" : "재생"}
@@ -217,6 +239,7 @@ export default function WizardLayout({
           taskTitle={modalState.taskTitle}
           onClose={handleModalClose}
           onConfirm={handleModalConfirm}
+          locationType={locationType}
         />
       )}
 
@@ -225,6 +248,7 @@ export default function WizardLayout({
           tasks={activeTasks}
           onClose={() => setBattleStartModalOpen(false)}
           onStart={handleBattleStart}
+          locationType={locationType}
         />
       )}
     </div>

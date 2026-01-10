@@ -1,14 +1,18 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import TaskActionBar from "../../components/TaskActionBar/TaskActionBar";
 import ThingsToDo from "../../components/ThingsToDo/ThingsToDo";
 import styles from "./TaskDetail.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
-import mapBackground from "../../assets/map/MAP-1.png";
 import { getTasksByDate } from "../../data/fightTaskData";
+import { getLocationBackground } from "../../utils/locationTheme";
 
 export default function TaskDetail() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { date } = useParams();
+  
+  const locationType = location.state?.locationType;
+  const mapBackground = getLocationBackground(locationType);
 
   const getTodayDateString = () => {
     const today = new Date();
@@ -25,7 +29,7 @@ export default function TaskDetail() {
   const tasksForDate = getTasksByDate(dateStr);
 
   const handleBack = () => {
-    navigate(-1);
+    navigate(-1, { state: { locationType } });
   };
 
   return (
@@ -50,7 +54,7 @@ export default function TaskDetail() {
         {/* Task 목록 */}
         <div className={styles.taskListContainer}>
           {tasksForDate.length > 0 ? (
-            <ThingsToDo tasks={tasksForDate} hideModify={true} />
+            <ThingsToDo tasks={tasksForDate} hideModify={true} locationType={locationType} />
           ) : (
             <div className={styles.emptyState}>
               <p>이 날짜에는 등록된 task가 없습니다.</p>

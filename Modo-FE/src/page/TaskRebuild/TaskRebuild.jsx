@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { getTasksByDate, CATEGORY_PRIORITY_MAP } from "../../data/fightTaskData";
 import robotStyles from "./layouts/RobotLayout.module.css";
 import GraveRobberLayout from "./layouts/GraveRobberLayout";
@@ -8,7 +8,10 @@ import RobotLayout from "./layouts/RobotLayout";
 
 export default function TaskRebuild() {
   const navigate = useNavigate();
-  const { date, character } = useParams();
+  const location = useLocation();
+  const { date, character, locationType: locationTypeParam } = useParams();
+  
+  const locationType = locationTypeParam || location.state?.locationType;
   
   // 캐릭터 경로를 타입으로 변환
   const getCharacterType = () => {
@@ -196,7 +199,7 @@ export default function TaskRebuild() {
   };
 
   const handleBack = () => {
-    navigate(-1);
+    navigate(-1, { state: { locationType } });
   };
 
   const handleCheckboxClick = (taskId, taskTitle) => {
@@ -271,6 +274,7 @@ export default function TaskRebuild() {
         battleStartModalOpen={battleStartModalOpen}
         setBattleStartModalOpen={setBattleStartModalOpen}
         handleBattleStart={handleBattleStart}
+        locationType={locationType}
       />
     );
   }
@@ -294,6 +298,7 @@ export default function TaskRebuild() {
         handleBattleStart={handleBattleStart}
         elapsedSeconds={elapsedSeconds}
         formatElapsedTime={formatElapsedTime}
+        locationType={locationType}
       />
     );
   }
@@ -314,6 +319,7 @@ export default function TaskRebuild() {
       modalState={modalState}
       handleModalClose={handleModalClose}
       handleModalConfirm={handleModalConfirm}
+      locationType={locationType}
     />
   );
 }

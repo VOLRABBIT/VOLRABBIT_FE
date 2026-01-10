@@ -5,7 +5,7 @@ import checkedIcon from "../../assets/checked.svg";
 import modifyIcon from "../../assets/modify.svg";
 import TaskCompleteModal from "../TaskCompleteModal/TaskCompleteModal";
 
-export default function ThingsToDo({ tasks = [], hideModify = false }) {
+export default function ThingsToDo({ tasks = [], hideModify = false, locationType }) {
   const navigate = useNavigate();
   const [taskStates, setTaskStates] = useState(() => {
     const initialState = {};
@@ -102,6 +102,7 @@ export default function ThingsToDo({ tasks = [], hideModify = false }) {
             category: category.category,
             categoryId: categoryId,
           },
+          locationType: locationType,
         },
       });
     }
@@ -220,6 +221,7 @@ export default function ThingsToDo({ tasks = [], hideModify = false }) {
           taskTitle={modalState.taskTitle}
           onClose={handleModalClose}
           onConfirm={handleModalConfirm}
+          locationType={locationType}
         />
       )}
     </div>

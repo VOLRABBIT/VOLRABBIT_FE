@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./TaskActionBar.module.css";
 import taskIcon from "../../assets/navbar/task.svg";
 import taskAddIcon from "../../assets/navbar/task-add.svg";
@@ -6,6 +6,10 @@ import reportIcon from "../../assets/navbar/report.svg";
 
 export default function TaskActionBar({ currentDate }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // locationType 가져오기 (기본값: gorge)
+  const locationType = location.state?.locationType || "gorge";
 
   const getCharacterPath = () => {
     const savedPersona = localStorage.getItem("personaType");
@@ -26,11 +30,15 @@ export default function TaskActionBar({ currentDate }) {
           return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
         })();
         const characterPath = getCharacterPath();
-        navigate(`/task-rebuild/${characterPath}/${dateStr}`);
+        navigate(`/task-rebuild/${characterPath}/${dateStr}/${locationType}`, {
+          state: { locationType }
+        });
         break;
       }
       case "task-add":
-        navigate("/task-create");
+        navigate("/task-create", {
+          state: { locationType }
+        });
         break;
       case "report":
         navigate("/mypage");

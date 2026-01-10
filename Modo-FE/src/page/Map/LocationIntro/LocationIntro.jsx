@@ -15,7 +15,9 @@ export default function LocationIntro() {
   }
 
   const handleSelect = () => {
-    console.log(`${locationData.title} 선택`);
+    navigate(`/fight/${locationData.locationType}`, {
+      state: { locationType: locationData.locationType }
+    });
   };
 
   return (
