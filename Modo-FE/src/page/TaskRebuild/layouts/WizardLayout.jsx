@@ -135,7 +135,7 @@ export default function WizardLayout({
         <img src={mapBackground} alt="배경" />
       </div>
 
-      <div className={commonStyles.content}>
+      <div className={`${commonStyles.content} ${styles.content}`}>
         <div className={commonStyles.header}>
           <button className={commonStyles.backButton} onClick={handleBack}>
             <img src={arrowLeftIcon} alt="뒤로가기" />
@@ -145,65 +145,68 @@ export default function WizardLayout({
 
         <div className={commonStyles.dateText}>{formattedDate} 전투 task</div>
 
-        {/* 타임라인 카드 */}
-        <div className={styles.timelineCard}>
-          <div className={styles.timelineWrapper}>
-            <div className={styles.timelineLine} />
-            <div className={styles.timelineLabels}>
-              {timelineLabels.map((label) => (
-                <span key={label}>{label}</span>
-              ))}
-            </div>
+        {/* 타임라인 및 스톱워치 섹션 */}
+        <div className={styles.timelineSection}>
+          {/* 타임라인 카드 */}
+          <div className={styles.timelineCard}>
+            <div className={styles.timelineWrapper}>
+              <div className={styles.timelineLine} />
+              <div className={styles.timelineLabels}>
+                {timelineLabels.map((label) => (
+                  <span key={label}>{label}</span>
+                ))}
+              </div>
 
-            <div className={styles.timelineTasks}>
-              {layoutedTasks.length > 0 ? (
-                layoutedTasks.map((task) => (
-                  <div
-                    key={task.id}
-                    className={styles.timelineTask}
-                    style={{ 
-                      top: `${task.top}px`,
-                      height: `${task.height}px`
-                    }}
-                  >
-                    <div className={styles.timelineDot} />
-                    <div className={styles.timelineTaskBox} style={{ height: `${task.height}px` }}>
-                      <p className={styles.timelineTaskTitle}>{task.title}</p>
+              <div className={styles.timelineTasks}>
+                {layoutedTasks.length > 0 ? (
+                  layoutedTasks.map((task) => (
+                    <div
+                      key={task.id}
+                      className={styles.timelineTask}
+                      style={{ 
+                        top: `${task.top}px`,
+                        height: `${task.height}px`
+                      }}
+                    >
+                      <div className={styles.timelineDot} />
+                      <div className={styles.timelineTaskBox} style={{ height: `${task.height}px` }}>
+                        <p className={styles.timelineTaskTitle}>{task.title}</p>
+                      </div>
                     </div>
+                  ))
+                ) : (
+                  <div className={styles.timelineEmpty}>등록된 task가 없습니다.</div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 하단 컨트롤 바 */}
+          <div className={styles.wizardControlCard} onClick={handleCardClick}>
+            <div className={styles.wizardControlText}>
+              {currentTask ? (
+                <>
+                  <div className={styles.wizardControlContainer}>
+                    <p className={styles.wizardSubtitle}>{currentTask.title}</p>
                   </div>
-                ))
+                  <div className={styles.wizardControlContainer}>
+                    <p className={styles.wizardTime}>{formatElapsedTime(elapsedSeconds).hours}h {formatElapsedTime(elapsedSeconds).minutes}m</p>
+                  </div>
+                </>
               ) : (
-                <div className={styles.timelineEmpty}>등록된 task가 없습니다.</div>
+                <div className={styles.wizardControlContainerEmpty}>
+                  <p className={styles.wizardSubtitleEmpty}>전투를 선택해주세요.</p>
+                </div>
               )}
             </div>
+            <button className={styles.wizardPlayButton} onClick={handleTimerToggle}>
+              <img
+                src={isTimerRunning ? pauseIcon : playIcon}
+                alt={isTimerRunning ? "일시정지" : "재생"}
+                className={styles.wizardPlayIcon}
+              />
+            </button>
           </div>
-        </div>
-
-        {/* 하단 컨트롤 바 */}
-        <div className={styles.wizardControlCard} onClick={handleCardClick}>
-          <div className={styles.wizardControlText}>
-            {currentTask ? (
-              <>
-                <div className={styles.wizardControlContainer}>
-                  <p className={styles.wizardSubtitle}>{currentTask.title}</p>
-                </div>
-                <div className={styles.wizardControlContainer}>
-                  <p className={styles.wizardTime}>{formatElapsedTime(elapsedSeconds).hours}h {formatElapsedTime(elapsedSeconds).minutes}m</p>
-                </div>
-              </>
-            ) : (
-              <div className={styles.wizardControlContainerEmpty}>
-                <p className={styles.wizardSubtitleEmpty}>전투를 선택해주세요.</p>
-              </div>
-            )}
-          </div>
-          <button className={styles.wizardPlayButton} onClick={handleTimerToggle}>
-            <img
-              src={isTimerRunning ? pauseIcon : playIcon}
-              alt={isTimerRunning ? "일시정지" : "재생"}
-              className={styles.wizardPlayIcon}
-            />
-          </button>
         </div>
       </div>
 
