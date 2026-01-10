@@ -17,6 +17,9 @@ export default function TaskFailedReview() {
   const navigate = useNavigate();
   const location = useLocation();
   const taskTitle = location.state?.taskTitle || "선형대수학2 과제하기";
+  const locationType = location.state?.locationType;
+  const mapBackground = getLocationBackground(locationType);
+  const buttonColor = getLocationButtonColor(locationType);
 
   const [selectedReason, setSelectedReason] = useState("시간이 없어서 그냥 지나갔어요.");
   const [customReason, setCustomReason] = useState("");
