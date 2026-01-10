@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
-import StepCard from "../../components/StepCard/StepCard";
-import Dropdown from "../../components/Dropdown/Dropdown";
 import styles from "./GuildQuestRegister.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
-import searchIcon from "../../assets/guild/search.svg";
+import Step1QuestName from "./steps/Step1QuestName";
+import Step2Category from "./steps/Step2Category";
+import Step3Deadline from "./steps/Step3Deadline";
+import Step4Repeat from "./steps/Step4Repeat";
+import Step5Subdivision from "./steps/Step5Subdivision";
+import Step6Verification from "./steps/Step6Verification";
+import Step7Tag from "./steps/Step7Tag";
+import CompleteStep from "./components/CompleteStep";
 
 export default function GuildQuestRegister() {
   const navigate = useNavigate();
@@ -21,16 +26,11 @@ export default function GuildQuestRegister() {
   const [verification, setVerification] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
 
-  // 드롭다운 상태
+  // 드롭다운 상태 관리
   const [deadlineDropdownOpen, setDeadlineDropdownOpen] = useState(false);
   const [repeatDropdownOpen, setRepeatDropdownOpen] = useState(false);
   const [subdivisionDropdownOpen, setSubdivisionDropdownOpen] = useState(false);
 
-  const categories = ["과제", "청소", "요리", "프로젝트"];
-  const deadlineOptions = ["오늘", "내일", "직접 입력"];
-  const repeatOptions = ["없음", "매일", "매주", "매달"];
-  const subdivisionOptions = ["없음", "2단계로 세분화", "3단계로 세분화", "Auto"];
-  const verificationOptions = ["자가 체크", "사진", "태깅"];
 
   const handleBack = () => {
     navigate(-1);
@@ -57,12 +57,8 @@ export default function GuildQuestRegister() {
   };
 
   const handleDeadlineSelect = (option) => {
-    if (option === "직접 입력") {
-      setDeadline("직접 입력");
-      setCustomDeadline("");
-      setSelectedDate(null);
-    } else {
-      setDeadline(option);
+    setDeadline(option);
+    if (option !== "직접 입력") {
       setCustomDeadline("");
       setSelectedDate(null);
     }
@@ -70,36 +66,12 @@ export default function GuildQuestRegister() {
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
-    const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-    setCustomDeadline(dateStr);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    setCustomDeadline(`${year}.${month}.${day}`);
+    setDeadline("직접 입력");
   };
-
-  // 달력 생성성
-  const getCalendarDays = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
-    
-    const adjustedDay = startingDayOfWeek === 0 ? 6 : startingDayOfWeek - 1;
-
-    const days = [];
-    
-    for (let i = 0; i < adjustedDay; i++) {
-      days.push(null);
-    }
-    
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(new Date(year, month, day));
-    }
-    
-    return days;
-  };
-
-  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const handleRepeatSelect = (option) => {
     setRepeatCycle(option);
@@ -117,18 +89,15 @@ export default function GuildQuestRegister() {
     setSelectedTag(tag);
   };
 
-
-  // 태깅이면 step7로, 아니면 step8로 이동
+  // 다음 step으로 이동
   const handleNext = (step) => {
-    if (currentStep === step && step < 6) {
+    if (currentStep !== step) return;
+    
+    if (step < 6) {
       setCurrentStep(step + 1);
-    } else if (currentStep === step && step === 6) {
-      if (verification === "태깅") {
-        setCurrentStep(7);
-      } else {
-        setCurrentStep(8);
-      }
-    } else if (currentStep === step && step === 7) {
+    } else if (step === 6) {
+      setCurrentStep(verification === "태깅" ? 7 : 8);
+    } else if (step === 7) {
       setCurrentStep(8);
     }
   };
@@ -145,22 +114,33 @@ export default function GuildQuestRegister() {
     navigate(-1);
   };
 
-  const canProceedStep1 = questName.length > 0;
-  const canProceedStep2 = category !== null || customCategory.length > 0;
-  const canProceedStep3 =
-    deadline !== null && (deadline !== "직접 입력" || customDeadline.length > 0);
-  const canProceedStep4 = repeatCycle !== null;
-  const canProceedStep5 = subdivision !== null;
-  const canProceedStep6 = verification !== null;
-  const canProceedStep7 = selectedTag !== null;
+  // Step 진행 가능 여부
+  const canProceedSteps = {
+    1: questName.length > 0,
+    2: category !== null || customCategory.length > 0,
+    3: deadline !== null && (deadline !== "직접 입력" || customDeadline.length > 0),
+    4: repeatCycle !== null,
+    5: subdivision !== null,
+    6: verification !== null,
+    7: selectedTag !== null,
+  };
+
+  const canProceedStep1 = canProceedSteps[1];
+  const canProceedStep2 = canProceedSteps[2];
+  const canProceedStep3 = canProceedSteps[3];
+  const canProceedStep4 = canProceedSteps[4];
+  const canProceedStep5 = canProceedSteps[5];
+  const canProceedStep6 = canProceedSteps[6];
+  const canProceedStep7 = canProceedSteps[7];
   const canRegister = currentStep === 8;
 
   const isStepCompleted = (step) => currentStep > step;
   const isStepActive = (step) => currentStep === step;
 
   const handleRegister = () => {
-    if (!canRegister) return;
-    handleComplete();
+    if (canRegister) {
+      handleComplete();
+    }
   };
 
   // 요약 카드
@@ -185,8 +165,6 @@ export default function GuildQuestRegister() {
     }
   };
 
-  const tagOptions = ["전공책", "세탁기", "기숙사 테이블"];
-
   if (currentStep === 8) {
     return (
       <div className={styles.container}>
@@ -198,39 +176,13 @@ export default function GuildQuestRegister() {
           <div className={styles.placeholder}></div>
         </div>
 
-        <div className={`${styles.content} ${styles.completeContent}`}>
-          {/* 모든 step의 요약 카드들 */}
-          {verification === "태깅" ? [1, 2, 3, 4, 5, 6, 7].map((step) => (
-            <StepCard
-              key={step}
-              stepNumber={step}
-              isCompleted={true}
-              summaryValue={getSummaryValue(step)}
-            />
-          )) : [1, 2, 3, 4, 5, 6].map((step) => (
-            <StepCard
-              key={step}
-              stepNumber={step}
-              isCompleted={true}
-              summaryValue={getSummaryValue(step)}
-            />
-          ))}
-
-          {/* 확인 모달 */}
-          <div className={styles.confirmModal}>
-            <div className={styles.modalIcon}>
-              <img src={searchIcon} alt="검색 아이콘" />
-            </div>
-            <div className={styles.modalContent}>
-              <p className={styles.modalQuestName}>{questName}</p>
-              <p className={styles.modalQuestInfo}>
-                {deadline === "직접 입력" ? customDeadline : deadline}
-              </p>
-              <p className={styles.modalQuestInfo}>{verification}</p>
-              <p className={styles.modalQuestion}>퀘스트를 추가하시겠습니까?</p>
-            </div>
-          </div>
-        </div>
+        <CompleteStep
+          verification={verification}
+          getSummaryValue={getSummaryValue}
+          questName={questName}
+          deadline={deadline}
+          customDeadline={customDeadline}
+        />
 
         <div className={styles.registerSection}>
           <button
@@ -260,271 +212,108 @@ export default function GuildQuestRegister() {
       </div>
 
       <div className={styles.content}>
-        {/* Step 1: 길드 퀘스트 입력하기 */}
-        <StepCard
-          stepNumber={1}
-          title="길드 퀘스트 입력하기"
-          description="길드 퀘스트를 10글자 내로 입력하세요."
+        <Step1QuestName
+          questName={questName}
+          onQuestNameChange={handleQuestNameChange}
           isCompleted={isStepCompleted(1)}
           isActive={isStepActive(1)}
-          summaryValue={questName}
-          stepClass="step1"
-        >
-          <div className={styles.inputWrapper}>
-            <input
-              type="text"
-              className={styles.textInput}
-              value={questName}
-              onChange={handleQuestNameChange}
-              maxLength={10}
-            />
-          </div>
-          <button
-            className={`${styles.nextButton} ${!canProceedStep1 || !isStepActive(1) ? styles.nextButtonDisabled : ""}`}
-            onClick={() => handleNext(1)}
-            disabled={!canProceedStep1 || !isStepActive(1)}
-          >
-            다음
-          </button>
-        </StepCard>
+          onNext={() => handleNext(1)}
+          canProceed={canProceedStep1}
+        />
 
-        {/* Step 2: 카테고리 선택하기 */}
-        <StepCard
-          stepNumber={2}
-          title="카테고리 선택하기"
-          description="입력한 퀘스트의 카테고리를 설정해주세요."
-          isCompleted={isStepCompleted(2)}
-          isActive={isStepActive(2)}
-          summaryValue={customCategory || category}
-          stepClass="step2"
-        >
-          <div className={styles.tagContainer}>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                className={`${styles.tag} ${category === cat ? styles.tagActive : ""}`}
-                onClick={() => handleCategorySelect(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-            <div className={`${styles.tagInputWrapper} ${customCategory ? styles.tagInputActive : ""}`}>
-              <input
-                type="text"
-                className={styles.tagInput}
-                value={customCategory}
-                onChange={handleCustomCategoryChange}
-                placeholder="입력"
-                maxLength={10}
-              />
-            </div>
-          </div>
-          <button
-            className={`${styles.nextButton} ${!canProceedStep2 || !isStepActive(2) ? styles.nextButtonDisabled : ""}`}
-            onClick={() => handleNext(2)}
-            disabled={!canProceedStep2 || !isStepActive(2)}
-          >
-            다음
-          </button>
-        </StepCard>
+        {isStepCompleted(1) && (
+          <Step2Category
+            category={category}
+            customCategory={customCategory}
+            onCategorySelect={handleCategorySelect}
+            onCustomCategoryChange={handleCustomCategoryChange}
+            isCompleted={isStepCompleted(2)}
+            isActive={isStepActive(2)}
+            onNext={() => handleNext(2)}
+            canProceed={canProceedStep2}
+          />
+        )}
 
-        {/* Step 3: 마감 기한 설정하기 */}
-        <StepCard
-          stepNumber={3}
-          title="마감 기한 설정하기"
-          description="입력한 할 일의 마감 기한을 설정해주세요."
-          isCompleted={isStepCompleted(3)}
-          isActive={isStepActive(3)}
-          summaryValue={deadline === "직접 입력" ? customDeadline : deadline}
-          stepClass={`step3 ${deadline === "직접 입력" && !isStepCompleted(3) ? "step3WithCalendar" : ""}`}
-        >
-          <Dropdown
-            placeholder="마감 기한"
-            selectedValue={deadline}
-            options={deadlineOptions}
-            isOpen={deadlineDropdownOpen}
-            onToggle={(open) => {
+        {isStepCompleted(2) && (
+          <Step3Deadline
+            deadline={deadline}
+            customDeadline={customDeadline}
+            selectedDate={selectedDate}
+            deadlineDropdownOpen={deadlineDropdownOpen}
+            onDeadlineToggle={(open) => {
               setDeadlineDropdownOpen(open);
-              setRepeatDropdownOpen(false);
-              setSubdivisionDropdownOpen(false);
+              if (open) {
+                setRepeatDropdownOpen(false);
+                setSubdivisionDropdownOpen(false);
+              }
             }}
-            onSelect={handleDeadlineSelect}
-            stepClass="step3"
-          >
-            {deadline === "직접 입력" && !deadlineDropdownOpen && (
-              <div className={styles.calendarContainer}>
-                <div className={styles.calendar}>
-                  <div className={styles.calendarHeader}>
-                    {weekDays.map((day, index) => (
-                      <div key={day} className={`${styles.weekDay} ${index === 6 ? styles.weekDayRed : ""}`}>
-                        {day}
-                      </div>
-                    ))}
-                  </div>
-                  <div className={styles.calendarGrid}>
-                    {getCalendarDays().map((date, index) => {
-                      if (date === null) {
-                        return <div key={`empty-${index}`} className={styles.calendarDayEmpty}></div>;
-                      }
-                      const dayNumber = date.getDate();
-                      const dayOfWeek = date.getDay();
-                      const isSunday = dayOfWeek === 0;
-                      const isSelected = selectedDate && 
-                        date.getDate() === selectedDate.getDate() &&
-                        date.getMonth() === selectedDate.getMonth() &&
-                        date.getFullYear() === selectedDate.getFullYear();
-                      // 일요일이거나 7, 14, 21, 28일인 경우 빨간색
-                      const isRedDate = isSunday || [7, 14, 21, 28].includes(dayNumber);
-                      
-                      return (
-                        <button
-                          key={date.getTime()}
-                          type="button"
-                          className={`${styles.calendarDay} ${isSelected ? styles.calendarDaySelected : ""} ${isRedDate ? styles.calendarDayRed : ""}`}
-                          onClick={() => handleDateSelect(date)}
-                        >
-                          {dayNumber}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            )}
-          </Dropdown>
-          <button
-            className={`${styles.nextButton} ${!canProceedStep3 || !isStepActive(3) ? styles.nextButtonDisabled : ""}`}
-            onClick={() => handleNext(3)}
-            disabled={!canProceedStep3 || !isStepActive(3)}
-          >
-            다음
-          </button>
-        </StepCard>
+            onDeadlineSelect={handleDeadlineSelect}
+            onDateSelect={handleDateSelect}
+            isCompleted={isStepCompleted(3)}
+            isActive={isStepActive(3)}
+            onNext={() => handleNext(3)}
+            canProceed={canProceedStep3}
+          />
+        )}
 
-        {/* Step 4: 반복 여부 확인하기 */}
-        <StepCard
-          stepNumber={4}
-          title="반복 여부 확인하기"
-          description="오늘 내로 끝나는 일이라면 '없음'을 선택해주세요."
-          isCompleted={isStepCompleted(4)}
-          isActive={isStepActive(4)}
-          summaryValue={repeatCycle}
-          stepClass={`step4 ${repeatDropdownOpen && !isStepCompleted(4) ? "step4WithDropdown" : ""}`}
-        >
-          <Dropdown
-            placeholder="반복 주기"
-            selectedValue={repeatCycle}
-            options={repeatOptions}
-            isOpen={repeatDropdownOpen}
-            onToggle={(open) => {
+        {isStepCompleted(3) && (
+          <Step4Repeat
+            repeatCycle={repeatCycle}
+            repeatDropdownOpen={repeatDropdownOpen}
+            onRepeatToggle={(open) => {
               setRepeatDropdownOpen(open);
-              setDeadlineDropdownOpen(false);
-              setSubdivisionDropdownOpen(false);
+              if (open) {
+                setDeadlineDropdownOpen(false);
+                setSubdivisionDropdownOpen(false);
+              }
             }}
-            onSelect={handleRepeatSelect}
-            stepClass="step4"
+            onRepeatSelect={handleRepeatSelect}
+            isCompleted={isStepCompleted(4)}
+            isActive={isStepActive(4)}
+            onNext={() => handleNext(4)}
+            canProceed={canProceedStep4}
           />
-          <button
-            className={`${styles.nextButton} ${!canProceedStep4 || !isStepActive(4) ? styles.nextButtonDisabled : ""}`}
-            onClick={() => handleNext(4)}
-            disabled={!canProceedStep4 || !isStepActive(4)}
-          >
-            다음
-          </button>
-        </StepCard>
+        )}
 
-        {/* Step 5: 세분화 단계 설정하기 */}
-        <StepCard
-          stepNumber={5}
-          title="세분화 단계 설정하기"
-          description="할 일을 작은 일로 세분화할 수 있어요."
-          isCompleted={isStepCompleted(5)}
-          isActive={isStepActive(5)}
-          summaryValue={subdivision}
-          stepClass={`step5 ${subdivisionDropdownOpen && !isStepCompleted(5) ? "step5WithDropdown" : ""}`}
-        >
-          <Dropdown
-            placeholder="단계별 세분화"
-            selectedValue={subdivision}
-            options={subdivisionOptions}
-            isOpen={subdivisionDropdownOpen}
-            onToggle={(open) => {
+        {isStepCompleted(4) && (
+          <Step5Subdivision
+            subdivision={subdivision}
+            subdivisionDropdownOpen={subdivisionDropdownOpen}
+            onSubdivisionToggle={(open) => {
               setSubdivisionDropdownOpen(open);
-              setDeadlineDropdownOpen(false);
-              setRepeatDropdownOpen(false);
+              if (open) {
+                setDeadlineDropdownOpen(false);
+                setRepeatDropdownOpen(false);
+              }
             }}
-            onSelect={handleSubdivisionSelect}
-            stepClass="step5"
+            onSubdivisionSelect={handleSubdivisionSelect}
+            isCompleted={isStepCompleted(5)}
+            isActive={isStepActive(5)}
+            onNext={() => handleNext(5)}
+            canProceed={canProceedStep5}
           />
-          <button
-            className={`${styles.nextButton} ${!canProceedStep5 || !isStepActive(5) ? styles.nextButtonDisabled : ""}`}
-            onClick={() => handleNext(5)}
-            disabled={!canProceedStep5 || !isStepActive(5)}
-          >
-            다음
-          </button>
-        </StepCard>
+        )}
 
-        {/* Step 6: 인증방식 선택하기 */}
-        <StepCard
-          stepNumber={6}
-          title="인증방식 선택하기"
-          description="할 일의 인증 방식을 선택해주세요."
-          isCompleted={isStepCompleted(6)}
-          isActive={isStepActive(6)}
-          summaryValue={verification}
-          stepClass="step6"
-        >
-          <div className={styles.verificationTagContainer}>
-            {verificationOptions.map((option) => (
-              <button
-                key={option}
-                className={`${styles.verificationTag} ${verification === option ? styles.verificationTagActive : ""}`}
-                onClick={() => handleVerificationSelect(option)}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-          <button
-            className={`${styles.nextButton} ${!canProceedStep6 || !isStepActive(6) ? styles.nextButtonDisabled : ""}`}
-            onClick={() => handleNext(6)}
-            disabled={!canProceedStep6 || !isStepActive(6)}
-          >
-            완료
-          </button>
-        </StepCard>
+        {isStepCompleted(5) && (
+          <Step6Verification
+            verification={verification}
+            onVerificationSelect={handleVerificationSelect}
+            isCompleted={isStepCompleted(6)}
+            isActive={isStepActive(6)}
+            onNext={() => handleNext(6)}
+            canProceed={canProceedStep6}
+          />
+        )}
 
-        {/* Step 7: 태그 선택하기 (태깅 선택 시에만 표시) */}
-        {verification === "태깅" && (
-          <StepCard
-            stepNumber={7}
-            title="태그 선택하기"
-            description="인증할 태그의 종류를 선택해주세요."
+        {isStepCompleted(6) && verification === "태깅" && (
+          <Step7Tag
+            selectedTag={selectedTag}
+            onTagSelect={handleTagSelect}
             isCompleted={isStepCompleted(7)}
             isActive={isStepActive(7)}
-            summaryValue={selectedTag}
-            stepClass="step7"
-          >
-            <div className={styles.verificationTagContainer}>
-              {tagOptions.map((tag) => (
-                <button
-                  key={tag}
-                  className={`${styles.verificationTag} ${selectedTag === tag ? styles.verificationTagActive : ""}`}
-                  onClick={() => handleTagSelect(tag)}
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-            <button
-              className={`${styles.nextButton} ${!canProceedStep7 || !isStepActive(7) ? styles.nextButtonDisabled : ""}`}
-              onClick={() => handleNext(7)}
-              disabled={!canProceedStep7 || !isStepActive(7)}
-            >
-              완료
-            </button>
-          </StepCard>
+            onNext={() => handleNext(7)}
+            canProceed={canProceedStep7}
+          />
         )}
       </div>
 

@@ -36,7 +36,9 @@ export default function StepCard({
           <p className={styles.stepSummaryValue}>{summaryValue}</p>
         </div>
       ) : (
-        children
+        <div className={styles.stepContent}>
+          {children}
+        </div>
       )}
     </div>
   );
