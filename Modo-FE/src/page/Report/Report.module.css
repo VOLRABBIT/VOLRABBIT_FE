@@ -1,0 +1,414 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg,
+      rgba(125, 167, 219, 0.4) 0%,
+      rgba(241, 169, 211, 0.4) 44.712%,
+      rgba(183, 168, 215, 0.4) 69.231%,
+      rgba(116, 179, 170, 0.4) 100%);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.content {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding: 16px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.content::-webkit-scrollbar {
+  display: none;
+}
+
+.reportContent {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.periodSelector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.periodSelector::before {
+  display: none;
+}
+
+.periodSelector::after {
+  display: none;
+}
+
+.periodArrow {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  z-index: 1;
+}
+
+.periodArrow img {
+  width: 16px;
+  height: 16px;
+}
+
+.periodText {
+  font-family: NanumSquareOTF, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+  z-index: 1;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.periodToggle {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 12px;
+  gap: 8px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.periodToggle::before {
+  display: none;
+}
+
+.toggleButton {
+  padding: 6px 16px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(187, 144, 221, 0.50);
+  text-align: center;
+  font-family: "NanumSquareOTF", sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: rgba(187, 144, 221, 0.50);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toggleButtonActive {
+  background-color: #BB90DD;
+  color: #52528F;
+  text-align: center;
+  font-family: "NanumSquareOTF", sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.statCard {
+  display: flex;
+  width: 120px;
+  height: 95px;
+  padding: 17px 21.233px 24px 21.234px;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 17px;
+  background: #FDA069;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);
+  box-sizing: border-box;
+}
+
+.statCardOrange {
+  background-color: rgba(253, 160, 105, 0.9);
+}
+
+.statCardTeal {
+  background-color: rgba(116, 179, 170, 0.9);
+}
+
+.statCardPurple {
+  background-color: rgba(187, 144, 221, 0.9);
+}
+
+.statCardLightBlue {
+  background-color: rgba(125, 167, 219, 0.9);
+}
+
+.statValue {
+  color: #FFF;
+  font-family: "NanumSquareOTF", sans-serif;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 51px;
+}
+
+.statLabel {
+  color: var(--white, #FFF);
+  font-family: "NanumSquareOTF", sans-serif;
+  font-size: 12.75px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 17px;
+}
+
+.resumedBattlesCard {
+  width: 250px;
+  height: 65px;
+  border-radius: 17px;
+  background: rgba(214, 153, 154, 0.70);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.resumedBattlesLabel {
+  font-family: NanumSquareOTF, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: white;
+}
+
+.resumedBattlesValue {
+  font-family: NanumSquareOTF, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+}
+
+.chartCard {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-sizing: content-box;
+  width: 223px;
+}
+
+.bubbleChartCard {
+  display: flex;
+  width: 265px;
+  height: 255px;
+  padding: 21.234px 21.234px 0 21.234px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16.987px;
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.chartTitle {
+  font-family: NanumSquareOTF, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  margin: 0;
+}
+
+.donutChart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+}
+
+.donutChartVisual {
+  height: 203.986px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donutChartSvg {
+  width: 100%;
+  height: 100%;
+  max-width: 120px;
+  max-height: 120px;
+}
+
+.chartLegend {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  width: 100%;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legendDotPurple {
+  background-color: #BB90DD;
+}
+
+.legendDotTeal {
+  background-color: #74B3AA;
+}
+
+.legendDotOrange {
+  background-color: #FDA069;
+}
+
+.legendText {
+  font-family: NanumSquareOTF, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #000;
+  flex: 1;
+}
+
+.legendPercent {
+  font-family: NanumSquareOTF, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+}
+
+.bubbleChart {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.bubble {
+  position: absolute;
+  background: #E9D4FF;
+  border-radius: 45372000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "NanumSquareOTF", sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 17px;
+  color: #6E11B0;
+  text-align: center;
+  padding: 8px;
+  box-sizing: border-box;
+  word-break: keep-all;
+}
+
+.focusTimeCard {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-sizing: content-box;
+  position: relative;
+  width: 223px;
+}
+
+.focusTimeValue {
+  color: #59168B;
+  font-family: NanumSquareOTF;
+  font-size: 34px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 40.8px;
+  text-align: left;
+  margin-bottom: 8px;
+}
+
+.focusTimeLabel {
+  font-family: NanumSquareOTF, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #71727A;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.topTimeSlots {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.topTimeTitle {
+  color: #6A7282;
+  font-family: NanumSquareOTF;
+  font-size: 12.75px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 17px;
+  margin-bottom: 8px;
+}
+
+.timeSlotItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkIcon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.timeSlotText {
+  color: #364153;
+  font-family: NanumSquareOTF;
+  font-size: 14.875px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21.25px;
+}

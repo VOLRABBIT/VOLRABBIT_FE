@@ -1,0 +1,234 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    rgba(125, 167, 219, 0.4) 0%,
+    rgba(241, 169, 211, 0.4) 44.71%,
+    rgba(183, 168, 215, 0.4) 69.23%,
+    rgba(116, 179, 170, 0.4) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  overflow-y: auto;
+  min-height: 0;
+  gap: 24px;
+}
+
+.stepCard {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px 20px 15px 20px;
+  background: #F1F1F1;
+  border-radius: 16px;
+  box-shadow: 2px 4px 4px 0 rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  gap: 6px;
+}
+
+.stepHeader {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.stepBadge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #BB90DD;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "NanumSquare", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.stepInfo {
+  flex: 1;
+}
+
+.stepTitle {
+  font-family: "NanumSquare", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 8px 0;
+}
+
+.stepDescription {
+  font-family: "NanumSquare", sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  color: #7A7A7A;
+  margin: 0;
+  line-height: 20px;
+}
+
+.tagNameInput {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid #DEDEDE;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 1);
+  font-family: "NanumSquare", sans-serif;
+  font-size: 14px;
+  color: #000;
+  box-sizing: border-box;
+}
+
+.tagNameInput::placeholder {
+  color: #999;
+}
+
+.stepButton {
+  display: flex;
+  width: calc(100% + 20px);
+  height: 56px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 999px;
+  border: none;
+  background: #BB90DD;
+  color: #fff;
+  font-family: "NanumSquare", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-sizing: border-box;
+  margin-top: 20px;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.stepButton:disabled {
+  background: rgba(187, 144, 221, 0.5);
+  cursor: not-allowed;
+}
+
+.stepButton:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.footer {
+  padding: 20px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.registerButton {
+  display: flex;
+  width: 358px;
+  height: 56px;
+  padding: 0 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 999px;
+  border: none;
+  background: #BB90DD;
+  color: #fff;
+  font-family: "NanumSquare", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.registerButton:disabled {
+  background: rgba(187, 144, 221, 0.5);
+  cursor: not-allowed;
+}
+
+.registerButton:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.completedStepCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 20px;
+  background: #F1F1F1;
+  border-radius: 16px;
+  box-shadow: 2px 4px 4px 0 rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+}
+
+.completedStepText {
+  font-family: "NanumSquare", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000;
+}
+
+.confirmCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 40px 20px;
+  background: #F1F1F1;
+  border-radius: 16px;
+  box-shadow: 2px 4px 4px 0 rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  gap: 24px;
+}
+
+.nfcIconContainer {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.nfcIcon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.confirmText {
+  font-family: "NanumSquare", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  text-align: center;
+  margin: 0;
+  line-height: 100%;
+}
+
+.confirmCard .tagNameText {
+  font-family: "NanumSquare", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #000;
+}
+
+.confirmCard .confirmQuestionText {
+  font-family: "NanumSquare", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #000;
+}
+

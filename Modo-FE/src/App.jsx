@@ -16,6 +16,8 @@ import GuildJoin from "./page/GuildJoin/GuildJoin.jsx";
 import GuildCreate from "./page/GuildCreate/GuildCreate.jsx";
 import GuildDetail from "./page/GuildDetail/GuildDetail.jsx";
 import GuildQuestRegister from "./page/GuildQuestRegister/GuildQuestRegister.jsx";
+import GuildManage from "./page/GuildManage/GuildManage.jsx";
+import GuildEdit from "./page/GuildEdit/GuildEdit.jsx";
 import MyPage from "./page/MyPage/MyPage.jsx";
 import TaskGiveUp from "./page/TaskGiveUp/TaskGiveUp.jsx";
 import TaskPhotoAuth from "./page/TaskPhotoAuth/TaskPhotoAuth.jsx";
@@ -23,6 +25,13 @@ import TaskCreate from "./page/TaskCreate/TaskCreate.jsx";
 import TaskDetail from "./page/TaskDetail/TaskDetail.jsx";
 import TaskRebuild from "./page/TaskRebuild/TaskRebuild.jsx";
 import TaskFailedReview from "./page/TaskFailedReview/TaskFailedReview.jsx";
+import Pause from "./page/Pause/Pause.jsx";
+import Report from "./page/Report/Report.jsx";
+import AllTypesPage from "./page/AllTypes/AllTypesPage.jsx";
+import CharacterSelectPage from "./page/CharacterSelect/CharacterSelectPage.jsx";
+import CategorySettings from "./page/CategorySettings/CategorySettings.jsx";
+import NFCSettings from "./page/NFCSettings/NFCSettings.jsx";
+import NFCRegister from "./page/NFCRegister/NFCRegister.jsx";
 import "./App.css";
 
 export default function App() {
@@ -48,6 +57,8 @@ export default function App() {
             <Route path="/guild/:id/quest/register" element={<GuildQuestRegister />} />
             <Route path="/guild/join" element={<GuildJoin />} />
             <Route path="/guild/create" element={<GuildCreate />} />
+            <Route path="/guild/manage" element={<GuildManage />} />
+            <Route path="/guild/:id/edit" element={<GuildEdit />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/task-give-up" element={<TaskGiveUp />} />
             <Route path="/task-failed-review" element={<TaskFailedReview />} />
@@ -56,6 +67,13 @@ export default function App() {
             <Route path="/task-detail/:date" element={<TaskDetail />} />
             <Route path="/task-rebuild/:character/:date" element={<TaskRebuild />} />
             <Route path="/task-rebuild/:date" element={<TaskRebuild />} />
+            <Route path="/pause" element={<Pause />} />
+            <Route path="/report" element={<Report />} />
+            <Route path="/all-types" element={<AllTypesPage />} />
+            <Route path="/character-select" element={<CharacterSelectPage />} />
+            <Route path="/category-settings" element={<CategorySettings />} />
+            <Route path="/nfc-settings" element={<NFCSettings />} />
+            <Route path="/nfc-register" element={<NFCRegister />} />
           </Routes>
         </div>
       </div>
