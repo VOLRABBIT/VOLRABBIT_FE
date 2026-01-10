@@ -79,12 +79,6 @@
   overflow-x: hidden;
   box-sizing: border-box;
   padding: 0;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.content::-webkit-scrollbar {
-  display: none;
 }
 
 /* 길드 정보 섹션 */

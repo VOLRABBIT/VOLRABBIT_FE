@@ -37,12 +37,6 @@
   position: relative;
   z-index: 1;
   padding-bottom: 20px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.content::-webkit-scrollbar {
-  display: none;
 }
 
 .header {

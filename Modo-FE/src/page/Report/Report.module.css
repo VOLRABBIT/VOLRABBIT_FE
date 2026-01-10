@@ -21,12 +21,6 @@
   overflow-x: hidden;
   box-sizing: border-box;
   padding: 16px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.content::-webkit-scrollbar {
-  display: none;
 }
 
 .reportContent {

@@ -37,15 +37,8 @@
   position: relative;
   z-index: 1;
   padding-bottom: 20px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
   width: 100%;
   box-sizing: border-box;
-}
-
-
-.content::-webkit-scrollbar {
-  display: none;
 }
 
 .header {
