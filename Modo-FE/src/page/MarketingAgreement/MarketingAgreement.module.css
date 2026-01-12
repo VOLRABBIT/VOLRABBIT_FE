@@ -68,12 +68,6 @@
   overflow-x: hidden;
   box-sizing: border-box;
   min-height: 0;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.mainContent::-webkit-scrollbar {
-  display: none;
 }
 
 .content {

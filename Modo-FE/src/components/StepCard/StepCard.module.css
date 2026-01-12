@@ -7,6 +7,8 @@
   border-radius: 12px;
   padding: 0;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .step1 {
@@ -56,25 +58,32 @@
   margin-bottom: 15px;
 }
 
+.summaryMode {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
 .stepHeader {
-  position: absolute;
-  left: 10px;
-  top: 13px;
+  position: relative;
+  left: 0;
+  top: 0;
   display: flex;
   align-items: flex-start;
-  gap: 13px;
+  gap: 12px;
+  padding: 16px;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .step1 .stepHeader {
-  left: 10px;
-  top: 13px;
+  padding: 16px;
 }
 
 .stepNumber {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background-color: #7da7db;
+  background-color: #3e6f77;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,7 +98,7 @@
 .stepInfo {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .stepTitle {
@@ -129,4 +138,13 @@
   font-size: 16px;
   color: #000000;
   margin: 0;
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 0 16px 16px 16px;
+  box-sizing: border-box;
 }

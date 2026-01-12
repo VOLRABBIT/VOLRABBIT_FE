@@ -1,0 +1,209 @@
+/* 공통 스타일 */
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.backgroundImage {
+  position: absolute;
+  inset: 0;
+  opacity: 0.25;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.backgroundImage img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  padding-bottom: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  min-height: 64px;
+  flex-shrink: 0;
+  padding: 0 16px;
+  position: relative;
+}
+
+.backButton {
+  width: 16px;
+  height: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.backButton img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.headerTitle {
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  color: #393939;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+}
+
+.dateText {
+  font-family: "NanumSquareOTF", "NanumSquareOTF Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 22px;
+  color: #393939;
+  position: absolute;
+  left: 35px;
+  top: 90px;
+  margin: 0;
+}
+
+/* 공통 컴포넌트 스타일 */
+.checkbox {
+  width: 21.25px;
+  height: 21.25px;
+  border: 1.6px solid #d1d5dc;
+  border-radius: 4.25px;
+  background-color: transparent;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.checkboxIcon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.emptyState {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  box-shadow: 2px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.emptyState p {
+  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #7a7a7a;
+  margin: 0;
+}
+
+/* 현재 전투 공통 스타일 */
+.currentBattleContainer {
+  background: #f1f1f1;
+  border-radius: 17px;
+  padding: 21.25px;
+  margin: 0 21px;
+  box-shadow: 2px 4px 4px -4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.currentBattleHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4.25px;
+}
+
+.currentBattleTitle {
+  font-family: "NanumSquareOTF", "NanumSquareOTF Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 25.5px;
+  color: #1e2939;
+  margin: 0;
+}
+
+.currentBattleDescription {
+  font-family: "NanumSquareOTF", "NanumSquareOTF Regular", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  font-size: 12.75px;
+  line-height: 17px;
+  color: #6a7282;
+  margin: 0;
+}
+
+.currentBattleTaskList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.currentTaskItem {
+  background: white;
+  border: 0.8px solid #e5e7eb;
+  border-radius: 17.425px;
+  padding: 19.75px 17px;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1),
+    0px 1px 2px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.currentTaskTitle {
+  font-family: "NanumSquareOTF", "NanumSquareOTF Regular", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 25.5px;
+  color: #1e2939;
+  margin: 0;
+  flex: 1;
+}

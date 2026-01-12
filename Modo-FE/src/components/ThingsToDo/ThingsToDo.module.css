@@ -1,0 +1,155 @@
+.container {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  box-shadow: 2px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 15px 24px 24px 24px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.categorySection {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.categoryTitle {
+  display: flex;
+  align-items: flex-start;
+  padding: 8px;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.categoryTitle p {
+  font-family: "Rubik", "Noto Sans KR", -apple-system, BlinkMacSystemFont,
+    sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  color: #161717;
+  margin: 0;
+}
+
+.taskWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.taskItem {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 8px;
+  box-sizing: border-box;
+  width: auto;
+}
+
+.checkbox {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #b4b4b4;
+  border-radius: 4px;
+  background-color: transparent;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkboxIcon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.taskText {
+  font-family: "Rubik", "Noto Sans KR", -apple-system, BlinkMacSystemFont,
+    sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: normal;
+  color: #161717;
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.modifyButton {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.modifyButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.modifyButton img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.taskInput {
+  flex: 1;
+  min-width: 0;
+  font-family: "Rubik", "Noto Sans KR", -apple-system, BlinkMacSystemFont,
+    sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #161717;
+  border: 1px solid #b4b4b4;
+  border-radius: 4px;
+  padding: 4px 8px;
+  outline: none;
+  background: white;
+}
+
+.taskInput:focus {
+  border-color: #7da7db;
+}
+
+.subtaskItem {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 8px 8px 32px;
+  box-sizing: border-box;
+}
+
+.subtaskItem .checkbox {
+  width: 24px;
+  height: 24px;
+}
+
+.subtaskItem .taskText {
+  font-family: "Rubik", "Noto Sans KR", -apple-system, BlinkMacSystemFont,
+    sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: normal;
+  color: #161717;
+  margin: 0;
+}
+

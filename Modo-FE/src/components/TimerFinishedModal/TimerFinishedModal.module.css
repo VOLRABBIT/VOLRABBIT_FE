@@ -1,0 +1,168 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.modal {
+  position: relative;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0px 0px 1px 0px rgba(24, 24, 27, 0.3),
+    0px 8px 16px 0px rgba(24, 24, 27, 0.1);
+  width: 320px;
+  max-width: calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.closeButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.closeIcon {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.header {
+  padding-top: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.title {
+  font-family: "NanumSquareOTF", "NanumSquareOTF ExtraBold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 28px;
+  color: #393939;
+  text-align: center;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.body {
+  padding-top: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.content {
+  min-height: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.contentText {
+  font-family: "NanumSquareOTF", "NanumSquareOTF Bold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 22px;
+  color: #7a7a7a;
+  text-align: center;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.footer {
+  padding-top: 0;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.cancelButton,
+.confirmButton {
+  flex: 1;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  font-family: "NanumSquareOTF", "NanumSquareOTF ExtraBold", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 22px;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  transition: opacity 0.2s;
+}
+
+.cancelButton {
+  background-color: #f1f1f1;
+  color: #7a7a7a;
+}
+
+.confirmButton {
+  background-color: #40625d;
+  color: white;
+}
+
+.cancelButton:hover,
+.confirmButton:hover {
+  opacity: 0.9;
+}
+
+.cancelButton:active,
+.confirmButton:active {
+  opacity: 0.8;
+}

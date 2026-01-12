@@ -19,6 +19,12 @@ import GuildQuestRegister from "./page/GuildQuestRegister/GuildQuestRegister.jsx
 import GuildManage from "./page/GuildManage/GuildManage.jsx";
 import GuildEdit from "./page/GuildEdit/GuildEdit.jsx";
 import MyPage from "./page/MyPage/MyPage.jsx";
+import TaskGiveUp from "./page/TaskGiveUp/TaskGiveUp.jsx";
+import TaskPhotoAuth from "./page/TaskPhotoAuth/TaskPhotoAuth.jsx";
+import TaskCreate from "./page/TaskCreate/TaskCreate.jsx";
+import TaskDetail from "./page/TaskDetail/TaskDetail.jsx";
+import TaskRebuild from "./page/TaskRebuild/TaskRebuild.jsx";
+import TaskFailedReview from "./page/TaskFailedReview/TaskFailedReview.jsx";
 import Pause from "./page/Pause/Pause.jsx";
 import Report from "./page/Report/Report.jsx";
 import AllTypesPage from "./page/AllTypes/AllTypesPage.jsx";
@@ -45,6 +51,7 @@ export default function App() {
             <Route path="/map" element={<Map />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/location/:type" element={<LocationIntro />} />
+            <Route path="/fight/:locationType" element={<Fight />} />
             <Route path="/fight" element={<Fight />} />
             <Route path="/guild" element={<Guild />} />
             <Route path="/guild/:id" element={<GuildDetail />} />
@@ -54,6 +61,13 @@ export default function App() {
             <Route path="/guild/manage" element={<GuildManage />} />
             <Route path="/guild/:id/edit" element={<GuildEdit />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/task-give-up" element={<TaskGiveUp />} />
+            <Route path="/task-failed-review" element={<TaskFailedReview />} />
+            <Route path="/task-photo-auth" element={<TaskPhotoAuth />} />
+            <Route path="/task-create" element={<TaskCreate />} />
+            <Route path="/task-detail/:date" element={<TaskDetail />} />
+            <Route path="/task-rebuild/:character/:date/:locationType?" element={<TaskRebuild />} />
+            <Route path="/task-rebuild/:date/:locationType?" element={<TaskRebuild />} />
             <Route path="/pause" element={<Pause />} />
             <Route path="/report" element={<Report />} />
             <Route path="/all-types" element={<AllTypesPage />} />

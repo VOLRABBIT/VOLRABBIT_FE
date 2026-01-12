@@ -69,12 +69,6 @@
   overflow-x: hidden;
   box-sizing: border-box;
   padding: 0;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.content::-webkit-scrollbar {
-  display: none;
 }
 
 .stepCard {
@@ -86,6 +80,10 @@
   border-radius: 12px;
   padding: 0;
   box-sizing: border-box;
+}
+
+.stepCard:not(.stepCardSummary) {
+  box-shadow: 2px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
 .step1 {
