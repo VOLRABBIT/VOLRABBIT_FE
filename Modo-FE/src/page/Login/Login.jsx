@@ -1,12 +1,13 @@
 import { useState } from "react";
 import styles from "./Login.module.css";
 import logoImage from "../../assets/landing-logo.png";
-import kakaoLoginImage from "../../assets/kakao-login.png";
+import appleIcon from "../../assets/apple.svg";
+import googleIcon from "../../assets/google.svg";
+import kakaoIcon from "../../assets/kakao-login.png";
 import eyeSlashIcon from "../../assets/eye-slash.svg";
 import eyeIcon from "../../assets/eye.svg";
 
 export default function Login() {
-  const [nickname, setNickname] = useState("");
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -14,7 +15,7 @@ export default function Login() {
   const [focusedField, setFocusedField] = useState(null);
   const [showKakaoSnack, setShowKakaoSnack] = useState(false);
 
-  const isLoginButtonActive = nickname.trim() && id.trim() && password.trim();
+  const isLoginButtonActive = id.trim() && password.trim();
 
   const handleLogin = (e) => {
     e?.preventDefault();
@@ -29,6 +30,14 @@ export default function Login() {
     setTimeout(() => {
       setShowKakaoSnack(false);
     }, 3000);
+  };
+
+  const handleGoogleLogin = () => {
+    console.log("구글 로그인");
+  };
+
+  const handleAppleLogin = () => {
+    console.log("애플 로그인");
   };
 
   return (
@@ -47,20 +56,6 @@ export default function Login() {
 
         {/* 입력 필드 */}
         <form className={styles.inputSection} onSubmit={handleLogin}>
-          {/* 닉네임 */}
-          <div className={styles.inputGroup}>
-            <label className={styles.label}>닉네임</label>
-            <input
-              type="text"
-              className={`${styles.input} ${focusedField === "nickname" ? styles.inputFocused : ""}`}
-              placeholder="닉네임 입력"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              onFocus={() => setFocusedField("nickname")}
-              onBlur={() => setFocusedField(null)}
-            />
-          </div>
-
           {/* 아이디 */}
           <div className={styles.inputGroup}>
             <label className={styles.label}>아이디</label>
@@ -119,16 +114,33 @@ export default function Login() {
           </button>
         </form>
 
-        {/* 카카오톡 로그인 버튼 */}
-        {showKakaoSnack ? (
-          <button className={styles.kakaoSnackButton} disabled>
-            카카오톡 계정 확인 중 ...
-          </button>
-        ) : (
-          <button className={styles.kakaoLoginButton} onClick={handleKakaoLogin}>
-            <img src={kakaoLoginImage} alt="카카오톡으로 로그인" className={styles.kakaoLoginImage} />
-          </button>
-        )}
+        {/* 소셜 로그인 버튼들 */}
+        <div className={styles.socialLoginSection}>
+          {showKakaoSnack ? (
+            <button className={styles.kakaoSnackButton} disabled>
+              카카오톡 계정 확인 중 ...
+            </button>
+          ) : (
+            <>
+              {/* 카카오톡 로그인 버튼 */}
+              <button className={styles.kakaoLoginButton} onClick={handleKakaoLogin}>
+                <img src={kakaoIcon} alt="카카오톡으로 로그인" className={styles.kakaoLoginImage} />
+              </button>
+
+              {/* 구글 로그인 버튼 */}
+              <button className={styles.googleLoginButton} onClick={handleGoogleLogin}>
+                <img src={googleIcon} alt="구글" className={styles.socialIcon} />
+                <span className={styles.socialButtonText}>Sign in with Google</span>
+              </button>
+
+              {/* 애플 로그인 버튼 */}
+              <button className={styles.appleLoginButton} onClick={handleAppleLogin}>
+                <img src={appleIcon} alt="애플" className={styles.socialIcon} />
+                <span className={styles.socialButtonText}>Sign in with Apple</span>
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

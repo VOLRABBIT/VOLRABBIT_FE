@@ -211,11 +211,21 @@
   cursor: pointer !important;
 }
 
+/* 소셜 로그인 섹션 */
+.socialLoginSection {
+  width: 100%;
+  max-width: 336px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
 /* 카카오톡 로그인 버튼 */
 .kakaoLoginButton {
-  width: 358px;
-  height: 56px;
-  border-radius: 999px;
+  width: 336px;
+  height: 45px;
+  border-radius: 4px;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -224,19 +234,102 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.2s;
   overflow: hidden;
+}
+
+.kakaoLoginButton:hover {
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.kakaoLoginButton:active {
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
 .kakaoLoginImage {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
+}
+
+/* 구글 로그인 버튼 */
+.googleLoginButton {
+  width: 336px;
+  height: 40px;
+  border-radius: 4px;
+  border: none;
+  background: #ffffff;
+  cursor: pointer;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-shrink: 0;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.googleLoginButton:hover {
+  background: #f9f9f9;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.googleLoginButton:active {
+  background: #f1f1f1;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+/* 애플 로그인 버튼 */
+.appleLoginButton {
+  width: 336px;
+  height: 40px;
+  border-radius: 4px;
+  border: none;
+  background: #ffffff;
+  cursor: pointer;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-shrink: 0;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.appleLoginButton:hover {
+  background: #f9f9f9;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.appleLoginButton:active {
+  background: #f1f1f1;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+/* 소셜 아이콘 */
+.socialIcon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* 소셜 버튼 텍스트 */
+.socialButtonText {
+  font-family: 'NanumSquare', 'NanumSquare Bold', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  color: #393939;
 }
 
 /* 카카오톡 계정 확인 */
 .kakaoSnackButton {
-  width: 358px;
+  width: 100%;
   height: auto;
   min-height: 46px;
   border-radius: 12px;
