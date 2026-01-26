@@ -6,6 +6,7 @@ import eyeIcon from "../../assets/eye.svg";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import arrowRightIcon from "../../assets/arrow-right.svg";
 import checkedIcon from "../../assets/checked.svg";
+import { signup } from "../../api/authApi";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ export default function Signup() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [passwordError, setPasswordError] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [agreements, setAgreements] = useState({
     all: false,
     service: false,
@@ -44,7 +47,33 @@ export default function Signup() {
     }
   };
 
-  const handleSignup = () => {};
+  const handleSignup = async () => {
+    if (!isSignupButtonActive || isLoading) return;
+
+    if (password !== confirmPassword) {
+      setPasswordError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+    setPasswordError("");
+
+    try {
+      await signup(nickname, id, password);
+      navigate("/login");
+    } catch (err) {
+      if (err.response?.status === 409) {
+        setError("이미 사용 중인 아이디입니다.");
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("회원가입에 실패했습니다. 다시 시도해주세요.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const isSignupButtonActive = 
     nickname.trim() && 
