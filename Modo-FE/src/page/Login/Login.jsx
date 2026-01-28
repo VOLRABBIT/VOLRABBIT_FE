@@ -7,6 +7,7 @@ import googleIcon from "../../assets/google.svg";
 import kakaoIcon from "../../assets/kakao-login.png";
 import eyeSlashIcon from "../../assets/eye-slash.svg";
 import eyeIcon from "../../assets/eye.svg";
+import arrowLeftIcon from "../../assets/arrow-left.svg";
 import { login, socialLogin, getUserProfile } from "../../api/authApi";
 
 export default function Login() {
@@ -16,10 +17,14 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [focusedField, setFocusedField] = useState(null);
-  const [showKakaoSnack, setShowKakaoSnack] = useState(false);
+  const [showKakaoSnack] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const isLoginButtonActive = id.trim() && password.trim();
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   const handleLogin = async (e) => {
     e?.preventDefault();
@@ -42,7 +47,7 @@ export default function Login() {
       }
     } catch (err) {
       if (err.response?.status === 401 || err.response?.status === 400) {
-        setError("아이디 또는 비밀번호가 일치하지 않습니다");
+        setError("이메일 또는 비밀번호가 일치하지 않습니다");
       } else if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
@@ -69,6 +74,9 @@ export default function Login() {
     <div className={styles.container}>
       {/* 헤더 */}
       <div className={styles.header}>
+        <button className={styles.backButton} onClick={handleBack}>
+          <img src={arrowLeftIcon} alt="뒤로가기" />
+        </button>
         <h1 className={styles.title}>로그인</h1>
       </div>
 
@@ -81,13 +89,13 @@ export default function Login() {
 
         {/* 입력 필드 */}
         <form className={styles.inputSection} onSubmit={handleLogin}>
-          {/* 아이디 */}
+          {/* 이메일 */}
           <div className={styles.inputGroup}>
-            <label className={styles.label}>아이디</label>
+            <label className={styles.label}>이메일</label>
             <input
               type="text"
               className={`${styles.input} ${focusedField === "id" ? styles.inputFocused : ""} ${error ? styles.inputError : ""}`}
-              placeholder="아이디 입력"
+              placeholder="이메일 입력"
               value={id}
               onChange={(e) => {
                 setId(e.target.value);

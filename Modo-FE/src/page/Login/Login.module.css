@@ -16,6 +16,28 @@
   flex-shrink: 0;
 }
 
+.backButton {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.backButton img {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
 .title {
   position: absolute;
   left: 78px;

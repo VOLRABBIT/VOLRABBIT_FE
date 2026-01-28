@@ -1,38 +1,65 @@
 import api from './api';
 
+// 디바이스 ID 관리 (회원가입/소셜 로그인에서 사용)
+const DEVICE_ID_KEY = 'deviceId';
+
+const generateDeviceId = () => {
+  if (typeof window !== 'undefined' && window.crypto?.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+  return `device-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
+
+const getOrCreateDeviceId = () => {
+  try {
+    const existing = localStorage.getItem(DEVICE_ID_KEY);
+    if (existing) return existing;
+
+    const created = generateDeviceId();
+    localStorage.setItem(DEVICE_ID_KEY, created);
+    return created;
+  } catch {
+    return generateDeviceId();
+  }
+};
+
 /**
  * 일반 로그인
- * @param {string} id - 사용자 아이디
+ * @param {string} email - 이메일
  * @param {string} password - 비밀번호
  * @returns {Promise} accessToken을 포함한 응답
  */
-export const login = async (id, password) => {
+export const login = async (email, password) => {
   const response = await api.post('/api/users/login', {
-    id,
+    email,
     password,
   });
-  
-  if (response.data.accessToken) {
-    localStorage.setItem('accessToken', response.data.accessToken);
+
+  const tokenData = response?.data?.data;
+
+  if (tokenData?.accessToken) {
+    localStorage.setItem('accessToken', tokenData.accessToken);
   }
-  
-  return response.data;
+
+  return tokenData;
 };
 
 /**
  * 일반 회원가입
  * @param {string} nickname - 닉네임
- * @param {string} id - 사용자 아이디
+ * @param {string} email - 이메일
  * @param {string} password - 비밀번호
  * @returns {Promise} 회원가입 응답
  */
-export const signup = async (nickname, id, password) => {
+export const signup = async (nickname, email, password) => {
+  const deviceId = getOrCreateDeviceId();
+
   const response = await api.post('/api/users/signup', {
-    nickname,
-    id,
+    email,
     password,
+    nickname,
+    deviceId,
   });
-  
   return response.data;
 };
 
@@ -42,8 +69,12 @@ export const signup = async (nickname, id, password) => {
  * @returns {void} - 브라우저가 해당 URL로 리다이렉트됨
  */
 export const socialLogin = (provider) => {
+  const deviceId = getOrCreateDeviceId();
+
   // OAuth 인증 URL로 리다이렉트
-  window.location.href = `${api.defaults.baseURL}/api/auth/oauth/${provider}`;
+  window.location.href = `${api.defaults.baseURL}/api/auth/oauth/${provider}?deviceId=${encodeURIComponent(
+    deviceId,
+  )}`;
 };
 
 /**
@@ -65,12 +96,14 @@ export const logout = async () => {
  */
 export const reissueToken = async () => {
   const response = await api.post('/api/users/reissue');
-  
-  if (response.data.accessToken) {
-    localStorage.setItem('accessToken', response.data.accessToken);
+
+  const tokenData = response?.data?.data;
+
+  if (tokenData?.accessToken) {
+    localStorage.setItem('accessToken', tokenData.accessToken);
   }
-  
-  return response.data;
+
+  return tokenData;
 };
 
 /**
@@ -79,5 +112,5 @@ export const reissueToken = async () => {
  */
 export const getUserProfile = async () => {
   const response = await api.get('/api/users/me');
-  return response.data;
+  return response?.data?.data;
 };

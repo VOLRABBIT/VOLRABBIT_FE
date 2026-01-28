@@ -87,6 +87,7 @@
   gap: 8px;
   width: 100%;
   flex-shrink: 0;
+  position: relative;
 }
 
 .inputGroup:not(:last-child) {
@@ -170,13 +171,15 @@
 }
 
 .errorMessage {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 4px);
   padding: 0 16px;
   font-family: 'NanumSquare', 'NanumSquare Bold', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 700;
   font-size: 12px;
   line-height: 20px;
   color: #ff4242;
-  margin-top: 4px;
 }
 
 /* 약관 동의 */
