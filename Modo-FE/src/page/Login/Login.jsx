@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 import logoImage from "../../assets/landing-logo.png";
 import appleIcon from "../../assets/apple.svg";
@@ -6,44 +7,76 @@ import googleIcon from "../../assets/google.svg";
 import kakaoIcon from "../../assets/kakao-login.png";
 import eyeSlashIcon from "../../assets/eye-slash.svg";
 import eyeIcon from "../../assets/eye.svg";
+import arrowLeftIcon from "../../assets/arrow-left.svg";
+import { login, socialLogin, getUserProfile } from "../../api/authApi";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [focusedField, setFocusedField] = useState(null);
-  const [showKakaoSnack, setShowKakaoSnack] = useState(false);
+  const [showKakaoSnack] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isLoginButtonActive = id.trim() && password.trim();
 
-  const handleLogin = (e) => {
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const handleLogin = async (e) => {
     e?.preventDefault();
-    if (!isLoginButtonActive) return;
-    // error test
-    // setError("아이디 또는 비밀번호가 일치하지 않습니다");
+    if (!isLoginButtonActive || isLoading) return;
+
+    setIsLoading(true);
+    setError("");
+
+    try {
+      await login(id, password);
+      
+      // 온보딩 완료 여부 확인
+      const profile = await getUserProfile();
+      
+      // persona가 있으면 기존 사용자이므로 맵 페이지로 이동, 없으면 신규 회원이므로 온보딩 페이지로 이동
+      if (profile.persona || profile.personaId) {
+        navigate("/map");
+      } else {
+        navigate("/onboarding");
+      }
+    } catch (err) {
+      if (err.response?.status === 401 || err.response?.status === 400) {
+        setError("이메일 또는 비밀번호가 일치하지 않습니다");
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("로그인에 실패했습니다. 다시 시도해주세요.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleKakaoLogin = () => {
-    setShowKakaoSnack(true);
-    // 3초 후 자동으로 숨김
-    setTimeout(() => {
-      setShowKakaoSnack(false);
-    }, 3000);
+    socialLogin("kakao");
   };
 
   const handleGoogleLogin = () => {
-    console.log("구글 로그인");
+    socialLogin("google");
   };
 
   const handleAppleLogin = () => {
-    console.log("애플 로그인");
+    socialLogin("apple");
   };
 
   return (
     <div className={styles.container}>
       {/* 헤더 */}
       <div className={styles.header}>
+        <button className={styles.backButton} onClick={handleBack}>
+          <img src={arrowLeftIcon} alt="뒤로가기" />
+        </button>
         <h1 className={styles.title}>로그인</h1>
       </div>
 
@@ -56,13 +89,13 @@ export default function Login() {
 
         {/* 입력 필드 */}
         <form className={styles.inputSection} onSubmit={handleLogin}>
-          {/* 아이디 */}
+          {/* 이메일 */}
           <div className={styles.inputGroup}>
-            <label className={styles.label}>아이디</label>
+            <label className={styles.label}>이메일</label>
             <input
               type="text"
               className={`${styles.input} ${focusedField === "id" ? styles.inputFocused : ""} ${error ? styles.inputError : ""}`}
-              placeholder="아이디 입력"
+              placeholder="이메일 입력"
               value={id}
               onChange={(e) => {
                 setId(e.target.value);
@@ -108,9 +141,9 @@ export default function Login() {
           <button 
             type="submit"
             className={`${styles.loginButton} ${isLoginButtonActive ? styles.loginButtonActive : ""}`} 
-            disabled={!isLoginButtonActive}
+            disabled={!isLoginButtonActive || isLoading}
           >
-            로그인
+            {isLoading ? "로그인 중..." : "로그인"}
           </button>
         </form>
 

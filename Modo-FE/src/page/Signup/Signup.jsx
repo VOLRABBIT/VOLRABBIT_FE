@@ -6,6 +6,7 @@ import eyeIcon from "../../assets/eye.svg";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import arrowRightIcon from "../../assets/arrow-right.svg";
 import checkedIcon from "../../assets/checked.svg";
+import { signup } from "../../api/authApi";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -17,6 +18,9 @@ export default function Signup() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const [passwordError, setPasswordError] = useState("");
+  const [nicknameError, setNicknameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [agreements, setAgreements] = useState({
     all: false,
     service: false,
@@ -44,7 +48,54 @@ export default function Signup() {
     }
   };
 
-  const handleSignup = () => {};
+  const handleSignup = async () => {
+    if (!isSignupButtonActive || isLoading) return;
+
+    if (password !== confirmPassword) {
+      setPasswordError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    // 이메일 형식 검증
+    const email = id.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError("올바른 이메일 형식을 입력해 주세요.");
+      return;
+    }
+
+    setIsLoading(true);
+    setNicknameError("");
+    setEmailError("");
+    setPasswordError("");
+
+    try {
+      await signup(nickname, email, password);
+      navigate("/login");
+    } catch (err) {
+      console.error("Signup failed:", err);
+
+      const status = err?.response?.status;
+      const rawMessage = err?.response?.data?.message || "";
+      const message = String(rawMessage);
+
+      if (message.includes("닉네임")) {
+        setNicknameError(message || "이미 사용 중인 닉네임입니다.");
+      } else if (message.includes("이메일") || message.toLowerCase().includes("email")) {
+        setEmailError(message || "이미 사용 중인 이메일입니다.");
+      } else if (status === 409) {
+        setEmailError(message || "이미 사용 중인 계정입니다.");
+      } else if (status === 400) {
+        setEmailError(message || "회원가입 정보가 올바르지 않습니다. 입력값을 다시 확인해주세요.");
+      } else if (message) {
+        setEmailError(message);
+      } else {
+        setEmailError("회원가입에 실패했습니다. 다시 시도해주세요.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const isSignupButtonActive = 
     nickname.trim() && 
@@ -73,26 +124,36 @@ export default function Signup() {
             <input
               type="text"
               className={`${styles.input} ${focusedField === "nickname" ? styles.inputFocused : ""}`}
-              placeholder="아이디 입력"
+              placeholder="닉네임 입력"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               onFocus={() => setFocusedField("nickname")}
               onBlur={() => setFocusedField(null)}
             />
+            {nicknameError && (
+              <div className={styles.errorMessage}>
+                {nicknameError}
+              </div>
+            )}
           </div>
 
-          {/* 아이디 */}
+          {/* 이메일 */}
           <div className={styles.inputGroup}>
-            <label className={styles.label}>아이디</label>
+            <label className={styles.label}>이메일</label>
             <input
               type="text"
               className={`${styles.input} ${focusedField === "id" ? styles.inputFocused : ""}`}
-              placeholder="아이디 입력"
+              placeholder="이메일 입력"
               value={id}
               onChange={(e) => setId(e.target.value)}
               onFocus={() => setFocusedField("id")}
               onBlur={() => setFocusedField(null)}
             />
+            {emailError && (
+              <div className={styles.errorMessage}>
+                {emailError}
+              </div>
+            )}
           </div>
 
           {/* 비밀번호 */}

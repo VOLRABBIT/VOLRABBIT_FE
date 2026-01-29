@@ -5,7 +5,8 @@ const BASE_URL = 'http://3.37.69.90:8080';
 // axios 인스턴스
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000, 
+  timeout: 10000,
+  withCredentials: true, // refresh Token 전달용
   headers: {
     'Content-Type': 'application/json',
   },
