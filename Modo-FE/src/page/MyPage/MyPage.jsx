@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../../components/TopBar/TopBar";
+import { logout } from "../../api/authApi";
 import Navbar from "../../components/Navbar/Navbar";
 import SkipModal from "../../components/Diagnosis/SkipModal";
 import ResultPage from "../Result/ResultPage";
@@ -87,12 +88,14 @@ export default function MyPage() {
     { id: "category", label: "카테고리 설정하기", path: "/category-settings" },
     { id: "pause", label: "일시정지", path: "/pause" },
     { id: "nfc", label: "NFC 태그 설정하기", path: "/nfc-settings" },
+    { id: "logout", label: "로그아웃", path: "/login" },
   ];
 
   const handleMenuClick = (path, id) => {
     if (id === "type") {
-      // 나의 유형 확인하기 클릭 시 결과 페이지 표시
       setShowResultPage(true);
+    } else if (id === "logout") {
+      handleLogout();
     } else {
       navigate(path);
     }
@@ -100,6 +103,11 @@ export default function MyPage() {
 
   const handleResultPageClose = () => {
     setShowResultPage(false);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
   };
 
   // 결과 페이지가 표시되면 ResultPage만 렌더링
