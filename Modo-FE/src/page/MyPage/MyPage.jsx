@@ -110,6 +110,7 @@ export default function MyPage() {
         personaData={personaData}
         buttonImage={overallTypeIcon}
         onButtonClick={() => navigate("/all-types")}
+        variant="allTypes"
       />
     );
   }

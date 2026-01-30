@@ -47,7 +47,10 @@ const RECOMMENDATION_BOX_COLORS = {
   "Emotional Adventure": "rgba(253, 160, 105, 0.20)",
 };
 
-const ResultPage = ({ personaData: propPersonaData, buttonImage, onButtonClick }) => {
+/**
+ * @param {"onboarding" | "allTypes"} [variant="onboarding"] - 온보딩 결과 페이지(모험 떠나기) | 전체 유형 확인하기 페이지
+ */
+const ResultPage = ({ personaData: propPersonaData, buttonImage, onButtonClick, variant = "onboarding" }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [expandedStats, setExpandedStats] = useState(false);
@@ -187,7 +190,11 @@ const ResultPage = ({ personaData: propPersonaData, buttonImage, onButtonClick }
       </div>
 
       {/* 하단 버튼 영역 */}
-      <div className={styles.bottomButtonContainer}>
+      <div
+        className={`${styles.bottomButtonContainer} ${
+          variant === "onboarding" ? styles.bottomButtonContainerOnboarding : styles.bottomButtonContainerAllTypes
+        }`}
+      >
         <img
           src={buttonIcon}
           className={styles.adventureButton}

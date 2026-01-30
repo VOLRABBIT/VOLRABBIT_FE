@@ -75,6 +75,7 @@ export default function AllTypesPage() {
         personaData={selectedPersonaData}
         buttonImage={selectedButtonIcon}
         onButtonClick={handleResultPageClose}
+        variant="allTypes"
       />
     );
   }

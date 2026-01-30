@@ -283,8 +283,18 @@
 }
 
 .bottomButtonContainer {
-  padding: 12px 8px 2px 8px;
   margin-top: auto;
+}
+
+/* 온보딩 결과 페이지: 모험 떠나기 버튼 */
+.bottomButtonContainerOnboarding {
+  padding: 0px 24px 15px 24px;
+}
+
+/* 전체 유형 확인하기 페이지: 하단 버튼 */
+.bottomButtonContainerAllTypes {
+  
+  padding: 0px 8px 2px 8px;
 }
 
 .adventureButton {
