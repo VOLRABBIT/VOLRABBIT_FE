@@ -1,12 +1,24 @@
-import { useState } from "react";
+// React & 라우터
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import TopBar from "../../components/TopBar/TopBar";
+
+// API
 import { logout } from "../../api/authApi";
+import { getMyInfo, getPersona } from "../../api/apiStore";
+
+// 컴포넌트
+import TopBar from "../../components/TopBar/TopBar";
 import Navbar from "../../components/Navbar/Navbar";
 import SkipModal from "../../components/Diagnosis/SkipModal";
 import ResultPage from "../Result/ResultPage";
+
+// 데이터
 import { PERSONA_DATA } from "../../data/personaData";
+
+// 스타일
 import styles from "./MyPage.module.css";
+
+// 에셋 - 캐릭터
 import adventurerCharacter from "../../assets/character/adventurer.png";
 import graveRobberCharacter from "../../assets/character/graverobber.png";
 import robotCharacter from "../../assets/character/robot.png";
@@ -16,6 +28,8 @@ import graverobberProfile from "../../assets/character/graverobber_profile.svg";
 import robotProfile from "../../assets/character/robot_profile.svg";
 import wizardProfile from "../../assets/character/wizard_profile.svg";
 import profileOutline from "../../assets/character/profile_outline.png";
+
+// 에셋 - 아이콘
 import arrowRightIcon from "../../assets/arrow-right.svg";
 import adventurerOverallType from "../../assets/icon/OverallType-adventurer.svg";
 import graverobberOverallType from "../../assets/icon/OverallType-graverobber.svg";
@@ -44,6 +58,14 @@ const CHARACTER_TO_PERSONA = {
   3: "Time Wizard", // 마법사
 };
 
+// personaId -> characterId (프로필 표시용)
+const PERSONA_ID_TO_CHARACTER_ID = {
+  1: 3, // Time Wizard -> 마법사
+  2: 2, // Starter-Freeze Bot -> 로봇
+  3: 1, // Attention-grave -> 도굴꾼
+  4: 0, // Emotional Adventure -> 모험가
+};
+
 // 캐릭터 ID를 OverallType 아이콘으로 매핑
 const CHARACTER_TO_OVERALL_TYPE_ICON = {
   0: adventurerOverallType, // 모험가
@@ -56,8 +78,31 @@ export default function MyPage() {
   const navigate = useNavigate();
   const [showSkipModal, setShowSkipModal] = useState(false);
   const [showResultPage, setShowResultPage] = useState(false);
+  const [myPagePersonaId, setMyPagePersonaId] = useState(null);
   const [currentCharacterId, setCurrentCharacterId] = useState(3); // 기본값: 마법사
-  const [nickname, setNickname] = useState("identity"); // 기본 닉네임
+  const [profileIconUrl, setProfileIconUrl] = useState(null); // API에서 받은 프로필 이미지
+  const [profileImageError, setProfileImageError] = useState(false);
+  const [nickname, setNickname] = useState("");
+
+  useEffect(() => {
+    getMyInfo()
+      .then((res) => {
+        const profile = res?.data ?? res;
+        if (profile?.nickname) setNickname(profile.nickname);
+        const pid = profile?.personaId ?? profile?.persona_id;
+        if (pid != null) {
+          const charId = PERSONA_ID_TO_CHARACTER_ID[pid];
+          if (charId != null) setCurrentCharacterId(charId);
+          getPersona(pid)
+            .then((res) => {
+              const data = res?.data ?? res;
+              if (data?.iconUrl) setProfileIconUrl(data.iconUrl);
+            })
+            .catch(() => {});
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleBack = () => {
     navigate(-1);
@@ -91,8 +136,16 @@ export default function MyPage() {
     { id: "logout", label: "로그아웃", path: "/login" },
   ];
 
-  const handleMenuClick = (path, id) => {
+  const handleMenuClick = async (path, id) => {
     if (id === "type") {
+      try {
+        const res = await getMyInfo();
+        const profile = res?.data ?? res;
+        const pid = profile?.personaId ?? profile?.persona_id;
+        setMyPagePersonaId(pid ?? undefined);
+      } catch {
+        setMyPagePersonaId(undefined);
+      }
       setShowResultPage(true);
     } else if (id === "logout") {
       handleLogout();
@@ -103,11 +156,12 @@ export default function MyPage() {
 
   const handleResultPageClose = () => {
     setShowResultPage(false);
+    setMyPagePersonaId(null);
   };
 
   const handleLogout = async () => {
     await logout();
-    navigate("/login");
+    navigate("/");
   };
 
   // 결과 페이지가 표시되면 ResultPage만 렌더링
@@ -119,6 +173,7 @@ export default function MyPage() {
         buttonImage={overallTypeIcon}
         onButtonClick={() => navigate("/all-types")}
         variant="allTypes"
+        personaId={myPagePersonaId ?? undefined}
       />
     );
   }
@@ -141,14 +196,15 @@ export default function MyPage() {
             onClick={handleProfileClick}
           >
             <img 
-              src={currentCharacter.profile} 
+              src={profileIconUrl && !profileImageError ? profileIconUrl : currentCharacter.profile} 
               alt="프로필 캐릭터" 
               className={styles.avatar}
               style={{ transform: currentCharacter.transform }}
+              onError={() => setProfileImageError(true)}
             />
           </div>
           <div className={styles.profileInfo}>
-            <h2 className={styles.identity}>{nickname}</h2>
+            <h2 className={styles.identity}>{nickname || "닉네임"}</h2>
             <p className={styles.subtitle}>{PERSONA_TYPES[currentCharacterId]}</p>
           </div>
         </div>
