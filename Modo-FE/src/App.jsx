@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Onboarding from "./page/Onboarding/Onboarding.jsx";
 import AdvancedDiagnosis from "./page/AdvancedDiagnosis/AdvancedDiagnosis.jsx";
 import Landing from "./page/Landing/Landing.jsx";
@@ -34,12 +35,22 @@ import NFCSettings from "./page/NFCSettings/NFCSettings.jsx";
 import NFCRegister from "./page/NFCRegister/NFCRegister.jsx";
 import "./App.css";
 
-export default function App() {
+const PUBLIC_PATHS = ["/", "/login", "/signup", "/terms-of-service", "/marketing-agreement"];
+
+function AppContent() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const isPublic = PUBLIC_PATHS.some((p) => location.pathname === p || location.pathname.startsWith(p + "/"));
+    if (!isPublic && !localStorage.getItem("accessToken")) {
+      navigate("/", { replace: true });
+    }
+  }, [location.pathname, navigate]);
+
   return (
-    <div className="viewport-wrapper">
-      <div className="app-frame">
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <Routes>
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/advanced-diagnosis" element={<AdvancedDiagnosis />} />
@@ -75,8 +86,16 @@ export default function App() {
             <Route path="/category-settings" element={<CategorySettings />} />
             <Route path="/nfc-settings" element={<NFCSettings />} />
             <Route path="/nfc-register" element={<NFCRegister />} />
-          </Routes>
-        </div>
+      </Routes>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <div className="viewport-wrapper">
+      <div className="app-frame">
+        <AppContent />
       </div>
     </div>
   );
