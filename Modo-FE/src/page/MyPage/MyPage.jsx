@@ -46,7 +46,7 @@ const CHARACTERS = [
 const PERSONA_TYPES = {
   0: "모험을 찾는 탐험가",
   1: "보물을 찾는 도굴꾼",
-  2: "완벽을 추구하는 로봇",
+  2: "시작 버튼이 멈춘 로봇",
   3: "시간이 사라지는 마법사",
 };
 
@@ -81,6 +81,7 @@ export default function MyPage() {
   const [myPagePersonaId, setMyPagePersonaId] = useState(null);
   const [currentCharacterId, setCurrentCharacterId] = useState(3); // 기본값: 마법사
   const [profileIconUrl, setProfileIconUrl] = useState(null); // API에서 받은 프로필 이미지
+  const [profilePersonaName, setProfilePersonaName] = useState(null); // API에서 받은 페르소나 이름 (서브타이틀)
   const [profileImageError, setProfileImageError] = useState(false);
   const [nickname, setNickname] = useState("");
 
@@ -97,6 +98,7 @@ export default function MyPage() {
             .then((res) => {
               const data = res?.data ?? res;
               if (data?.iconUrl) setProfileIconUrl(data.iconUrl);
+              if (data?.name) setProfilePersonaName(data.name);
             })
             .catch(() => {});
         }
@@ -205,7 +207,7 @@ export default function MyPage() {
           </div>
           <div className={styles.profileInfo}>
             <h2 className={styles.identity}>{nickname || "닉네임"}</h2>
-            <p className={styles.subtitle}>{PERSONA_TYPES[currentCharacterId]}</p>
+            <p className={styles.subtitle}>{profilePersonaName ?? PERSONA_TYPES[currentCharacterId]}</p>
           </div>
         </div>
 
