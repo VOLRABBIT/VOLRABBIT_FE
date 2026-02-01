@@ -1,3 +1,5 @@
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDiagnosisFlow } from "../../hooks/useDiagnosisFlow";
 import ResultPage from "../Result/ResultPage";
 import IntroScreen from "../../components/Diagnosis/IntroScreen";
@@ -5,7 +7,10 @@ import LoadingScreen from "../../components/Diagnosis/LoadingScreen";
 import QuestionScreen from "../../components/Diagnosis/QuestionScreen";
 import SkipModal from "../../components/Diagnosis/SkipModal";
 import { matchPersona } from "../../utils/personaCalculator";
-import { PERSONA_DATA } from "../../data/personaData";
+import { PERSONA_DATA, PERSONA_ID_TO_TYPE } from "../../data/personaData";
+import { getOnboardingQuestions, submitOnboarding } from "../../api/apiStore";
+import { getUserProfile } from "../../api/authApi";
+import { convertAnswerToScore } from "../../utils/personaCalculator";
 import robotButtonIcon from "../../assets/icon/Button-robot.svg";
 import adventurerButtonIcon from "../../assets/icon/Button-adventurer.svg";
 import graveButtonIcon from "../../assets/icon/Button-grave robber.svg";
@@ -19,17 +24,62 @@ const BUTTON_ICONS = {
   "Emotional Adventure": adventurerButtonIcon,
 };
 
-const QUESTIONS = [
-  "해야 할 일을 알지만 시작이 잘 되지 않는다.",
-  "복잡한 일을 보면 막막함이 든다.",
-  "잠깐만 하다가 시간이 훅 지나간다.",
-  "마감이 다가와야 움직인다.",
-  "관심 없는 활동에서는 집중이 오래 안 간다.",
-  "작은 실패에도 크게 좌절한다.",
-  "루틴을 유지하는 것이 어렵다.",
-];
-
 export default function Onboarding() {
+  const navigate = useNavigate();
+  const [apiQuestions, setApiQuestions] = useState([]);
+  const [questionsLoading, setQuestionsLoading] = useState(true);
+  const [questionsError, setQuestionsError] = useState(null);
+
+  /** 이미 페르소나가 있으면 맵으로 이동 */
+  useEffect(() => {
+    getUserProfile()
+      .then((profile) => {
+        const pid = profile?.personaId ?? profile?.persona_id;
+        if (pid != null) {
+          navigate("/map", { replace: true });
+        }
+      })
+      .catch(() => {});
+  }, [navigate]);
+
+  /** 질문 목록 조회 */
+  useEffect(() => {
+    getOnboardingQuestions()
+      .then((data) => setApiQuestions(data?.data ?? []))
+      .catch((err) => setQuestionsError(err))
+      .finally(() => setQuestionsLoading(false));
+  }, []);
+
+  const questions = useMemo(
+    () => apiQuestions.map((q) => q.questionText).filter(Boolean),
+    [apiQuestions]
+  );
+
+  /** 온보딩 제출 API 호출 후 페르소나 타입/ID 반환 */
+  const getPersonaFromApi = useCallback(
+    async (answers, isSkipped) => {
+      try {
+        const payload = isSkipped
+          ? null
+          : apiQuestions.map((q, i) => ({
+              questionNo: q.questionNo,
+              questionResponse: convertAnswerToScore(answers[i] ?? ""),
+            }));
+        const res = await submitOnboarding(payload);
+        const data = res?.data ?? res;
+        const personaId = data?.personaId;
+        const personaType = data?.personaType ?? (personaId ? PERSONA_ID_TO_TYPE[personaId] : null);
+        if (!personaType && !personaId) {
+          throw new Error("서버에서 페르소나 결과를 받지 못했습니다.");
+        }
+        return personaId ? { personaType: personaType ?? PERSONA_ID_TO_TYPE[personaId], personaId } : personaType;
+      } catch (err) {
+        throw err;
+      }
+    },
+    [apiQuestions]
+  );
+
   const {
     isIntro,
     currentQuestionIndex,
@@ -38,6 +88,8 @@ export default function Onboarding() {
     currentCharacterIndex,
     showResult,
     personaType,
+    resultPersonaId,
+    resultError,
     currentQuestion,
     selectedAnswer,
     handleStart,
@@ -48,11 +100,38 @@ export default function Onboarding() {
     handleNext,
     handleAnswerChange,
     questionsLength,
-  } = useDiagnosisFlow(QUESTIONS, matchPersona);
+  } = useDiagnosisFlow(questions, matchPersona, { getPersonaFromApi });
 
+  /** 모험 시작 버튼 클릭 → 맵으로 이동 */
   const handleStartAdventure = () => {
-    // 모험 시작 로직 구현 필요
+    navigate("/map");
   };
+
+  // 예외처리: 질문 목록 조회 실패 시
+  if (questionsLoading) {
+    return (
+      <div className={styles.container} style={{ padding: 24, textAlign: "center" }}>
+        <p>질문을 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  if (questionsError) {
+    const msg = questionsError.response?.data?.message ?? questionsError.message ?? "질문을 불러오지 못했습니다.";
+    return (
+      <div className={styles.container} style={{ padding: 24, textAlign: "center", color: "#b91c1c" }}>
+        <p>{msg}</p>
+      </div>
+    );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className={styles.container} style={{ padding: 24, textAlign: "center", color: "#666" }}>
+        <p>표시할 질문이 없습니다.</p>
+      </div>
+    );
+  }
 
   if (isIntro) {
     return (
@@ -75,14 +154,32 @@ export default function Onboarding() {
     return <LoadingScreen currentCharacterIndex={currentCharacterIndex} styles={styles} />;
   }
 
+  if (showResult && resultError) {
+    const msg = resultError.response?.data?.message ?? resultError.message ?? "결과를 불러오지 못했습니다.";
+    return (
+      <div className={styles.container} style={{ padding: 24, textAlign: "center", color: "#b91c1c" }}>
+        <p>{msg}</p>
+      </div>
+    );
+  }
+
   if (showResult && personaType) {
-    const personaData = PERSONA_DATA[personaType] || PERSONA_DATA["Starter-Freeze Bot"];
+    const personaData = PERSONA_DATA[personaType];
+    if (!personaData) {
+      return (
+        <div className={styles.container} style={{ padding: 24, textAlign: "center", color: "#b91c1c" }}>
+          <p>알 수 없는 페르소나 유형입니다.</p>
+        </div>
+      );
+    }
     const buttonIcon = BUTTON_ICONS[personaData.id] || robotButtonIcon;
     return (
       <ResultPage
         personaData={personaData}
         buttonImage={buttonIcon}
         onButtonClick={handleStartAdventure}
+        variant="onboarding"
+        personaId={resultPersonaId ?? undefined}
       />
     );
   }
