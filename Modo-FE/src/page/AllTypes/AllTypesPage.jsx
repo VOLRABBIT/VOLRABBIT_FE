@@ -1,15 +1,28 @@
+// React & 라우터
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
+// API
+import { getPersonas } from "../../api/apiStore";
+
+// 컴포넌트
 import TopBar from "../../components/TopBar/TopBar";
 import ResultPage from "../Result/ResultPage";
 import CharacterCard from "../../components/CharacterCard/CharacterCard";
+
+// 데이터
 import { PERSONA_DATA } from "../../data/personaData";
-import { getPersonas } from "../../api/apiStore";
+
+// 스타일
 import styles from "./AllTypesPage.module.css";
+
+// 에셋 - 캐릭터
 import wizardCharacter from "../../assets/character/wizard.png";
 import robotCharacter from "../../assets/character/robot.png";
 import graverobberCharacter from "../../assets/character/graverobber.png";
 import adventurerCharacter from "../../assets/character/adventurer.png";
+
+// 에셋 - 아이콘
 import adventurerOverallType from "../../assets/icon/OverallType-adventurer.svg";
 import graverobberOverallType from "../../assets/icon/OverallType-graverobber.svg";
 import robotOverallType from "../../assets/icon/OverallType-robot.svg";

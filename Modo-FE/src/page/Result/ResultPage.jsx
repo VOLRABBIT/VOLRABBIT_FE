@@ -1,11 +1,18 @@
+// React & 라우터
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import styles from "./ResultPage.module.css";
-import StatusBadge from "../../components/StatusBadge/StatusBadge";
-import RadarChart from "../../components/RadarChart/RadarChart";
+// API
 import { getPersonaAnalysis } from "../../api/apiStore";
 
+// 컴포넌트
+import StatusBadge from "../../components/StatusBadge/StatusBadge";
+import RadarChart from "../../components/RadarChart/RadarChart";
+
+// 스타일
+import styles from "./ResultPage.module.css";
+
+// 에셋 - 아이콘
 import arrowDownIcon from "../../assets/icon/arrow-down.svg";
 import arrowUpIcon from "../../assets/icon/arrow-up.svg";
 import robotButtonIcon from "../../assets/icon/Button-robot.svg";

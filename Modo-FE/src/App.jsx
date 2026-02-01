@@ -1,15 +1,16 @@
+// React & 라우터
 import { useEffect } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import Onboarding from "./page/Onboarding/Onboarding.jsx";
-import AdvancedDiagnosis from "./page/AdvancedDiagnosis/AdvancedDiagnosis.jsx";
+
+// 페이지
 import Landing from "./page/Landing/Landing.jsx";
 import Login from "./page/Login/Login.jsx";
 import Signup from "./page/Signup/Signup.jsx";
 import TermsOfService from "./page/TermsOfService/TermsOfService.jsx";
 import MarketingAgreement from "./page/MarketingAgreement/MarketingAgreement.jsx";
-import BattleModalExample from "./page/BattleModalExample/BattleModalExample.jsx";
+import Onboarding from "./page/Onboarding/Onboarding.jsx";
+import AdvancedDiagnosis from "./page/AdvancedDiagnosis/AdvancedDiagnosis.jsx";
 import Map from "./page/Map/Map.jsx";
-import Shop from "./page/Shop/Shop.jsx";
 import LocationIntro from "./page/Map/LocationIntro/LocationIntro.jsx";
 import Fight from "./page/Fight/Fight.jsx";
 import Guild from "./page/Guild/Guild.jsx";
@@ -20,6 +21,7 @@ import GuildQuestRegister from "./page/GuildQuestRegister/GuildQuestRegister.jsx
 import GuildManage from "./page/GuildManage/GuildManage.jsx";
 import GuildEdit from "./page/GuildEdit/GuildEdit.jsx";
 import MyPage from "./page/MyPage/MyPage.jsx";
+import Shop from "./page/Shop/Shop.jsx";
 import TaskGiveUp from "./page/TaskGiveUp/TaskGiveUp.jsx";
 import TaskPhotoAuth from "./page/TaskPhotoAuth/TaskPhotoAuth.jsx";
 import TaskCreate from "./page/TaskCreate/TaskCreate.jsx";
@@ -33,6 +35,9 @@ import CharacterSelectPage from "./page/CharacterSelect/CharacterSelectPage.jsx"
 import CategorySettings from "./page/CategorySettings/CategorySettings.jsx";
 import NFCSettings from "./page/NFCSettings/NFCSettings.jsx";
 import NFCRegister from "./page/NFCRegister/NFCRegister.jsx";
+import BattleModalExample from "./page/BattleModalExample/BattleModalExample.jsx";
+
+// 스타일
 import "./App.css";
 
 const PUBLIC_PATHS = ["/", "/login", "/signup", "/terms-of-service", "/marketing-agreement"];

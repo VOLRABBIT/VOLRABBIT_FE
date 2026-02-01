@@ -1,21 +1,33 @@
+// React & 라우터
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+
+// 훅 & 페이지
 import { useDiagnosisFlow } from "../../hooks/useDiagnosisFlow";
 import ResultPage from "../Result/ResultPage";
+
+// 컴포넌트
 import IntroScreen from "../../components/Diagnosis/IntroScreen";
 import LoadingScreen from "../../components/Diagnosis/LoadingScreen";
 import QuestionScreen from "../../components/Diagnosis/QuestionScreen";
 import SkipModal from "../../components/Diagnosis/SkipModal";
-import { matchPersona } from "../../utils/personaCalculator";
+
+// 데이터 & 유틸
+import { matchPersona, convertAnswerToScore } from "../../utils/personaCalculator";
 import { PERSONA_DATA, PERSONA_ID_TO_TYPE } from "../../data/personaData";
+
+// API
 import { getOnboardingQuestions, submitOnboarding } from "../../api/apiStore";
 import { getUserProfile } from "../../api/authApi";
-import { convertAnswerToScore } from "../../utils/personaCalculator";
+
+// 스타일
+import styles from "./Onboarding.module.css";
+
+// 에셋 - 아이콘
 import robotButtonIcon from "../../assets/icon/Button-robot.svg";
 import adventurerButtonIcon from "../../assets/icon/Button-adventurer.svg";
 import graveButtonIcon from "../../assets/icon/Button-grave robber.svg";
 import wizardButtonIcon from "../../assets/icon/Button-wizard.svg";
-import styles from "./Onboarding.module.css";
 
 const BUTTON_ICONS = {
   "Time Wizard": wizardButtonIcon,
