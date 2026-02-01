@@ -35,24 +35,41 @@ const CHARACTER_TYPES = [
   { id: "Emotional Adventure", personaId: 4, name: "감정 모험가", image: adventurerCharacter, overallTypeIcon: adventurerOverallType },
 ];
 
+// API 없을 때 쓸 폴백 리스트 (로컬 이미지를 iconUrl로도 사용)
+const FALLBACK_CHARACTERS = CHARACTER_TYPES.map((c) => ({ ...c, iconUrl: c.image }));
+
 export default function AllTypesPage() {
   const navigate = useNavigate();
   const [selectedPersonaData, setSelectedPersonaData] = useState(null);
   const [selectedPersonaId, setSelectedPersonaId] = useState(null);
   const [selectedButtonIcon, setSelectedButtonIcon] = useState(null);
-  const [personasFromApi, setPersonasFromApi] = useState({}); // personaId -> { name, iconUrl }
+  const [displayCharacters, setDisplayCharacters] = useState(FALLBACK_CHARACTERS);
 
   useEffect(() => {
     getPersonas()
       .then((res) => {
         const list = res?.data ?? res ?? [];
-        const map = {};
-        (Array.isArray(list) ? list : []).forEach((p) => {
-          if (p?.personaId != null) map[p.personaId] = { name: p.name, iconUrl: p.iconUrl };
-        });
-        setPersonasFromApi(map);
+        const arr = Array.isArray(list) ? list : [];
+        if (arr.length === 0) {
+          setDisplayCharacters(FALLBACK_CHARACTERS);
+          return;
+        }
+        const built = arr
+          .filter((p) => p?.name)
+          .map((p) => {
+            const local = CHARACTER_TYPES.find((c) => c.name === p.name);
+            if (!local) return null;
+            return {
+              ...local,
+              name: p.name ?? local.name,
+              iconUrl: p.iconUrl || local.image,
+              personaId: p.personaId ?? local.personaId,
+            };
+          })
+          .filter(Boolean);
+        setDisplayCharacters(built.length > 0 ? built : FALLBACK_CHARACTERS);
       })
-      .catch(() => {});
+      .catch(() => setDisplayCharacters(FALLBACK_CHARACTERS));
   }, []);
 
   const handleBack = () => {
@@ -104,22 +121,13 @@ export default function AllTypesPage() {
 
       <div className={styles.content}>
         <div className={styles.characterGrid}>
-          {CHARACTER_TYPES.map((character) => {
-            const apiData = personasFromApi[character.personaId];
-            const merged = {
-              ...character,
-              name: apiData?.name ?? character.name,
-              image: character.image,
-              iconUrl: apiData?.iconUrl,
-            };
-            return (
-              <CharacterCard
-                key={character.id}
-                character={merged}
-                onClick={() => handleCharacterClick(character)}
-              />
-            );
-          })}
+          {displayCharacters.map((character) => (
+            <CharacterCard
+              key={`${character.id}-${character.personaId}`}
+              character={character}
+              onClick={() => handleCharacterClick(character)}
+            />
+          ))}
         </div>
       </div>
     </div>

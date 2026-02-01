@@ -6,15 +6,11 @@ export default function CharacterCard({ character, onClick }) {
   const imageSrc = character.iconUrl && !imageError ? character.iconUrl : character.image;
 
   const getCardClass = () => {
-    if (character.id === "Time Wizard") {
-      return `${styles.characterCard} ${styles.characterCardWizard}`;
-    } else if (character.id === "Starter-Freeze Bot") {
-      return `${styles.characterCard} ${styles.characterCardRobot}`;
-    } else if (character.id === "Attention-grave") {
-      return `${styles.characterCard} ${styles.characterCardGraverobber}`;
-    } else if (character.id === "Emotional Adventure") {
-      return `${styles.characterCard} ${styles.characterCardAdventurer}`;
-    }
+    const name = character.name;
+    if (name === "시간이 사라지는 마법사") return `${styles.characterCard} ${styles.characterCardWizard}`;
+    if (name === "시작 버튼이 멈춘 로봇") return `${styles.characterCard} ${styles.characterCardRobot}`;
+    if (name === "주의력 도굴꾼") return `${styles.characterCard} ${styles.characterCardGraverobber}`;
+    if (name === "감정 모험가") return `${styles.characterCard} ${styles.characterCardAdventurer}`;
     return styles.characterCard;
   };
 

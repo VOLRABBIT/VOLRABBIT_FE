@@ -31,10 +31,11 @@ export const PERSONA_DATA = {
   },
 };
 
-// PersonaID
+// PersonaID → 타입 id
 export const PERSONA_ID_TO_TYPE = {
   1: "Time Wizard",
   2: "Starter-Freeze Bot",
   3: "Attention-grave",
   4: "Emotional Adventure",
 };
+
