@@ -1,6 +1,10 @@
+import { useState } from "react";
 import styles from "./CharacterCard.module.css";
 
 export default function CharacterCard({ character, onClick }) {
+  const [imageError, setImageError] = useState(false);
+  const imageSrc = character.iconUrl && !imageError ? character.iconUrl : character.image;
+
   const getCardClass = () => {
     if (character.id === "Time Wizard") {
       return `${styles.characterCard} ${styles.characterCardWizard}`;
@@ -19,9 +23,10 @@ export default function CharacterCard({ character, onClick }) {
       <div className={getCardClass()}>
         <div className={styles.characterImageContainer}>
           <img
-            src={character.image}
+            src={imageSrc}
             alt={character.name}
             className={styles.characterImage}
+            onError={() => setImageError(true)}
           />
         </div>
       </div>
