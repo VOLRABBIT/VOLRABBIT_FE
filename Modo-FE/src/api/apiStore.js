@@ -55,3 +55,9 @@ export const updateNickname = async (nickname) => {
   const response = await api.patch('/api/users/me/nickname', { nickname });
   return response.data;
 };
+
+/** 회원 탈퇴 (현재 로그인 유저 계정·토큰 정보 영구 삭제) */
+export const deleteAccount = async () => {
+  const response = await api.delete('/api/users/me');
+  return response.data;
+};

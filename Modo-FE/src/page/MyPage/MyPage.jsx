@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 // API
 import { logout } from "../../api/authApi";
-import { getMyInfo, getPersona } from "../../api/apiStore";
+import { getMyInfo, getPersona, deleteAccount } from "../../api/apiStore";
 
 // 컴포넌트
 import TopBar from "../../components/TopBar/TopBar";
@@ -77,6 +77,7 @@ const CHARACTER_TO_OVERALL_TYPE_ICON = {
 export default function MyPage() {
   const navigate = useNavigate();
   const [showSkipModal, setShowSkipModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [showResultPage, setShowResultPage] = useState(false);
   const [myPagePersonaId, setMyPagePersonaId] = useState(null);
   const [currentCharacterId, setCurrentCharacterId] = useState(3); // 기본값: 마법사
@@ -167,6 +168,28 @@ export default function MyPage() {
     navigate("/");
   };
 
+  const handleWithdrawModalClose = () => {
+    setShowWithdrawModal(false);
+  };
+
+  const handleWithdrawConfirm = async () => {
+    setShowWithdrawModal(false);
+    try {
+      await deleteAccount();
+      // 탈퇴 후에는 로그아웃 API가 실패할 수 있으므로, 토큰만 제거하고 랜딩으로 이동
+      try {
+        await logout();
+      } catch {
+        // 무시 (계정 삭제로 이미 토큰 무효화된 경우)
+      }
+      localStorage.removeItem("accessToken");
+      navigate("/", { replace: true });
+    } catch (err) {
+      const msg = err.response?.data?.message ?? "회원 탈퇴에 실패했습니다.";
+      alert(msg);
+    }
+  };
+
   // 결과 페이지가 표시되면 ResultPage만 렌더링
   if (showResultPage) {
     const overallTypeIcon = CHARACTER_TO_OVERALL_TYPE_ICON[currentCharacterId];
@@ -229,6 +252,15 @@ export default function MyPage() {
             </div>
           ))}
         </div>
+
+        {/* 회원 탈퇴 */}
+        <button
+          type="button"
+          className={styles.withdrawLink}
+          onClick={() => setShowWithdrawModal(true)}
+        >
+          <span className={styles.withdrawLinkText}>회원 탈퇴</span>
+        </button>
       </div>
 
       <Navbar activeItem="mypage" />
@@ -241,6 +273,17 @@ export default function MyPage() {
           continueButtonText="취소"
           onClose={handleSkipModalClose}
           onStop={handleChangeConfirm}
+        />
+      )}
+
+      {showWithdrawModal && (
+        <SkipModal
+          title="회원 탈퇴"
+          content="정말 탈퇴하시겠습니까?<br></br>계정과 토큰 정보가 영구 삭제됩니다."
+          stopButtonText="탈퇴하기"
+          continueButtonText="취소"
+          onClose={handleWithdrawModalClose}
+          onStop={handleWithdrawConfirm}
         />
       )}
     </div>

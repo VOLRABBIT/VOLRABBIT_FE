@@ -84,9 +84,11 @@
 .menuList {
   display: flex;
   width: 328px;
-  flex: 1;
+  flex: 0 1 auto;
+  max-height: 360px;
   min-height: 0;
-  padding: 24px 16px;
+  margin-top: 20px;
+  padding: 0 16px 20px 16px;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
@@ -108,8 +110,7 @@
 }
 
 .menuLabel {
-  color: var(--Neutral-Dark-Darkest, #1F2024);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1F2024;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -120,4 +121,25 @@
   width: 20px;
   height: 20px;
   opacity: 0.5;
+}
+
+.withdrawLink {
+  display: block;
+  width: 100%;
+  margin-top: auto;
+  padding: 20px 0px 15px 0px;
+  background: none;
+  border: none;
+  color: #c62828;
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: none;
+  text-align: center;
+  cursor: default;
+  line-height: 1.4;
+}
+
+.withdrawLinkText {
+  text-decoration: underline;
+  cursor: pointer;
 }
