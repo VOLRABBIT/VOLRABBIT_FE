@@ -41,3 +41,17 @@ export const getMyInfo = async () => {
   const response = await api.get('/api/users/me');
   return response.data;
 };
+
+/** 닉네임 중복 확인 (true: 중복됨, false: 사용 가능) */
+export const checkNickname = async (nickname) => {
+  const response = await api.get('/api/users/nickname/check', {
+    params: { nickname },
+  });
+  return response.data;
+};
+
+/** 닉네임 수정 (로그인 유저 닉네임 변경, 중복 불가) */
+export const updateNickname = async (nickname) => {
+  const response = await api.patch('/api/users/me/nickname', { nickname });
+  return response.data;
+};

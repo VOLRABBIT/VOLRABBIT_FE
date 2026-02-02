@@ -1,0 +1,211 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    rgba(125, 167, 219, 0.4) 0%,
+    rgba(241, 169, 211, 0.4) 44.71%,
+    rgba(183, 168, 215, 0.4) 69.23%,
+    rgba(116, 179, 170, 0.4) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.description {
+  color: #71727a;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0 0 24px 0;
+  align-self: center;
+}
+
+.inputGroup {
+  margin-bottom: 16px;
+}
+
+.label {
+  display: block;
+  color: #1f2024;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding-left: 5px;
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  background: #fff;
+  color: #1f2024;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: #bb90dd;
+}
+
+.input::placeholder {
+  color: #a0a0a8;
+}
+
+.input:disabled {
+  background: #f5f5f6;
+  color: #71727a;
+}
+
+.available {
+  margin: 8px 0 0 0;
+  color: #34a853;
+  font-size: 13px;
+  font-weight: 500;
+  padding-left: 5px;
+}
+
+.duplicate {
+  margin: 8px 0 0 0;
+  color: #ea4335;
+  font-size: 13px;
+  font-weight: 500;
+  padding-left: 5px;
+}
+
+.error {
+  margin: 0 0 16px 0;
+  color: #ea4335;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.buttonSecondary {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(187, 144, 221, 0.28);
+  color: #52528f;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.buttonSecondary:hover:not(:disabled) {
+  background: rgba(187, 144, 221, 0.25);
+}
+
+.buttonSecondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.buttonPrimary {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #bb90dd;
+  color: #fff;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.buttonPrimary:hover:not(:disabled) {
+  opacity: 0.95;
+}
+
+.buttonPrimary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.buttonPrimary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 성공 모달 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  width: 320px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px 15px 10px 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  box-sizing: border-box;
+}
+
+.modalMessage {
+  margin: 0;
+  color: #1f2024;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 24px;
+}
+
+.modalButton {
+  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #bb90dd;
+  color: #fff;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.modalButton:hover {
+  opacity: 0.95;
+}
