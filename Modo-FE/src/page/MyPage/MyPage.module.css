@@ -84,10 +84,13 @@
 .menuList {
   display: flex;
   width: 328px;
+  flex: 1;
+  min-height: 0;
   padding: 24px 16px;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
+  overflow-y: auto;
 }
 
 .menuItem {

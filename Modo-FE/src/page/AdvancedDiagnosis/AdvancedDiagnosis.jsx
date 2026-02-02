@@ -102,6 +102,7 @@ export default function AdvancedDiagnosis() {
         personaData={personaData}
         buttonImage={buttonIcon}
         onButtonClick={handleStartAdventure}
+        variant="onboarding"
       />
     );
   }
