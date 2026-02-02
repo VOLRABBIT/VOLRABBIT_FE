@@ -21,6 +21,7 @@ import GuildQuestRegister from "./page/GuildQuestRegister/GuildQuestRegister.jsx
 import GuildManage from "./page/GuildManage/GuildManage.jsx";
 import GuildEdit from "./page/GuildEdit/GuildEdit.jsx";
 import MyPage from "./page/MyPage/MyPage.jsx";
+import NicknameChange from "./page/NicknameChange/NicknameChange.jsx";
 import Shop from "./page/Shop/Shop.jsx";
 import TaskGiveUp from "./page/TaskGiveUp/TaskGiveUp.jsx";
 import TaskPhotoAuth from "./page/TaskPhotoAuth/TaskPhotoAuth.jsx";
@@ -77,6 +78,7 @@ function AppContent() {
             <Route path="/guild/manage" element={<GuildManage />} />
             <Route path="/guild/:id/edit" element={<GuildEdit />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/nickname-change" element={<NicknameChange />} />
             <Route path="/task-give-up" element={<TaskGiveUp />} />
             <Route path="/task-failed-review" element={<TaskFailedReview />} />
             <Route path="/task-photo-auth" element={<TaskPhotoAuth />} />
