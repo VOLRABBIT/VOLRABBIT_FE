@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import { getTasksByDate, CATEGORY_PRIORITY_MAP } from "../../data/fightTaskData";
+import { getTodosByDate } from "../../api/todoApi";
+import { CATEGORY_PRIORITY_MAP } from "../../data/fightTaskData";
+import styles from "./TaskRebuild.module.css";
 import robotStyles from "./layouts/RobotLayout.module.css";
 import GraveRobberLayout from "./layouts/GraveRobberLayout";
 import WizardLayout from "./layouts/WizardLayout";
@@ -46,20 +48,21 @@ export default function TaskRebuild() {
   const isGraveRobber = characterType === "Attention-grave";
   const isWizard = characterType === "Time Wizard";
 
-  const tasksForDate = getTasksByDate(dateStr);
+  const [lastFetchedDate, setLastFetchedDate] = useState(null);
+  const [error, setError] = useState(null);
+  const loading = lastFetchedDate !== dateStr;
 
   const calculatePriority = (task, category) => {
     if (task.priority) {
       return task.priority;
     }
-    
     return CATEGORY_PRIORITY_MAP[category] || "중요";
   };
 
-  const flattenTasks = () => {
+  const flattenTasks = useCallback((categoryGroups) => {
     const allTasks = [];
-    tasksForDate.forEach((categoryGroup) => {
-      categoryGroup.tasks.forEach((task) => {
+    (categoryGroups || []).forEach((categoryGroup) => {
+      (categoryGroup.tasks || []).forEach((task) => {
         if (!task.isCompleted) {
           const priority = calculatePriority(task, categoryGroup.category);
           allTasks.push({
@@ -69,25 +72,44 @@ export default function TaskRebuild() {
             priority,
             isCompleted: false,
             startTime: task.startTime ?? null,
-            duration: task.duration ?? null, 
+            duration: task.duration ?? null,
           });
         }
       });
     });
-    
-    // 우선순위에 따라 정렬
+    const priorityOrder = { "긴급·중요": 1, "긴급": 2, "중요": 3 };
     return allTasks.sort((a, b) => {
       if (a.startTime !== null && b.startTime !== null) {
         return a.startTime - b.startTime;
       }
       if (a.startTime !== null) return -1;
       if (b.startTime !== null) return 1;
-      const priorityOrder = { "긴급·중요": 1, "긴급": 2, "중요": 3 };
       return (priorityOrder[a.priority] || 4) - (priorityOrder[b.priority] || 4);
     });
-  };
+  }, []);
 
-  const [tasks, setTasks] = useState(flattenTasks());
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    getTodosByDate(dateStr)
+      .then((data) => {
+        if (!cancelled) {
+          setTasks(flattenTasks(data ?? []));
+          setError(null);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(err?.response?.data?.message ?? err?.message ?? "목록을 불러오지 못했습니다.");
+          setTasks([]);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLastFetchedDate(dateStr);
+      });
+    return () => { cancelled = true; };
+  }, [dateStr, flattenTasks]);
   const [modalState, setModalState] = useState({
     isOpen: false,
     taskTitle: "",
@@ -256,6 +278,25 @@ export default function TaskRebuild() {
 
   const activeTasks = tasks.filter((task) => !task.isCompleted);
   const currentTask = selectedBattleTask || null;
+
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.content} style={{ justifyContent: "center", alignItems: "center" }}>
+          <p>불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.content} style={{ justifyContent: "center", alignItems: "center" }}>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleTimerFinishedConfirm = () => {
     // 타이머 리셋

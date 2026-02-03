@@ -61,3 +61,10 @@ export const deleteAccount = async () => {
   const response = await api.delete('/api/users/me');
   return response.data;
 };
+
+// Category API (마이페이지 카테고리 관리 연동)
+/** 카테고리 목록 조회 (id, name) **/
+export const getCategories = async () => {
+  const response = await api.get('/api/categories');
+  return response.data;
+};

@@ -7,6 +7,8 @@ import styles from "./TaskCreate.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import taskFightIcon from "../../assets/task-fight.svg";
 import { getLocationBackground, getLocationButtonColor } from "../../utils/locationTheme";
+import { createTodo, buildCreateTodoPayload } from "../../api/todoApi";
+import { getCategories } from "../../api/apiStore";
 
 export default function TaskCreate() {
   const navigate = useNavigate();
@@ -15,12 +17,14 @@ export default function TaskCreate() {
   const isEditMode = location.state?.isEditMode || false;
   
   const locationType = location.state?.locationType;
+  const targetDateFromState = location.state?.targetDate;
   const mapBackground = getLocationBackground(locationType);
   const buttonColor = getLocationButtonColor(locationType);
   
   const [currentStep, setCurrentStep] = useState(1);
   const [taskName, setTaskName] = useState("");
-  const [category, setCategory] = useState(null);
+  const [categoryId, setCategoryId] = useState(null);
+  const [categoriesList, setCategoriesList] = useState([]);
   const [deadline, setDeadline] = useState(null);
   const [customDeadline, setCustomDeadline] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
@@ -29,21 +33,43 @@ export default function TaskCreate() {
   const [verification, setVerification] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
 
-  // 수정 모드일 때 기존 데이터 로드
+  // 카테고리 목록 조회 (마이페이지 카테고리 관리와 동일 소스)
   useEffect(() => {
-    if (isEditMode && editTaskData) {
-      setTaskName(editTaskData.title || "");
-      setCategory(editTaskData.category || null);
-      // 기존 데이터에 없는 필드들은 기본값 유지
+    getCategories()
+      .then((data) => {
+        const list = Array.isArray(data)
+          ? data
+          : (Array.isArray(data?.data) ? data.data : null) ?? data?.content ?? data?.categories ?? [];
+        setCategoriesList(list);
+      })
+      .catch(() => setCategoriesList([]));
+  }, []);
+
+  // 수정 모드일 때 기존 데이터 로드 (ThingsToDo는 category 이름 전달, API는 categoryId 숫자 사용)
+  useEffect(() => {
+    if (!isEditMode || !editTaskData) return;
+    setTaskName(editTaskData.title || "");
+    if (categoriesList.length === 0) return;
+    const numericId = editTaskData.categoryId != null && Number.isFinite(Number(editTaskData.categoryId))
+      ? Number(editTaskData.categoryId)
+      : null;
+    if (numericId != null && categoriesList.some((c) => c.id === numericId)) {
+      setCategoryId(numericId);
+    } else if (editTaskData.category) {
+      const found = categoriesList.find(
+        (c) => c.name === editTaskData.category || String(c.id) === String(editTaskData.category)
+      );
+      if (found) setCategoryId(found.id);
     }
-  }, [isEditMode, editTaskData]);
+  }, [isEditMode, editTaskData, categoriesList]);
 
   // 드롭다운 상태
   const [deadlineDropdownOpen, setDeadlineDropdownOpen] = useState(false);
   const [repeatDropdownOpen, setRepeatDropdownOpen] = useState(false);
   const [subdivisionDropdownOpen, setSubdivisionDropdownOpen] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
-  const categories = ["과제", "건강", "집안일", "아르바이트", "휴식"];
   const deadlineOptions = ["오늘", "내일", "직접 입력"];
   const repeatOptions = ["없음", "매일", "매주", "매달"];
   const subdivisionOptions = ["없음", "2단계로 세분화", "3단계로 세분화", "Auto"];
@@ -62,7 +88,8 @@ export default function TaskCreate() {
   };
 
   const handleCategorySelect = (cat) => {
-    setCategory(cat);
+    const id = cat.id ?? cat.categoryId;
+    if (id != null) setCategoryId(id);
   };
 
   const handleDeadlineSelect = (option) => {
@@ -143,21 +170,82 @@ export default function TaskCreate() {
     }
   };
 
-  const handleComplete = () => {
-    console.log("태스크 생성 완료", {
-      taskName,
-      category,
-      deadline,
-      repeatCycle,
-      subdivision,
-      verification,
-      selectedTag,
-    });
-    navigate(-1, { state: { locationType } });
+  const handleComplete = async () => {
+    setSubmitError(null);
+    setSubmitLoading(true);
+    try {
+      if (import.meta.env?.DEV) {
+        console.log("[1] TaskCreate 폼 상태", {
+          taskName,
+          categoryId,
+          categoryId타입: typeof categoryId,
+          deadline,
+          customDeadline,
+          selectedDate: selectedDate ? selectedDate.toISOString?.() : selectedDate,
+          repeatCycle,
+          subdivision,
+          verification,
+          selectedTag,
+        });
+      }
+      const categoryIdValid = categoryId != null && categoryId !== '' && Number.isFinite(Number(categoryId));
+      if (!categoryIdValid) {
+        setSubmitError("카테고리를 선택해 주세요.");
+        setSubmitLoading(false);
+        return;
+      }
+      const targetDateStr = targetDateFromState || (() => {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      })();
+      if (import.meta.env?.DEV) {
+        console.log("[2] buildCreateTodoPayload 호출 직전, targetDateStr:", targetDateStr);
+      }
+      const payload = buildCreateTodoPayload({
+        taskName,
+        categoryId,
+        deadline,
+        customDeadline,
+        selectedDate,
+        repeatCycle,
+        subdivision,
+        verification,
+        selectedTag,
+      }, targetDateStr);
+      if (import.meta.env?.DEV) {
+        console.log("[3] buildCreateTodoPayload 결과 (API로 보낼 payload)", payload);
+        console.log("[4] createTodo(payload) 호출 직전");
+      }
+      await createTodo(payload);
+      navigate(-1, { state: { locationType } });
+    } catch (err) {
+      const status = err?.response?.status;
+      const data = err?.response?.data;
+      if (import.meta.env?.DEV && err?.response) {
+        console.error("[TaskCreate] createTodo error response", { status, data, fullResponse: err?.response });
+      }
+      const message =
+        (typeof data === "string" ? data : null) ??
+        data?.message ??
+        data?.detail ??
+        data?.error ??
+        (Array.isArray(data?.errors) && data.errors[0] ? (typeof data.errors[0] === "string" ? data.errors[0] : data.errors[0]?.message ?? data.errors[0]?.defaultMessage) : null) ??
+        err?.message ??
+        "저장에 실패했습니다.";
+      const displayMessage =
+        status >= 400 && status < 500
+          ? message
+          : status >= 500
+            ? (message && message !== "저장에 실패했습니다." ? `서버 오류: ${message}` : "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.")
+            : message;
+      setSubmitError(displayMessage);
+    } finally {
+      setSubmitLoading(false);
+    }
   };
 
   const canProceedStep1 = taskName.length > 0;
-  const canProceedStep2 = category !== null;
+  const canProceedStep2 = categoryId != null;
   const canProceedStep3 = deadline !== null && (deadline !== "직접 입력" || customDeadline.length > 0);
   const canProceedStep4 = repeatCycle !== null;
   const canProceedStep5 = subdivision !== null;
@@ -171,11 +259,16 @@ export default function TaskCreate() {
     switch (step) {
       case 1:
         return taskName;
-      case 2:
-        return category;
-      case 3:
+      case 2: {
+        const found = categoriesList.find(
+          (c) => (c.id ?? c.categoryId) === categoryId || String(c.id ?? c.categoryId) === String(categoryId)
+        );
+        return found?.name ?? found?.categoryName ?? "";
+      }
+      case 3: {
         const deadlineValue = deadline === "직접 입력" ? customDeadline : deadline;
         return deadlineValue ? `${deadlineValue}까지` : "";
+      }
       case 4:
         return repeatCycle;
       case 5:
@@ -254,13 +347,19 @@ export default function TaskCreate() {
             </div>
           </div>
 
+          {submitError && (
+            <p className={styles.errorText} style={{ marginTop: 8, marginBottom: 0, color: "#c00" }}>
+              {submitError}
+            </p>
+          )}
           <div className={styles.registerSection}>
             <button
               className={styles.registerButton}
               onClick={handleComplete}
               style={{ backgroundColor: buttonColor }}
+              disabled={submitLoading}
             >
-              {isEditMode ? "수정하기" : "추가하기"}
+              {submitLoading ? "처리 중..." : isEditMode ? "수정하기" : "추가하기"}
             </button>
           </div>
         </div>
@@ -332,8 +431,9 @@ export default function TaskCreate() {
             buttonColor={buttonColor}
           >
           <div className={styles.categoryTags}>
-            {categories.map((cat) => {
-              const isSelected = category === cat;
+            {categoriesList.map((cat) => {
+              const catId = cat.id ?? cat.categoryId;
+              const isSelected = categoryId != null && (categoryId === catId || String(categoryId) === String(catId));
               let bgColor, textColor;
               
               if (locationType === "gorge") {
@@ -360,7 +460,8 @@ export default function TaskCreate() {
               
               return (
                 <button
-                  key={cat}
+                  type="button"
+                  key={catId}
                   className={`${styles.categoryTag} ${isSelected ? styles.categoryTagSelected : ""}`}
                   onClick={() => handleCategorySelect(cat)}
                   style={{
@@ -368,12 +469,13 @@ export default function TaskCreate() {
                     color: textColor
                   }}
                 >
-                  {cat}
+                  {cat.name ?? cat.categoryName}
                 </button>
               );
             })}
           </div>
           <button
+            type="button"
             className={`${styles.nextButton} ${!canProceedStep2 || !isStepActive(2) ? styles.nextButtonDisabled : ""}`}
             onClick={() => handleNext(2)}
             disabled={!canProceedStep2 || !isStepActive(2)}

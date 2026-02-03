@@ -35,11 +35,16 @@ export default function TaskActionBar({ currentDate }) {
         });
         break;
       }
-      case "task-add":
+      case "task-add": {
+        const targetDate = currentDate || (() => {
+          const today = new Date();
+          return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+        })();
         navigate("/task-create", {
-          state: { locationType }
+          state: { locationType, targetDate }
         });
         break;
+      }
       case "report":
         navigate("/mypage");
         break;

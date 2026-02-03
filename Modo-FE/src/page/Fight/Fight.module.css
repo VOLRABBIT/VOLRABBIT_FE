@@ -271,3 +271,14 @@
   box-sizing: border-box;
   max-width: 330px;
 }
+
+.taskListMessage {
+  font-family: "NanumSquare", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: #7a7a7a;
+  text-align: center;
+  margin: 0;
+  padding: 20px 0;
+}

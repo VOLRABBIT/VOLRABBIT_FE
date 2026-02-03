@@ -1,9 +1,11 @@
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import ThingsToDo from "../../components/ThingsToDo/ThingsToDo";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import addIcon from "../../assets/map/add.svg";
-import { FIGHT_TASK_DATA } from "../../data/fightTaskData";
+import { getTasksByDate } from "../../api/taskApi";
+import { transformApiResponseToUi } from "../../api/todoApi";
 import { getLocationBackground, getLocationTitle } from "../../utils/locationTheme";
 import styles from "./Fight.module.css";
 
@@ -16,6 +18,31 @@ export default function Fight() {
   const currentLocationType = locationType || location.state?.locationType || "gorge";
   const mapBackground = getLocationBackground(currentLocationType);
   const locationTitle = getLocationTitle(currentLocationType);
+  
+  const [tasks, setTasks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 오늘 날짜의 task 목록 조회
+  useEffect(() => {
+    const fetchTodayTasks = async () => {
+      try {
+        setIsLoading(true);
+        const today = new Date();
+        const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        const response = await getTasksByDate(dateStr);
+        const rawList = Array.isArray(response) ? response : (response?.tasks || response?.data || []);
+        const taskList = Array.isArray(rawList) && rawList.length > 0 ? transformApiResponseToUi(rawList) : rawList;
+        setTasks(taskList);
+      } catch (err) {
+        console.error('Task 조회 실패:', err);
+        setTasks([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTodayTasks();
+  }, []);
 
   const handleBack = () => {
     navigate(-1);
@@ -126,7 +153,13 @@ export default function Fight() {
 
         {/* 전투 Task 목록 */}
         <div className={styles.taskListContainer}>
-          <ThingsToDo tasks={FIGHT_TASK_DATA} locationType={currentLocationType} />
+          {isLoading ? (
+            <div style={{ padding: '20px', textAlign: 'center' }}>로딩 중...</div>
+          ) : tasks.length > 0 ? (
+            <ThingsToDo tasks={tasks} locationType={currentLocationType} />
+          ) : (
+            <div style={{ padding: '20px', textAlign: 'center' }}>등록된 task가 없습니다.</div>
+          )}
         </div>
       </div>
       <Navbar activeItem="fight" />

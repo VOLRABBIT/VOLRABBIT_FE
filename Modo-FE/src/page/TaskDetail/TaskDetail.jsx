@@ -1,9 +1,11 @@
+import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import TaskActionBar from "../../components/TaskActionBar/TaskActionBar";
 import ThingsToDo from "../../components/ThingsToDo/ThingsToDo";
 import styles from "./TaskDetail.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
-import { getTasksByDate } from "../../data/fightTaskData";
+import { getTasksByDate as getTasksByDateApi } from "../../api/taskApi";
+import { transformApiResponseToUi } from "../../api/todoApi";
 import { getLocationBackground } from "../../utils/locationTheme";
 
 export default function TaskDetail() {
@@ -13,6 +15,10 @@ export default function TaskDetail() {
   
   const locationType = location.state?.locationType;
   const mapBackground = getLocationBackground(locationType);
+
+  const [tasksForDate, setTasksForDate] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const getTodayDateString = () => {
     const today = new Date();
@@ -26,7 +32,27 @@ export default function TaskDetail() {
   const [year, month, day] = dateStr.split("-");
   const formattedDate = `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`;
 
-  const tasksForDate = getTasksByDate(dateStr);
+  // API에서 task 목록 조회
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const response = await getTasksByDateApi(dateStr);
+        const rawList = Array.isArray(response) ? response : (response?.tasks || response?.data || []);
+        const tasks = Array.isArray(rawList) && rawList.length > 0 ? transformApiResponseToUi(rawList) : rawList;
+        setTasksForDate(tasks);
+      } catch (err) {
+        console.error('Task 조회 실패:', err);
+        setError('Task를 불러오는데 실패했습니다.');
+        setTasksForDate([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, [dateStr]);
 
   const handleBack = () => {
     navigate(-1, { state: { locationType } });
@@ -53,7 +79,15 @@ export default function TaskDetail() {
 
         {/* Task 목록 */}
         <div className={styles.taskListContainer}>
-          {tasksForDate.length > 0 ? (
+          {isLoading ? (
+            <div className={styles.emptyState}>
+              <p>로딩 중...</p>
+            </div>
+          ) : error ? (
+            <div className={styles.emptyState}>
+              <p>{error}</p>
+            </div>
+          ) : tasksForDate.length > 0 ? (
             <ThingsToDo tasks={tasksForDate} hideModify={true} locationType={locationType} />
           ) : (
             <div className={styles.emptyState}>

@@ -83,7 +83,7 @@ function AppContent() {
             <Route path="/task-failed-review" element={<TaskFailedReview />} />
             <Route path="/task-photo-auth" element={<TaskPhotoAuth />} />
             <Route path="/task-create" element={<TaskCreate />} />
-            <Route path="/task-detail/:date" element={<TaskDetail />} />
+            <Route path="/task-detail/:date" element={<TaskDetail key={location.pathname} />} />
             <Route path="/task-rebuild/:character/:date/:locationType?" element={<TaskRebuild />} />
             <Route path="/task-rebuild/:date/:locationType?" element={<TaskRebuild />} />
             <Route path="/pause" element={<Pause />} />

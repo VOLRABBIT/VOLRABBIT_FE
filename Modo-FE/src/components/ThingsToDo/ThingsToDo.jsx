@@ -4,14 +4,18 @@ import styles from "./ThingsToDo.module.css";
 import checkedIcon from "../../assets/checked.svg";
 import modifyIcon from "../../assets/modify.svg";
 import TaskCompleteModal from "../TaskCompleteModal/TaskCompleteModal";
+import { toggleTaskComplete, toggleSubtaskComplete, updateTaskTitle } from "../../api/taskApi";
 
 export default function ThingsToDo({ tasks = [], hideModify = false, locationType }) {
   const navigate = useNavigate();
   const [taskStates, setTaskStates] = useState(() => {
     const initialState = {};
-    tasks.forEach((category) => {
-      category.tasks.forEach((task) => {
-        initialState[`task-${category.id}-${task.id}`] = task.isCompleted;
+    (Array.isArray(tasks) ? tasks : []).forEach((category) => {
+      const subList = category && category.tasks;
+      if (!Array.isArray(subList)) return;
+      subList.forEach((task, taskIndex) => {
+        const taskKey = `task-${category.id}-${task.id}-${taskIndex}`;
+        initialState[taskKey] = task.isCompleted;
         task.subtasks.forEach((subtask) => {
           initialState[`subtask-${category.id}-${task.id}-${subtask.id}`] =
             subtask.isCompleted;
@@ -23,9 +27,12 @@ export default function ThingsToDo({ tasks = [], hideModify = false, locationTyp
 
   const [taskTitles, setTaskTitles] = useState(() => {
     const initialState = {};
-    tasks.forEach((category) => {
-      category.tasks.forEach((task) => {
-        initialState[`task-${category.id}-${task.id}`] = task.title;
+    (Array.isArray(tasks) ? tasks : []).forEach((category) => {
+      const subList = category && category.tasks;
+      if (!Array.isArray(subList)) return;
+      subList.forEach((task, taskIndex) => {
+        const taskKey = `task-${category.id}-${task.id}-${taskIndex}`;
+        initialState[taskKey] = task.title;
       });
     });
     return initialState;
@@ -40,10 +47,13 @@ export default function ThingsToDo({ tasks = [], hideModify = false, locationTyp
     taskTitle: "",
   });
 
-  const handleTaskClick = (categoryId, taskId, taskTitle) => {
+  const handleTaskClick = async (categoryId, taskId, taskTitle) => {
     if (editingTask === `task-${categoryId}-${taskId}`) return;
     const key = `task-${categoryId}-${taskId}`;
-    if (!taskStates[key]) {
+    const currentState = taskStates[key];
+    
+    if (!currentState) {
+      // 완료되지 않은 task 클릭 시 모달 표시
       setModalState({
         isOpen: true,
         categoryId,
@@ -51,10 +61,16 @@ export default function ThingsToDo({ tasks = [], hideModify = false, locationTyp
         taskTitle,
       });
     } else {
-      setTaskStates((prev) => ({
-        ...prev,
-        [key]: false,
-      }));
+      // 완료된 task 클릭 시 미완료로 변경
+      try {
+        await toggleTaskComplete(taskId, false);
+        setTaskStates((prev) => ({
+          ...prev,
+          [key]: false,
+        }));
+      } catch (err) {
+        console.error('Task 완료 상태 변경 실패:', err);
+      }
     }
   };
 
@@ -67,24 +83,38 @@ export default function ThingsToDo({ tasks = [], hideModify = false, locationTyp
     });
   };
 
-  const handleModalConfirm = () => {
+  const handleModalConfirm = async () => {
     const { categoryId, taskId } = modalState;
     if (categoryId && taskId) {
-      const key = `task-${categoryId}-${taskId}`;
-      setTaskStates((prev) => ({
-        ...prev,
-        [key]: true,
-      }));
+      try {
+        await toggleTaskComplete(taskId, true);
+        const key = `task-${categoryId}-${taskId}`;
+        setTaskStates((prev) => ({
+          ...prev,
+          [key]: true,
+        }));
+      } catch (err) {
+        console.error('Task 완료 처리 실패:', err);
+        alert('Task 완료 처리에 실패했습니다.');
+      }
     }
     handleModalClose();
   };
 
-  const handleSubtaskClick = (categoryId, taskId, subtaskId) => {
+  const handleSubtaskClick = async (categoryId, taskId, subtaskId) => {
     const key = `subtask-${categoryId}-${taskId}-${subtaskId}`;
-    setTaskStates((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
+    const currentState = taskStates[key];
+    const newState = !currentState;
+    
+    try {
+      await toggleSubtaskComplete(taskId, subtaskId, newState);
+      setTaskStates((prev) => ({
+        ...prev,
+        [key]: newState,
+      }));
+    } catch (err) {
+      console.error('Subtask 완료 상태 변경 실패:', err);
+    }
   };
 
   const handleModifyClick = (e, categoryId, taskId, task) => {
@@ -108,13 +138,19 @@ export default function ThingsToDo({ tasks = [], hideModify = false, locationTyp
     }
   };
 
-  const handleSaveEdit = (categoryId, taskId) => {
+  const handleSaveEdit = async (categoryId, taskId) => {
     const key = `task-${categoryId}-${taskId}`;
     if (editValue.trim()) {
-      setTaskTitles((prev) => ({
-        ...prev,
-        [key]: editValue.trim(),
-      }));
+      try {
+        await updateTaskTitle(taskId, editValue.trim());
+        setTaskTitles((prev) => ({
+          ...prev,
+          [key]: editValue.trim(),
+        }));
+      } catch (err) {
+        console.error('Task 제목 수정 실패:', err);
+        alert('Task 제목 수정에 실패했습니다.');
+      }
     }
     setEditingTask(null);
     setEditValue("");
@@ -133,15 +169,18 @@ export default function ThingsToDo({ tasks = [], hideModify = false, locationTyp
     }
   };
 
+  const list = Array.isArray(tasks) ? tasks : [];
   return (
     <div className={styles.container}>
-      {tasks.map((category) => (
-        <div key={category.id} className={styles.categorySection}>
+      {list.map((category) => {
+        const categoryTasks = category && Array.isArray(category.tasks) ? category.tasks : [];
+        return (
+        <div key={category?.id ?? Math.random()} className={styles.categorySection}>
           <div className={styles.categoryTitle}>
-            <p>{category.category}</p>
+            <p>{category?.category ?? ''}</p>
           </div>
-          {category.tasks.map((task) => {
-            const taskKey = `task-${category.id}-${task.id}`;
+          {categoryTasks.map((task, taskIndex) => {
+            const taskKey = `task-${category.id}-${task.id}-${taskIndex}`;
             const isEditing = editingTask === taskKey;
             return (
               <div key={task.id} className={styles.taskWrapper}>
@@ -190,7 +229,7 @@ export default function ThingsToDo({ tasks = [], hideModify = false, locationTyp
                     </button>
                   )}
                 </div>
-                {task.subtasks.map((subtask) => (
+                {(Array.isArray(task.subtasks) ? task.subtasks : []).map((subtask) => (
                   <div key={subtask.id} className={styles.subtaskItem}>
                     <button
                       className={styles.checkbox}
@@ -215,7 +254,8 @@ export default function ThingsToDo({ tasks = [], hideModify = false, locationTyp
             );
           })}
         </div>
-      ))}
+        );
+      })}
       {modalState.isOpen && (
         <TaskCompleteModal
           taskTitle={modalState.taskTitle}
