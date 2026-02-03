@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { getTodosByDate } from "../../api/todoApi";
+import { getCategories } from "../../api/apiStore";
 import { CATEGORY_PRIORITY_MAP } from "../../data/fightTaskData";
 import styles from "./TaskRebuild.module.css";
 import robotStyles from "./layouts/RobotLayout.module.css";
@@ -92,10 +93,26 @@ export default function TaskRebuild() {
 
   useEffect(() => {
     let cancelled = false;
-    getTodosByDate(dateStr)
-      .then((data) => {
+    Promise.all([getTodosByDate(dateStr), getCategories().catch(() => null)])
+      .then(([data, categoriesData]) => {
         if (!cancelled) {
-          setTasks(flattenTasks(data ?? []));
+          let categoryGroups = data ?? [];
+
+          // 삭제된 카테고리는 제외하고 전투 목록 구성
+          if (Array.isArray(categoryGroups) && categoryGroups.length > 0 && categoriesData != null) {
+            const list = Array.isArray(categoriesData)
+              ? categoriesData
+              : (categoriesData?.data ?? categoriesData?.content ?? categoriesData?.categories ?? []);
+            const currentIds = (Array.isArray(list) ? list : []).map((c) => c.categoryId ?? c.id);
+            const currentNames = (Array.isArray(list) ? list : []).map((c) => c.name ?? c.categoryName ?? "");
+            categoryGroups = categoryGroups.filter(
+              (group) =>
+                currentIds.some((id) => id == group.id || String(id) === String(group.id)) ||
+                currentNames.includes(group.category ?? "")
+            );
+          }
+
+          setTasks(flattenTasks(categoryGroups));
           setError(null);
         }
       })

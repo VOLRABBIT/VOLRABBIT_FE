@@ -6,6 +6,7 @@ import styles from "./TaskDetail.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import { getTasksByDate as getTasksByDateApi } from "../../api/taskApi";
 import { transformApiResponseToUi } from "../../api/todoApi";
+import { getCategories } from "../../api/apiStore";
 import { getLocationBackground } from "../../utils/locationTheme";
 
 export default function TaskDetail() {
@@ -38,9 +39,27 @@ export default function TaskDetail() {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await getTasksByDateApi(dateStr);
+        const [response, categoriesData] = await Promise.all([
+          getTasksByDateApi(dateStr),
+          getCategories().catch(() => null),
+        ]);
         const rawList = Array.isArray(response) ? response : (response?.tasks || response?.data || []);
-        const tasks = Array.isArray(rawList) && rawList.length > 0 ? transformApiResponseToUi(rawList) : rawList;
+        let tasks = Array.isArray(rawList) && rawList.length > 0 ? transformApiResponseToUi(rawList) : rawList;
+
+        // 삭제된 카테고리는 화면에서 제외
+        if (Array.isArray(tasks) && tasks.length > 0 && categoriesData != null) {
+          const list = Array.isArray(categoriesData)
+            ? categoriesData
+            : (categoriesData?.data ?? categoriesData?.content ?? categoriesData?.categories ?? []);
+          const currentIds = (Array.isArray(list) ? list : []).map((c) => c.categoryId ?? c.id);
+          const currentNames = (Array.isArray(list) ? list : []).map((c) => c.name ?? c.categoryName ?? "");
+          tasks = tasks.filter(
+            (group) =>
+              currentIds.some((id) => id == group.id || String(id) === String(group.id)) ||
+              currentNames.includes(group.category ?? "")
+          );
+        }
+
         setTasksForDate(tasks);
       } catch (err) {
         console.error('Task 조회 실패:', err);
