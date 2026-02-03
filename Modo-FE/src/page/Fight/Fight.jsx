@@ -6,6 +6,7 @@ import arrowLeftIcon from "../../assets/arrow-left.svg";
 import addIcon from "../../assets/map/add.svg";
 import { getTasksByDate } from "../../api/taskApi";
 import { transformApiResponseToUi } from "../../api/todoApi";
+import { getCategories } from "../../api/apiStore";
 import { getLocationBackground, getLocationTitle } from "../../utils/locationTheme";
 import styles from "./Fight.module.css";
 
@@ -29,9 +30,22 @@ export default function Fight() {
         setIsLoading(true);
         const today = new Date();
         const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-        const response = await getTasksByDate(dateStr);
+        const [response, categoriesData] = await Promise.all([
+          getTasksByDate(dateStr),
+          getCategories().catch(() => null),
+        ]);
         const rawList = Array.isArray(response) ? response : (response?.tasks || response?.data || []);
-        const taskList = Array.isArray(rawList) && rawList.length > 0 ? transformApiResponseToUi(rawList) : rawList;
+        let taskList = Array.isArray(rawList) && rawList.length > 0 ? transformApiResponseToUi(rawList) : rawList;
+        if (Array.isArray(taskList) && taskList.length > 0 && categoriesData != null) {
+          const list = Array.isArray(categoriesData) ? categoriesData : (categoriesData?.data ?? categoriesData?.content ?? categoriesData?.categories ?? []);
+          const currentIds = (Array.isArray(list) ? list : []).map((c) => c.categoryId ?? c.id);
+          const currentNames = (Array.isArray(list) ? list : []).map((c) => c.name ?? c.categoryName ?? "");
+          taskList = taskList.filter(
+            (group) =>
+              currentIds.some((id) => id == group.id || String(id) === String(group.id)) ||
+              currentNames.includes(group.category ?? "")
+          );
+        }
         setTasks(taskList);
       } catch (err) {
         console.error('Task 조회 실패:', err);

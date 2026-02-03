@@ -68,3 +68,16 @@ export const getCategories = async () => {
   const response = await api.get('/api/categories');
   return response.data;
 };
+
+/** 카테고리 생성 (POST /api/categories) - body: { name } (Swagger에서 categoryName이면 api 수정) */
+export const createCategory = async (payload) => {
+  const name = typeof payload === 'string' ? payload : (payload?.name ?? payload?.categoryName ?? '');
+  const response = await api.post('/api/categories', { name });
+  return response.data;
+};
+
+/** 카테고리 삭제 (DELETE /api/categories/{id}) */
+export const deleteCategory = async (categoryId) => {
+  const response = await api.delete(`/api/categories/${categoryId}`);
+  return response.data;
+};
