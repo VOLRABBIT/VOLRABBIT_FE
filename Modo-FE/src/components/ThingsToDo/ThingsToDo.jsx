@@ -117,7 +117,7 @@ export default function ThingsToDo({ tasks = [], hideModify = false, locationTyp
     }
   };
 
-  const handleModifyClick = (e, categoryId, taskId, task) => {
+  const handleModifyClick = (e, categoryId, taskId) => {
     e.stopPropagation();
     // TaskCreate 페이지로 이동하면서 task 데이터 전달
     const category = tasks.find((cat) => cat.id === categoryId);
@@ -172,10 +172,11 @@ export default function ThingsToDo({ tasks = [], hideModify = false, locationTyp
   const list = Array.isArray(tasks) ? tasks : [];
   return (
     <div className={styles.container}>
-      {list.map((category) => {
+      {list.map((category, categoryIndex) => {
         const categoryTasks = category && Array.isArray(category.tasks) ? category.tasks : [];
+        const categoryKey = category?.id ?? `category-${categoryIndex}`;
         return (
-        <div key={category?.id ?? Math.random()} className={styles.categorySection}>
+        <div key={categoryKey} className={styles.categorySection}>
           <div className={styles.categoryTitle}>
             <p>{category?.category ?? ''}</p>
           </div>
@@ -222,7 +223,7 @@ export default function ThingsToDo({ tasks = [], hideModify = false, locationTyp
                   {!hideModify && (
                     <button
                       className={styles.modifyButton}
-                      onClick={(e) => handleModifyClick(e, category.id, task.id, task)}
+                      onClick={(e) => handleModifyClick(e, category.id, task.id)}
                       disabled={isEditing}
                     >
                       <img src={modifyIcon} alt="수정" />
@@ -267,4 +268,3 @@ export default function ThingsToDo({ tasks = [], hideModify = false, locationTyp
     </div>
   );
 }
-

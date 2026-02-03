@@ -5,20 +5,54 @@ import SkipModal from "../../components/Diagnosis/SkipModal";
 import plusIcon from "../../assets/icon/plus.svg";
 import rightIcon from "../../assets/Right icon.svg";
 import styles from "./CategorySettings.module.css";
+import { getCategories } from "../../api/apiStore";
 
 const INITIAL_CATEGORIES = {
-  battle: [
-    { id: 1, name: "과제" },
-    { id: 2, name: "건강" },
-    { id: 3, name: "아르바이트" },
-  ],
+  battle: [],
   guild: [],
 };
+
+/** API 응답 정규화 */
+function normalizeCategoriesResponse(data) {
+  console.log("[CategorySettings] API 응답 원본:", data);
+
+  if (!data || typeof data !== "object") {
+    console.log("[CategorySettings] 응답이 객체가 아님, 빈 값 반환");
+    return INITIAL_CATEGORIES;
+  }
+
+  if (Array.isArray(data.battle) || Array.isArray(data.guild)) {
+    const result = {
+      battle: Array.isArray(data.battle) ? data.battle.map((c) => ({ id: c.id ?? c.categoryId, name: c.name ?? c.categoryName ?? "" })) : [],
+      guild: Array.isArray(data.guild) ? data.guild.map((c) => ({ id: c.id ?? c.categoryId, name: c.name ?? c.categoryName ?? "" })) : [],
+    };
+    console.log("[CategorySettings] battle/guild 구조로 정규화:", result);
+    return result;
+  }
+
+  const list = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.data)
+      ? data.data
+      : Array.isArray(data?.content)
+        ? data.content
+        : Array.isArray(data?.categories)
+          ? data.categories
+          : [];
+  const battleList = list.map((c, i) => ({
+    id: c.id ?? c.categoryId ?? i + 1,
+    name: c.name ?? c.categoryName ?? "",
+  }));
+  console.log("[CategorySettings] 배열로 정규화 → battle:", battleList);
+  return { battle: battleList, guild: [] };
+}
 
 export default function CategorySettings() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("battle");
   const [categories, setCategories] = useState(INITIAL_CATEGORIES);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [categoriesError, setCategoriesError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isAddingCategory, setIsAddingCategory] = useState(false);
@@ -101,6 +135,35 @@ export default function CategorySettings() {
     setShowDeleteModal(false);
     setSelectedCategory(null);
   };
+
+  // 카테고리 목록 API 조회
+  useEffect(() => {
+    let cancelled = false;
+    setCategoriesLoading(true);
+    setCategoriesError(null);
+    console.log("[CategorySettings] getCategories 호출 시작");
+    getCategories()
+      .then((data) => {
+        if (cancelled) return;
+        console.log("[CategorySettings] getCategories 성공, raw data:", data);
+        const normalized = normalizeCategoriesResponse(data);
+        setCategories(normalized);
+        console.log("[CategorySettings] setCategories 완료:", normalized);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.error("[CategorySettings] getCategories 실패:", err);
+        setCategoriesError(err?.message ?? "카테고리 조회 실패");
+        setCategories(INITIAL_CATEGORIES);
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setCategoriesLoading(false);
+          console.log("[CategorySettings] getCategories 로딩 완료");
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     if (isAddingCategory && inputRef.current) {
@@ -188,6 +251,15 @@ export default function CategorySettings() {
 
         {/* 카테고리 리스트 */}
         <div className={styles.categoryList}>
+          {categoriesLoading && (
+            <div style={{ padding: "12px", color: "#666" }}>카테고리 불러오는 중...</div>
+          )}
+          {!categoriesLoading && categoriesError && (
+            <div style={{ padding: "12px", color: "#c00" }}>{categoriesError}</div>
+          )}
+          {!categoriesLoading && categories[activeTab].length === 0 && !categoriesError && (
+            <div style={{ padding: "12px", color: "#666" }}>등록된 카테고리가 없어요.</div>
+          )}
           {categories[activeTab].map((category) => (
             <div key={category.id} className={styles.categoryItem}>
               {editingCategoryId === category.id ? (

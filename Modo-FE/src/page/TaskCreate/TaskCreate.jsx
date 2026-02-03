@@ -35,14 +35,20 @@ export default function TaskCreate() {
 
   // 카테고리 목록 조회 (마이페이지 카테고리 관리와 동일 소스)
   useEffect(() => {
+    console.log("[TaskCreate] getCategories 호출");
     getCategories()
       .then((data) => {
+        console.log("[TaskCreate] getCategories raw 응답:", data);
         const list = Array.isArray(data)
           ? data
           : (Array.isArray(data?.data) ? data.data : null) ?? data?.content ?? data?.categories ?? [];
+        console.log("[TaskCreate] 카테고리 목록 설정:", list);
         setCategoriesList(list);
       })
-      .catch(() => setCategoriesList([]));
+      .catch((err) => {
+        console.error("[TaskCreate] getCategories 실패:", err);
+        setCategoriesList([]);
+      });
   }, []);
 
   // 수정 모드일 때 기존 데이터 로드 (ThingsToDo는 category 이름 전달, API는 categoryId 숫자 사용)
