@@ -48,7 +48,12 @@ export default function Guild() {
       </div>
       <div className={styles.content}>
         <div className={styles.guildList}>
-          {GUILD_DATA.map((guild) => (
+          {GUILD_DATA.length === 0 ? (
+            <div className={styles.emptyState}>
+              <p>등록된 길드가 없습니다.</p>
+            </div>
+          ) : (
+          GUILD_DATA.map((guild) => (
             <div
               key={guild.id}
               className={styles.guildCard}
@@ -65,7 +70,7 @@ export default function Guild() {
                 <span className={styles.statValue}>{guild.winRate}%</span>
               </div>
             </div>
-          ))}
+          )))}
         </div>
       </div>
       <Navbar activeItem="guild" />

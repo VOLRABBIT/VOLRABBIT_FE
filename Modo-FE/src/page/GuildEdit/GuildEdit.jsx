@@ -20,7 +20,7 @@ export default function GuildEdit() {
   
   const [guildName, setGuildName] = useState(initialGuildData.name);
   const [members, setMembers] = useState(initialGuildData.members);
-  const [memberCount, setMemberCount] = useState(4);
+  const [memberCount, setMemberCount] = useState(initialGuildData.members?.length ?? 0);
   const [customMemberCount, setCustomMemberCount] = useState("");
   const [duration, setDuration] = useState(null);
   const [customDuration, setCustomDuration] = useState("");
