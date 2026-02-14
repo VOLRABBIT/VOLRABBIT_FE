@@ -1,0 +1,32 @@
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(125, 167, 219, 0.40) 0%, rgba(241, 169, 211, 0.40) 44.71%, rgba(183, 168, 215, 0.40) 69.23%, rgba(116, 179, 170, 0.40) 100%);
+}
+
+.splash.fadeOut {
+  animation: fadeOut 0.5s ease-out 1.3s forwards;
+}
+
+.logo {
+  max-width: 70%;
+  max-height: 70%;
+  object-fit: contain;
+}
+
+.hiddenContent {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
