@@ -15,10 +15,12 @@
 .menuContainer {
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   height: 100%;
-  padding: 0 40px;
+  padding: 0;
+  padding-left: 40px;
+  padding-right: 40px;
   gap: 0;
 }
 
@@ -29,11 +31,48 @@
   justify-content: flex-start;
   gap: 0;
   cursor: pointer;
-  flex: 1;
-  min-width: 0;
+  flex: 0 0 auto;
   position: relative;
   padding-top: 35px;
   padding-bottom: 23px;
+}
+
+.menuItem:nth-child(1) {
+  margin-left: 0;
+  margin-right: 67px;
+}
+
+.menuItem:nth-child(2) {
+  margin-left: 0;
+  margin-right: 66px;
+}
+
+.menuItem:nth-child(3) {
+  margin-left: 0;
+  margin-right: 54px;
+}
+
+.menuItem:nth-child(4) {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+@media (min-width: 600px) {
+  .menuContainer {
+    justify-content: space-between;
+    padding: 0 40px;
+  }
+  .menuItem {
+    flex: 1;
+    min-width: 0;
+  }
+  .menuItem:nth-child(1),
+  .menuItem:nth-child(2),
+  .menuItem:nth-child(3),
+  .menuItem:nth-child(4) {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 .iconWrapper {
