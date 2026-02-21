@@ -95,6 +95,13 @@
   overflow-y: auto;
 }
 
+@media (min-height: 700px) {
+  .menuList {
+    flex: 1 1 auto;
+    max-height: none;
+  }
+}
+
 .menuItem {
   display: flex;
   width: 100%;
