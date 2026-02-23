@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import styles from "./TaskCompleteModal.module.css";
 import closeIcon from "../../assets/icon/close.svg";
 import { getLocationButtonColor } from "../../utils/locationTheme";
@@ -7,9 +6,12 @@ export default function TaskCompleteModal({
   taskTitle,
   onClose,
   onConfirm,
+  onGiveUp,
+  onRetry,
+  errorMessage,
+  isLoading = false,
   locationType = "dungeon",
 }) {
-  const navigate = useNavigate();
   const buttonColor = getLocationButtonColor(locationType);
 
   const handleOverlayClick = (e) => {
@@ -19,13 +21,11 @@ export default function TaskCompleteModal({
   };
 
   const handleConfirm = () => {
-    onClose();
-    navigate("/task-photo-auth", { state: { taskTitle, locationType } });
+    onConfirm?.();
   };
 
   const handleGiveUp = () => {
-    onClose();
-    navigate("/task-give-up", { state: { taskTitle, locationType } });
+    onGiveUp?.();
   };
 
   return (
@@ -45,6 +45,9 @@ export default function TaskCompleteModal({
             <p className={styles.contentText}>
               선택한 방법으로 인증을 진행해주세요.
             </p>
+            {errorMessage ? (
+              <p className={styles.errorText}>{errorMessage}</p>
+            ) : null}
           </div>
         </div>
         <div className={styles.footer}>
@@ -52,17 +55,22 @@ export default function TaskCompleteModal({
             <button 
               className={styles.confirmButton} 
               onClick={handleConfirm}
+              disabled={isLoading}
               style={{ backgroundColor: buttonColor }}
             >
-              인증하기
+              {isLoading ? "처리 중..." : "인증하기"}
             </button>
-            <button className={styles.cancelButton} onClick={handleGiveUp}>
+            <button className={styles.cancelButton} onClick={handleGiveUp} disabled={isLoading}>
               포기하기
             </button>
           </div>
+          {errorMessage ? (
+            <button className={styles.retryButton} onClick={onRetry ?? handleConfirm}>
+              다시 시도
+            </button>
+          ) : null}
         </div>
       </div>
     </div>
   );
 }
-
