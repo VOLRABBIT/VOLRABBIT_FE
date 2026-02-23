@@ -12,7 +12,6 @@
   );
   position: relative;
   overflow: hidden;
-  overflow-x: hidden;
   box-sizing: border-box;
 }
 
@@ -47,8 +46,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family: inherit;
   font-weight: 700;
   font-size: 16px;
   color: #393939;
@@ -63,116 +61,115 @@
 
 .content {
   flex: 1;
-  position: relative;
   width: 100%;
   overflow-y: auto;
-  overflow-x: hidden;
   box-sizing: border-box;
+  padding: 20px 16px;
+}
+
+.tabContainer {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.tabButton {
+  flex: 1;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.6);
+  color: #5a6a95;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tabButtonActive {
+  background: #7da7db;
+  color: #fff;
 }
 
 .description {
-  position: absolute;
-  left: 50%;
-  top: 200px;
-  transform: translateX(-50%) translateY(-50%);
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
-  font-weight: 700;
+  width: 100%;
+  max-width: 360px;
+  margin: 8px auto 12px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 20px;
+  color: #1f1f1f;
+}
+
+.formGroup {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.singleInput {
+  width: 100%;
+  height: 52px;
+  border: 1px solid #7da7db;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.85);
+  font-family: inherit;
   font-size: 16px;
   color: #000;
-  text-align: center;
-  margin: 0;
-  line-height: 24px;
-  width: 240px;
-  padding: 0;
-  box-sizing: border-box;
-  white-space: nowrap;
-}
-
-.codeInputContainer {
-  position: absolute;
-  left: 50%;
-  top: 315px;
-  transform: translateX(-50%) translateY(-50%);
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-  justify-content: center;
-  align-items: center;
-  width: 322px;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.codeInput {
-  width: 54px;
-  height: 54px;
-  border: 1px solid #7da7db;
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.8);
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  color: #000;
-  text-align: center;
-  text-transform: uppercase;
-  padding: 0;
+  padding: 0 14px;
   box-sizing: border-box;
   outline: none;
-  flex-shrink: 0;
 }
 
-.codeInput:focus {
-  border-color: #7da7db;
-  background-color: rgba(255, 255, 255, 0.9);
+.singleInput:focus {
+  background-color: rgba(255, 255, 255, 0.95);
 }
 
 .codeInputError {
-  border-color: #ff0000;
+  border-color: #ff4242;
 }
 
 .errorMessage {
-  position: absolute;
-  left: 50%;
-  top: 369px;
-  transform: translateX(-50%);
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
-  font-weight: 700;
+  width: 100%;
+  max-width: 360px;
+  margin: 8px auto 0;
+  font-family: inherit;
   font-size: 12px;
-  line-height: 20px;
+  line-height: 18px;
   color: #ff4242;
-  text-align: center;
-  margin: 0;
-  width: 338px;
-  padding: 0;
-  box-sizing: border-box;
+}
+
+.helperText {
+  width: 100%;
+  max-width: 360px;
+  margin: 10px auto 0;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 18px;
+  color: #5f5f5f;
 }
 
 .footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  flex-shrink: 0;
   height: 80px;
-  position: relative;
+  flex-shrink: 0;
 }
 
 .confirmButton {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  width: 358px;
+  width: min(358px, calc(100vw - 24px));
   height: 56px;
   border-radius: 999px;
   border: none;
   background-color: #7da7db;
   color: white;
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family: inherit;
   font-weight: 700;
   font-size: 16px;
   line-height: 24px;
@@ -180,31 +177,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.confirmButton:hover {
-  opacity: 0.9;
-}
-
-.confirmButton:active {
-  opacity: 0.8;
 }
 
 .confirmButton:disabled {
   background-color: #dadada;
   cursor: not-allowed;
-  opacity: 1;
 }
-
-.confirmButtonDisabled {
-  background-color: #dadada;
-  cursor: not-allowed;
-}
-
-.confirmButtonDisabled:hover,
-.confirmButtonDisabled:active {
-  opacity: 1;
-}
-

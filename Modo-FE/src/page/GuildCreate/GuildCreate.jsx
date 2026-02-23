@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import GuildCreateSuccessModal from "../../components/GuildCreateSuccessModal/GuildCreateSuccessModal";
+import { createGuild, setCurrentGuildId } from "../../api/guildApi";
 import styles from "./GuildCreate.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 
@@ -15,6 +16,8 @@ export default function GuildCreate() {
   const [customDuration, setCustomDuration] = useState("");
   const [guildCode, setGuildCode] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [createdGuildId, setCreatedGuildId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 길드 고유 코드 생성 (랜덤 5자리 영문+숫자)
   const generateGuildCode = () => {
@@ -82,23 +85,59 @@ export default function GuildCreate() {
     }
   };
 
-  const handleCreate = () => {
-    console.log("길드 생성:", {
-      name: guildName,
-      memberCount: memberCount || customMemberCount,
-      duration: duration || (customDuration && durationUnit ? `${customDuration}${durationUnit}` : ""),
-      code: guildCode,
-    });
-    setShowSuccessModal(true);
+  const handleCreate = async () => {
+    if (isSubmitting) return;
+    const normalizedGuildName = guildName.trim();
+    if (!normalizedGuildName) {
+      alert("길드 이름을 입력해주세요.");
+      return;
+    }
+    if (normalizedGuildName.length > 10) {
+      alert("길드 이름은 10자 이내로 입력해주세요.");
+      return;
+    }
+    if (!canProceedStep2 || !canProceedStep3 || !canProceedStep4) {
+      alert("모든 단계를 완료한 뒤 길드를 생성할 수 있습니다.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const introduction = [
+        `최대 인원: ${memberCount || customMemberCount || "-"}`,
+        `유지 기간: ${duration || (customDuration && durationUnit ? `${customDuration}${durationUnit}` : "-")}`,
+        `코드: ${guildCode || "-"}`,
+      ].join(" / ");
+
+      const created = await createGuild({
+        name: normalizedGuildName,
+        introduction,
+        private: false,
+      });
+
+      const guildId = created?.guildId ?? created?.id;
+      if (guildId != null) {
+        setCurrentGuildId(guildId);
+        setCreatedGuildId(guildId);
+      }
+      setShowSuccessModal(true);
+    } catch (e) {
+      alert(e?.message || "길드 생성에 실패했습니다. (status/message 확인 필요)");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false);
+    if (createdGuildId != null) {
+      navigate(`/guild/${createdGuildId}`);
+      return;
+    }
     navigate("/guild");
   };
 
   const handleCopyCode = () => {
-    console.log("공유 코드 복사:", guildCode);
   };
 
   const canProceedStep1 = guildName.trim().length > 0;
@@ -175,7 +214,7 @@ export default function GuildCreate() {
         )}
 
         {/* Step 2: 길드 인원 */}
-        {isStepCompleted(2) ? (
+        {currentStep >= 2 && (isStepCompleted(2) ? (
           <div className={`${styles.stepCard} ${styles.stepCardSummary} ${styles.step2}`}>
             <div className={styles.stepSummaryHeader}>
               <div className={styles.stepNumber}>2</div>
@@ -229,10 +268,10 @@ export default function GuildCreate() {
               </>
             )}
           </div>
-        )}
+        ))}
 
         {/* Step 3: 길드 유지 기간 */}
-        {isStepCompleted(3) ? (
+        {currentStep >= 3 && (isStepCompleted(3) ? (
           <div className={`${styles.stepCard} ${styles.stepCardSummary} ${styles.step3}`}>
             <div className={styles.stepSummaryHeader}>
               <div className={styles.stepNumber}>3</div>
@@ -295,10 +334,10 @@ export default function GuildCreate() {
               </>
             )}
           </div>
-        )}
+        ))}
 
         {/* Step 4: 길드 고유 코드 */}
-        {isStepCompleted(4) ? (
+        {currentStep >= 4 && (isStepCompleted(4) ? (
           <div className={`${styles.stepCard} ${styles.stepCardSummary} ${styles.step4}`}>
             <div className={styles.stepSummaryHeader}>
               <div className={styles.stepNumber}>4</div>
@@ -341,18 +380,20 @@ export default function GuildCreate() {
               </>
             )}
           </div>
-        )}
+        ))}
       </div>
 
-      <div className={styles.footer}>
-        <button 
-          className={`${styles.createButton} ${!canCreate ? styles.createButtonDisabled : ""}`}
-          onClick={handleCreate}
-          disabled={!canCreate}
-        >
-          생성하기
-        </button>
-      </div>
+      {currentStep > 4 && (
+        <div className={styles.footer}>
+          <button 
+            className={`${styles.createButton} ${!canCreate ? styles.createButtonDisabled : ""}`}
+            onClick={handleCreate}
+            disabled={!canCreate || isSubmitting}
+          >
+            {isSubmitting ? "생성 중..." : "생성하기"}
+          </button>
+        </div>
+      )}
       {showSuccessModal && (
         <GuildCreateSuccessModal
           guildName={guildName}
@@ -364,4 +405,3 @@ export default function GuildCreate() {
     </div>
   );
 }
-
