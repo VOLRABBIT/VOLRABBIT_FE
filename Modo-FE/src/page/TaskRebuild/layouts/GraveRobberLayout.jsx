@@ -26,6 +26,7 @@ export default function GraveRobberLayout({
   TIMER_RADIUS,
   TIMER_CIRCUMFERENCE,
   formatTime,
+  formatElapsedTime,
   activeTasks,
   battleStartModalOpen,
   setBattleStartModalOpen,
@@ -34,9 +35,18 @@ export default function GraveRobberLayout({
   timerFinishedModalOpen,
   setTimerFinishedModalOpen,
   handleTimerFinishedConfirm,
+  todayTotalSeconds,
+  selectedTodoTotalSeconds,
 }) {
   const mapBackground = getLocationBackground(locationType);
   const buttonColor = getLocationButtonColor(locationType);
+  const formatSummary = (seconds) => {
+    if (seconds == null || !Number.isFinite(Number(seconds))) {
+      return "--h --m";
+    }
+    const formatted = formatElapsedTime(Number(seconds));
+    return `${formatted.hours}h ${formatted.minutes}m`;
+  };
   return (
     <div className={commonStyles.container}>
       {/* 배경 이미지 */}
@@ -93,7 +103,7 @@ export default function GraveRobberLayout({
           <div className={commonStyles.currentBattleHeader}>
             <h2 className={commonStyles.currentBattleTitle}>현재 전투</h2>
             <p className={commonStyles.currentBattleDescription}>
-              현재 전투에 집중하세요!
+              오늘 누적 {formatSummary(todayTotalSeconds)} / 선택 전투 누적 {formatSummary(selectedTodoTotalSeconds)}
             </p>
           </div>
           <div 
@@ -160,4 +170,3 @@ export default function GraveRobberLayout({
     </div>
   );
 }
-
