@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Signup.module.css";
 import eyeSlashIcon from "../../assets/eye-slash.svg";
@@ -8,12 +8,43 @@ import arrowRightIcon from "../../assets/arrow-right.svg";
 import checkedIcon from "../../assets/checked.svg";
 import { signup } from "../../api/authApi";
 
+const SIGNUP_DRAFT_KEY = "signupDraft";
+
+const readSignupDraft = () => {
+  try {
+    const raw = sessionStorage.getItem(SIGNUP_DRAFT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+const writeSignupDraft = (draft) => {
+  try {
+    sessionStorage.setItem(SIGNUP_DRAFT_KEY, JSON.stringify(draft));
+  } catch {
+    // ignore storage errors
+  }
+};
+
+const clearSignupDraft = () => {
+  try {
+    sessionStorage.removeItem(SIGNUP_DRAFT_KEY);
+  } catch {
+    // ignore storage errors
+  }
+};
+
 export default function Signup() {
   const navigate = useNavigate();
-  const [nickname, setNickname] = useState("");
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const draft = readSignupDraft();
+  const [nickname, setNickname] = useState(draft?.nickname ?? "");
+  const [id, setId] = useState(draft?.email ?? "");
+  const [password, setPassword] = useState(draft?.password ?? "");
+  const [confirmPassword, setConfirmPassword] = useState(draft?.confirmPassword ?? "");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
@@ -22,10 +53,20 @@ export default function Signup() {
   const [emailError, setEmailError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [agreements, setAgreements] = useState({
-    all: false,
-    service: false,
-    marketing: false,
+    all: draft?.agreements?.all ?? false,
+    service: draft?.agreements?.service ?? false,
+    marketing: draft?.agreements?.marketing ?? false,
   });
+
+  useEffect(() => {
+    writeSignupDraft({
+      email: id,
+      nickname,
+      password,
+      confirmPassword,
+      agreements,
+    });
+  }, [id, nickname, password, confirmPassword, agreements]);
 
   const handleBack = () => {
     navigate(-1);
@@ -71,6 +112,7 @@ export default function Signup() {
 
     try {
       await signup(nickname, email, password);
+      clearSignupDraft();
       navigate("/login");
     } catch (err) {
       console.error("Signup failed:", err);
@@ -333,4 +375,3 @@ export default function Signup() {
     </div>
   );
 }
-

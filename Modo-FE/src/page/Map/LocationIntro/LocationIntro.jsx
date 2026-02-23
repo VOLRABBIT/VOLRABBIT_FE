@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import LocationPage from "../../../components/LocationPage/LocationPage";
 import { LOCATION_DATA } from "../../../data/locationData";
+import { saveSelectedMap } from "../../../utils/selectedMapStorage";
 
 export default function LocationIntro() {
   const { type } = useParams();
@@ -15,6 +16,7 @@ export default function LocationIntro() {
   }
 
   const handleSelect = () => {
+    saveSelectedMap(locationData.locationType);
     navigate(`/fight/${locationData.locationType}`, {
       state: { locationType: locationData.locationType }
     });
@@ -31,4 +33,3 @@ export default function LocationIntro() {
     />
   );
 }
-
