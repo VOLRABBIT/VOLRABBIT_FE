@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.css";
+import SkipModal from "../Diagnosis/SkipModal";
 import mapIcon from "../../assets/navbar/map.svg";
 import mapSelectedIcon from "../../assets/navbar/map-selected.svg";
 import fightIcon from "../../assets/navbar/fight.svg";
@@ -8,6 +10,7 @@ import guildIcon from "../../assets/navbar/guild.svg";
 import guildSelectedIcon from "../../assets/navbar/guild-selected.svg";
 import mypageIcon from "../../assets/navbar/mypage.svg";
 import mypageSelectedIcon from "../../assets/navbar/mypage-selected.svg";
+import { getSelectedMap } from "../../utils/selectedMapStorage";
 
 /**
  * @param {Object} props
@@ -15,6 +18,7 @@ import mypageSelectedIcon from "../../assets/navbar/mypage-selected.svg";
  */
 export default function Navbar({ activeItem = null }) {
   const navigate = useNavigate();
+  const [showFightGuardModal, setShowFightGuardModal] = useState(false);
 
   const menuItems = [
     {
@@ -48,38 +52,57 @@ export default function Navbar({ activeItem = null }) {
   ];
 
   const handleItemClick = (path) => {
+    if (path === "/fight" && !getSelectedMap()) {
+      setShowFightGuardModal(true);
+      return;
+    }
     navigate(path);
   };
 
   return (
-    <nav className={styles.navbar}>
-      <div className={styles.navbarBackground} />
-      <div className={styles.menuContainer}>
-        {menuItems.map((item) => {
-          const isActive = activeItem === item.id;
-          return (
-            <div
-              key={item.id}
-              className={styles.menuItem}
-              onClick={() => handleItemClick(item.path)}
-            >
-              <div className={styles.iconWrapper}>
-                <img
-                  src={isActive ? item.selectedIcon : item.icon}
-                  alt={item.label}
-                  className={styles.icon}
-                />
-              </div>
-              <span
-                className={`${styles.label} ${isActive ? styles.labelActive : ""}`}
+    <>
+      <nav className={styles.navbar}>
+        <div className={styles.navbarBackground} />
+        <div className={styles.menuContainer}>
+          {menuItems.map((item) => {
+            const isActive = activeItem === item.id;
+            return (
+              <div
+                key={item.id}
+                className={styles.menuItem}
+                onClick={() => handleItemClick(item.path)}
               >
-                {item.label}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-    </nav>
+                <div className={styles.iconWrapper}>
+                  <img
+                    src={isActive ? item.selectedIcon : item.icon}
+                    alt={item.label}
+                    className={styles.icon}
+                  />
+                </div>
+                <span
+                  className={`${styles.label} ${isActive ? styles.labelActive : ""}`}
+                >
+                  {item.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </nav>
+
+      {showFightGuardModal && (
+        <SkipModal
+          title="전투 진입 안내"
+          content="맵을 지정하지 않았습니다. 먼저 맵을 지정해주세요."
+          stopButtonText="맵 설정하러 가기"
+          continueButtonText="취소"
+          onClose={() => setShowFightGuardModal(false)}
+          onStop={() => {
+            setShowFightGuardModal(false);
+            navigate("/mypage", { state: { focusSection: "mapSetting" } });
+          }}
+        />
+      )}
+    </>
   );
 }
-

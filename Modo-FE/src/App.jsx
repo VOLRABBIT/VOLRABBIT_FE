@@ -5,6 +5,7 @@ import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 // 페이지
 import Landing from "./page/Landing/Landing.jsx";
 import Login from "./page/Login/Login.jsx";
+import OAuthCallback from "./page/OAuthCallback/OAuthCallback.jsx";
 import Signup from "./page/Signup/Signup.jsx";
 import TermsOfService from "./page/TermsOfService/TermsOfService.jsx";
 import MarketingAgreement from "./page/MarketingAgreement/MarketingAgreement.jsx";
@@ -36,12 +37,11 @@ import CharacterSelectPage from "./page/CharacterSelect/CharacterSelectPage.jsx"
 import CategorySettings from "./page/CategorySettings/CategorySettings.jsx";
 import NFCSettings from "./page/NFCSettings/NFCSettings.jsx";
 import NFCRegister from "./page/NFCRegister/NFCRegister.jsx";
-import BattleModalExample from "./page/BattleModalExample/BattleModalExample.jsx";
 
 // 스타일
 import "./App.css";
 
-const PUBLIC_PATHS = ["/", "/login", "/signup", "/terms-of-service", "/marketing-agreement"];
+const PUBLIC_PATHS = ["/", "/login", "/signup", "/terms-of-service", "/marketing-agreement", "/oauth/callback"];
 
 function AppContent() {
   const location = useLocation();
@@ -55,16 +55,16 @@ function AppContent() {
   }, [location.pathname, navigate]);
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflowY: "auto", overflowX: "hidden" }}>
       <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/advanced-diagnosis" element={<AdvancedDiagnosis />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/oauth/callback/:provider" element={<OAuthCallback />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/marketing-agreement" element={<MarketingAgreement />} />
-            <Route path="/battle-modal-example" element={<BattleModalExample />} />
             <Route path="/map" element={<Map />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/location/:type" element={<LocationIntro />} />
