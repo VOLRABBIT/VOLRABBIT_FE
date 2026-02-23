@@ -7,7 +7,7 @@ import styles from "./TaskCreate.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import taskFightIcon from "../../assets/task-fight.svg";
 import { getLocationBackground, getLocationButtonColor } from "../../utils/locationTheme";
-import { createTodo, buildCreateTodoPayload } from "../../api/todoApi";
+import { createTodoTree, buildCreateTodoPayload } from "../../api/todoApi";
 import { getCategories } from "../../api/apiStore";
 
 export default function TaskCreate() {
@@ -29,24 +29,20 @@ export default function TaskCreate() {
   const [customDeadline, setCustomDeadline] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [repeatCycle, setRepeatCycle] = useState(null);
-  const [subdivision, setSubdivision] = useState(null);
-  const [verification, setVerification] = useState(null);
+  const [segmentationType, setSegmentationType] = useState(null);
+  const [verificationType, setVerificationType] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
 
   // 카테고리 목록 조회 (마이페이지 카테고리 관리와 동일 소스)
   useEffect(() => {
-    console.log("[TaskCreate] getCategories 호출");
     getCategories()
       .then((data) => {
-        console.log("[TaskCreate] getCategories raw 응답:", data);
         const list = Array.isArray(data)
           ? data
           : (Array.isArray(data?.data) ? data.data : null) ?? data?.content ?? data?.categories ?? [];
-        console.log("[TaskCreate] 카테고리 목록 설정:", list);
         setCategoriesList(list);
       })
-      .catch((err) => {
-        console.error("[TaskCreate] getCategories 실패:", err);
+      .catch(() => {
         setCategoriesList([]);
       });
   }, []);
@@ -75,11 +71,21 @@ export default function TaskCreate() {
   const [subdivisionDropdownOpen, setSubdivisionDropdownOpen] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [segmentationNotice, setSegmentationNotice] = useState(null);
 
   const deadlineOptions = ["오늘", "내일", "직접 입력"];
   const repeatOptions = ["없음", "매일", "매주", "매달"];
-  const subdivisionOptions = ["없음", "2단계로 세분화", "3단계로 세분화", "Auto"];
-  const verificationOptions = ["자가 체크", "사진", "태깅"];
+  const subdivisionOptions = [
+    { label: "없음", code: "NONE" },
+    { label: "2단계로 세분화", code: "TWO" },
+    { label: "3단계로 세분화", code: "THREE" },
+    { label: "Auto", code: "AUTO" },
+  ];
+  const verificationOptions = [
+    { label: "자가 체크", code: "CHECK" },
+    { label: "사진", code: "PHOTO_PROOF" },
+    { label: "태깅", code: "TAG" },
+  ];
   const tagOptions = ["전공책", "세탁기", "기숙사 테이블"];
 
   const handleBack = () => {
@@ -150,12 +156,20 @@ export default function TaskCreate() {
   };
 
   const handleSubdivisionSelect = (option) => {
-    setSubdivision(option);
+    setSegmentationType(option.code);
     setSubdivisionDropdownOpen(false);
   };
 
   const handleVerificationSelect = (option) => {
-    setVerification(option);
+    if (option.code === "TAG") {
+      if (segmentationType && segmentationType !== "NONE") {
+        setSegmentationType("NONE");
+      }
+      setSegmentationNotice("TAG verification does not support segmentation");
+    } else {
+      setSegmentationNotice(null);
+    }
+    setVerificationType(option.code);
   };
 
   const handleTagSelect = (tag) => {
@@ -166,7 +180,7 @@ export default function TaskCreate() {
     if (currentStep === step && step < 6) {
       setCurrentStep(step + 1);
     } else if (currentStep === step && step === 6) {
-      if (verification === "태깅") {
+      if (verificationType === "TAG") {
         setCurrentStep(7);
       } else {
         setCurrentStep(8);
@@ -180,19 +194,10 @@ export default function TaskCreate() {
     setSubmitError(null);
     setSubmitLoading(true);
     try {
-      if (import.meta.env?.DEV) {
-        console.log("[1] TaskCreate 폼 상태", {
-          taskName,
-          categoryId,
-          categoryId타입: typeof categoryId,
-          deadline,
-          customDeadline,
-          selectedDate: selectedDate ? selectedDate.toISOString?.() : selectedDate,
-          repeatCycle,
-          subdivision,
-          verification,
-          selectedTag,
-        });
+      if (verificationType === "TAG" && segmentationType !== "NONE") {
+        setSubmitError("TAG verification does not support segmentation");
+        setSubmitLoading(false);
+        return;
       }
       const categoryIdValid = categoryId != null && categoryId !== '' && Number.isFinite(Number(categoryId));
       if (!categoryIdValid) {
@@ -200,13 +205,14 @@ export default function TaskCreate() {
         setSubmitLoading(false);
         return;
       }
-      const targetDateStr = targetDateFromState || (() => {
+      const realTodayStr = (() => {
         const d = new Date();
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
       })();
-      if (import.meta.env?.DEV) {
-        console.log("[2] buildCreateTodoPayload 호출 직전, targetDateStr:", targetDateStr);
-      }
+      const targetDateStr =
+        deadline === "오늘" || deadline === "내일"
+          ? realTodayStr
+          : (targetDateFromState || realTodayStr);
       const payload = buildCreateTodoPayload({
         taskName,
         categoryId,
@@ -214,15 +220,14 @@ export default function TaskCreate() {
         customDeadline,
         selectedDate,
         repeatCycle,
-        subdivision,
-        verification,
+        subdivision: segmentationType,
+        verification: verificationType,
         selectedTag,
       }, targetDateStr);
-      if (import.meta.env?.DEV) {
-        console.log("[3] buildCreateTodoPayload 결과 (API로 보낼 payload)", payload);
-        console.log("[4] createTodo(payload) 호출 직전");
-      }
-      await createTodo(payload);
+      await createTodoTree(payload, {
+        startDate: targetDateStr,
+        endDate: payload.dueDate,
+      });
       navigate(-1, { state: { locationType } });
     } catch (err) {
       const status = err?.response?.status;
@@ -254,8 +259,8 @@ export default function TaskCreate() {
   const canProceedStep2 = categoryId != null;
   const canProceedStep3 = deadline !== null && (deadline !== "직접 입력" || customDeadline.length > 0);
   const canProceedStep4 = repeatCycle !== null;
-  const canProceedStep5 = subdivision !== null;
-  const canProceedStep6 = verification !== null;
+  const canProceedStep5 = segmentationType !== null;
+  const canProceedStep6 = verificationType !== null;
   const canProceedStep7 = selectedTag !== null;
 
   const isStepCompleted = (step) => currentStep > step;
@@ -278,9 +283,9 @@ export default function TaskCreate() {
       case 4:
         return repeatCycle;
       case 5:
-        return subdivision;
+        return subdivisionOptions.find((option) => option.code === segmentationType)?.label ?? "";
       case 6:
-        return verification;
+        return verificationOptions.find((option) => option.code === verificationType)?.label ?? "";
       case 7:
         return selectedTag;
       default:
@@ -302,7 +307,7 @@ export default function TaskCreate() {
           <button
             className={styles.backButton}
             onClick={() =>
-              setCurrentStep(verification === "태깅" ? 7 : 6)
+              setCurrentStep(verificationType === "TAG" ? 7 : 6)
             }
           >
             <img src={arrowLeftIcon} alt="뒤로가기" />
@@ -314,7 +319,7 @@ export default function TaskCreate() {
 
         <div className={`${styles.content} ${styles.completeContent}`}>
           {/* 모든 step의 요약 카드들 */}
-          {verification === "태깅"
+          {verificationType === "TAG"
             ? [1, 2, 3, 4, 5, 6, 7].map((step) => (
                 <StepCard
                   key={step}
@@ -346,7 +351,7 @@ export default function TaskCreate() {
               <p className={styles.modalTaskInfo}>
                 {deadline === "직접 입력" ? customDeadline : deadline}
               </p>
-              <p className={styles.modalTaskInfo}>{verification}</p>
+              <p className={styles.modalTaskInfo}>{verificationOptions.find((option) => option.code === verificationType)?.label ?? ""}</p>
               <p className={styles.modalQuestion}>
                 {isEditMode ? "전투를 수정하시겠습니까?" : "전투를 추가하시겠습니까?"}
               </p>
@@ -619,17 +624,29 @@ export default function TaskCreate() {
           >
             <Dropdown
               placeholder="단계별 세분화"
-              selectedValue={subdivision}
-              options={subdivisionOptions}
+              selectedValue={subdivisionOptions.find((option) => option.code === segmentationType)?.label ?? null}
+              options={subdivisionOptions.map((option) => option.label)}
               isOpen={subdivisionDropdownOpen}
               onToggle={(open) => {
+                if (verificationType === "TAG") {
+                  setSubdivisionDropdownOpen(false);
+                  return;
+                }
                 setSubdivisionDropdownOpen(open);
                 setDeadlineDropdownOpen(false);
                 setRepeatDropdownOpen(false);
               }}
-              onSelect={handleSubdivisionSelect}
+              onSelect={(label) => {
+                const selected = subdivisionOptions.find((option) => option.label === label);
+                if (selected) handleSubdivisionSelect(selected);
+              }}
               stepClass="step5"
             />
+            {verificationType === "TAG" && (
+              <p style={{ marginTop: 8, marginBottom: 0, color: "#c00", fontSize: 12 }}>
+                {segmentationNotice ?? "TAG verification does not support segmentation"}
+              </p>
+            )}
             <button
               className={`${styles.nextButton} ${!canProceedStep5 || !isStepActive(5) ? styles.nextButtonDisabled : ""}`}
               onClick={() => handleNext(5)}
@@ -655,7 +672,7 @@ export default function TaskCreate() {
           >
             <div className={styles.verificationTags}>
               {verificationOptions.map((option) => {
-                const isSelected = verification === option;
+                const isSelected = verificationType === option.code;
                 let bgColor, textColor;
                 
                 if (locationType === "gorge") {
@@ -682,7 +699,7 @@ export default function TaskCreate() {
                 
                 return (
                   <button
-                    key={option}
+                    key={option.code}
                     className={`${styles.verificationTag} ${isSelected ? styles.verificationTagSelected : ""}`}
                     onClick={() => handleVerificationSelect(option)}
                     style={{
@@ -690,7 +707,7 @@ export default function TaskCreate() {
                       color: textColor
                     }}
                   >
-                    {option}
+                    {option.label}
                   </button>
                 );
               })}
@@ -701,13 +718,13 @@ export default function TaskCreate() {
               disabled={!canProceedStep6 || !isStepActive(6)}
               style={{ backgroundColor: buttonColor }}
             >
-              {verification === "태깅" ? "다음" : "완료"}
+              {verificationType === "TAG" ? "다음" : "완료"}
             </button>
           </StepCard>
         )}
 
         {/* Step 7: 태그 선택하기 (태깅 선택 시) */}
-        {verification === "태깅" && isStepCompleted(6) && (
+        {verificationType === "TAG" && isStepCompleted(6) && (
           <StepCard
             stepNumber={7}
             title="태그 선택하기"
@@ -782,4 +799,3 @@ export default function TaskCreate() {
     </div>
   );
 }
-
