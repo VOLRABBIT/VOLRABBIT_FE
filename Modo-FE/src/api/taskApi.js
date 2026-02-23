@@ -1,4 +1,6 @@
 import api from './api';
+import { submitTodoPhotoProof } from './photoApi';
+import { filterOutGuildQuests, filterOutGuildQuestGroups } from "../utils/taskSource";
 
 /**
  * 날짜별 todo 목록 조회
@@ -16,7 +18,14 @@ export const getTasksByDate = async (date) => {
       date: date
     },
   });
-  return response?.data?.data || response?.data;
+  const data = response?.data?.data || response?.data;
+  if (Array.isArray(data)) {
+    if (data.length > 0 && Array.isArray(data[0]?.tasks)) {
+      return filterOutGuildQuestGroups(data);
+    }
+    return filterOutGuildQuests(data);
+  }
+  return data;
 };
 
 /**
@@ -46,9 +55,6 @@ export const getTask = async (todoId) => {
  * @returns {Promise}
  */
 export const createTask = async (taskData) => {
-  
-  console.log('createTask 호출 - taskData:', taskData);
-  
   // 필수 필드 검증
   if (!taskData.content) {
     throw new Error('content는 필수입니다.');
@@ -168,22 +174,39 @@ export const uncheckTodo = async (todoId) => {
  * @returns {Promise} 인증 결과
  */
 export const uploadPhotoProof = async (todoId, photoData) => {
-  const response = await api.post(`/api/todos/${todoId}/photo-proof`, photoData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  return submitTodoPhotoProof(todoId, photoData);
+};
+
+/**
+ * NFC 태그 등록
+ * @param {number} todoId
+ * @returns {Promise} 등록 결과
+ */
+export const registerNfcTag = async (todoId) => {
+  const response = await api.post(`/api/todos/${todoId}/nfc/register`);
   return response?.data?.data || response?.data;
 };
 
 /**
  * NFC 태깅 인증
- * @param {number} todoId
- * @param {Object} tagData - 태그 데이터
+ * @param {string} tagCode
  * @returns {Promise} 인증 결과
  */
+export const verifyNfcTag = async (tagCode) => {
+  const response = await api.post('/api/todos/nfc/verify', { tagCode });
+  return response?.data?.data || response?.data;
+};
+
+/**
+ * 하위 호환용 별칭
+ */
 export const tagTodo = async (todoId, tagData) => {
-  const response = await api.post(`/api/todos/${todoId}/tag`, tagData);
+  const code = tagData?.tagCode;
+  if (!code) {
+    throw new Error('tagCode가 필요합니다.');
+  }
+  await registerNfcTag(todoId);
+  const response = await api.post('/api/todos/nfc/verify', { tagCode: code });
   return response?.data?.data || response?.data;
 };
 
