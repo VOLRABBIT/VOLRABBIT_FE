@@ -11,6 +11,11 @@ import { getCategories } from "../../api/apiStore";
 import { getLocationBackground, getLocationTitle } from "../../utils/locationTheme";
 import { getSelectedMap } from "../../utils/selectedMapStorage";
 import { filterOutGuildQuestGroups, filterOutGuildQuests } from "../../utils/taskSource";
+import {
+  applyOrderedIdsToGroupedTasks,
+  mergeOrderedIdsWithCurrent,
+  readTaskRebuildOrder,
+} from "../../utils/taskRebuildOrder";
 import styles from "./Fight.module.css";
 
 const extractCategoryList = (data) => {
@@ -67,6 +72,17 @@ export default function Fight() {
               currentIds.some((id) => id == group.id || String(id) === String(group.id)) ||
               currentNames.includes(group.category ?? "")
           );
+        }
+        // task-rebuild에서 저장한 순서 적용
+        if (Array.isArray(taskList) && taskList.length > 0) {
+          const flattenedTaskIds = taskList
+            .flatMap((group) => (Array.isArray(group?.tasks) ? group.tasks : []))
+            .map((task) => String(task?.id ?? task?.todoId));
+          const scopeTodoId = flattenedTaskIds[0] ?? null;
+          const storedOrderedIds = readTaskRebuildOrder(scopeTodoId);
+          const baseOrderedIds = storedOrderedIds ?? [];
+          const mergedOrderedIds = mergeOrderedIdsWithCurrent(flattenedTaskIds, baseOrderedIds);
+          taskList = applyOrderedIdsToGroupedTasks(taskList, mergedOrderedIds);
         }
         setTasks(taskList);
       } catch (err) {

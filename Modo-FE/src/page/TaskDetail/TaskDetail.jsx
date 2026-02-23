@@ -8,41 +8,11 @@ import { getTodosByDate } from "../../api/todoApi";
 import { getCategories } from "../../api/apiStore";
 import { getLocationBackground } from "../../utils/locationTheme";
 import {
+  applyOrderedIdsToGroupedTasks,
   mergeOrderedIdsWithCurrent,
   readTaskRebuildOrder,
   syncTaskRebuildOrder,
 } from "../../utils/taskRebuildOrder";
-
-function applyOrderedIdsToGroupedTasks(groups, orderedIds) {
-  const safeGroups = Array.isArray(groups) ? groups : [];
-  const orderMap = new Map((orderedIds || []).map((id, index) => [String(id), index]));
-
-  const reorderedGroups = safeGroups.map((group) => {
-    const tasks = Array.isArray(group?.tasks) ? [...group.tasks] : [];
-    tasks.sort((a, b) => {
-      const aId = String(a?.id ?? a?.todoId);
-      const bId = String(b?.id ?? b?.todoId);
-      const aIndex = orderMap.has(aId) ? orderMap.get(aId) : Number.MAX_SAFE_INTEGER;
-      const bIndex = orderMap.has(bId) ? orderMap.get(bId) : Number.MAX_SAFE_INTEGER;
-      if (aIndex !== bIndex) return aIndex - bIndex;
-      return 0;
-    });
-    const firstTask = tasks[0];
-    const firstIndex = firstTask
-      ? (orderMap.has(String(firstTask?.id ?? firstTask?.todoId))
-        ? orderMap.get(String(firstTask?.id ?? firstTask?.todoId))
-        : Number.MAX_SAFE_INTEGER)
-      : Number.MAX_SAFE_INTEGER;
-    return { ...group, tasks, __firstIndex: firstIndex };
-  });
-
-  reorderedGroups.sort((a, b) => a.__firstIndex - b.__firstIndex);
-  return reorderedGroups.map((group) => {
-    const next = { ...group };
-    delete next.__firstIndex;
-    return next;
-  });
-}
 
 export default function TaskDetail() {
   const navigate = useNavigate();
