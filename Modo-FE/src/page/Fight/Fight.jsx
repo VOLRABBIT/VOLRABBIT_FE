@@ -185,13 +185,12 @@ export default function Fight() {
           <h1 className={styles.headerTitle}>{locationTitle}</h1>
         </div>
 
-        {/* 월/년 표시 */}
-        <div className={styles.monthYear}>
-          {year}년 {monthName}
-        </div>
-
-        {/* 캘린더 */}
-        <div className={styles.calendar}>
+        {/* 달력 영역: 날짜는 캘린더 왼쪽 위에 정렬 (전투 Task 작성하기와 동일) */}
+        <div className={styles.calendarSection}>
+          <div className={styles.monthYear}>
+            {year}년 {monthName}
+          </div>
+          <div className={styles.calendar}>
           <div className={styles.weekDays}>
             {weekDays.map((day, index) => (
               <div
@@ -217,6 +216,7 @@ export default function Fight() {
               </div>
             ))}
           </div>
+        </div>
         </div>
 
         {/* 전투 Task 작성하기 */}
