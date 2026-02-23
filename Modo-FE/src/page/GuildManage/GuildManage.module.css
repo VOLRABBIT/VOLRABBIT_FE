@@ -12,13 +12,19 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: 20px 16px;
   overflow-y: auto;
   min-height: 0;
 }
 
 .section {
+  width: 100%;
+  max-width: 343px;
   margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .section:last-child {
@@ -31,6 +37,7 @@
   font-weight: 700;
   color: #000000;
   margin: 0 0 8px 0;
+  text-align: left;
 }
 
 .sectionDescription {
@@ -40,6 +47,7 @@
   color: #71727A;
   line-height: 20px;
   margin: 0 0 16px 0;
+  text-align: left;
 }
 
 .guildList {
@@ -47,6 +55,7 @@
   flex-direction: column;
   gap: 12px;
   align-items: center;
+  align-self: center;
 }
 
 .guildCard {
