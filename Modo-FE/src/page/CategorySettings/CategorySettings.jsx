@@ -9,7 +9,6 @@ import { getCategories, createCategory, deleteCategory } from "../../api/apiStor
 
 const INITIAL_CATEGORIES = { battle: [], guild: [] };
 
-/** CategoryResponse: categoryId, name, active → id, name */
 function mapCategoryItem(c, index) {
   return {
     id: c.categoryId ?? c.id ?? index + 1,
@@ -87,9 +86,6 @@ export default function CategorySettings() {
   };
 
   const handleCategoryNameClick = (categoryId, categoryName) => {
-    // if (isAddingCategory) return;
-    // setEditingCategoryId(categoryId);
-    // setEditingCategoryName(categoryName);
   };
 
   const handleEditConfirm = async (categoryId) => {
