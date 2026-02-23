@@ -1,4 +1,4 @@
-import styles from "../GuildQuestRegister.module.css";
+import taskStyles from "../../TaskCreate/TaskCreate.module.css";
 import { weekDays } from "../constants";
 
 export default function Calendar({ selectedDate, onDateSelect }) {
@@ -27,19 +27,19 @@ export default function Calendar({ selectedDate, onDateSelect }) {
   };
 
   return (
-    <div className={styles.calendarContainer}>
-      <div className={styles.calendar}>
-        <div className={styles.calendarHeader}>
+    <div className={taskStyles.calendarContainer}>
+      <div className={taskStyles.calendar}>
+        <div className={taskStyles.calendarHeader}>
           {weekDays.map((day, index) => (
-            <div key={day} className={`${styles.weekDay} ${index === 6 ? styles.weekDayRed : ""}`}>
+            <div key={day} className={`${taskStyles.weekDay} ${index === 6 ? taskStyles.weekDayRed : ""}`}>
               {day}
             </div>
           ))}
         </div>
-        <div className={styles.calendarGrid}>
+        <div className={taskStyles.calendarGrid}>
           {getCalendarDays().map((date, index) => {
             if (date === null) {
-              return <div key={`empty-${index}`} className={styles.calendarDayEmpty}></div>;
+              return <div key={`empty-${index}`} className={taskStyles.calendarDayEmpty}></div>;
             }
             const dayNumber = date.getDate();
             const dayOfWeek = date.getDay();
@@ -54,7 +54,7 @@ export default function Calendar({ selectedDate, onDateSelect }) {
               <button
                 key={date.getTime()}
                 type="button"
-                className={`${styles.calendarDay} ${isSelected ? styles.calendarDaySelected : ""} ${isRedDate ? styles.calendarDayRed : ""}`}
+                className={`${taskStyles.calendarDay} ${isSelected ? taskStyles.calendarDaySelected : ""} ${isRedDate ? taskStyles.calendarDayRed : ""}`}
                 onClick={() => onDateSelect(date)}
               >
                 {dayNumber}
