@@ -23,6 +23,32 @@ const getOrCreateDeviceId = () => {
   }
 };
 
+const resolvePublicOrigin = () => {
+  if (import.meta.env.VITE_PUBLIC_ORIGIN) {
+    return import.meta.env.VITE_PUBLIC_ORIGIN;
+  }
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    return window.location.origin;
+  }
+  return 'http://localhost:5173';
+};
+
+const buildOAuthCallbackUrl = (provider) => {
+  const origin = resolvePublicOrigin().replace(/\/$/, '');
+  return `${origin}/oauth/callback/${encodeURIComponent(provider)}`;
+};
+
+export const clearClientSession = () => {
+  try {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('deviceId');
+    localStorage.removeItem('personaType');
+    localStorage.removeItem('selectedMap');
+  } catch {
+    console.error('clearClientSession 에러:', error);
+  }
+};
+
 /**
  * 일반 로그인
  * @param {string} email - 이메일
@@ -70,11 +96,51 @@ export const signup = async (nickname, email, password) => {
  */
 export const socialLogin = (provider) => {
   const deviceId = getOrCreateDeviceId();
+  const callbackUrl = buildOAuthCallbackUrl(provider);
+  const startPath = `/api/auth/oauth/${provider}`;
+  const startUrl = `${api.defaults.baseURL}${startPath}?deviceId=${encodeURIComponent(deviceId)}&redirectUri=${encodeURIComponent(callbackUrl)}`;
 
-  // OAuth 인증 URL로 리다이렉트
-  window.location.href = `${api.defaults.baseURL}/api/auth/oauth/${provider}?deviceId=${encodeURIComponent(
-    deviceId,
-  )}`;
+  api
+    .get(startPath, {
+      params: {
+        deviceId,
+        redirectUri: callbackUrl,
+      },
+      withCredentials: true,
+    })
+    .then((res) => {
+      const redirectUrl =
+        res?.data?.data?.url ??
+        res?.data?.url ??
+        res?.data?.data?.redirectUrl ??
+        res?.data?.redirectUrl;
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+        return;
+      }
+      window.location.href = startUrl;
+    })
+    .catch(() => {
+      window.location.href = startUrl;
+    });
+};
+
+/**
+ * 소셜 로그인 콜백 코드 교환
+ * @param {string} provider - 소셜 로그인 제공자
+ * @param {string} code - OAuth 인가 코드
+ * @returns {Promise<Object>} 토큰 정보
+ */
+export const socialLoginCallback = async (provider, code) => {
+  const response = await api.get(`/api/auth/oauth/callback/${provider}`, {
+    params: { code },
+    withCredentials: true,
+  });
+  const tokenData = response?.data?.data;
+  if (tokenData?.accessToken) {
+    localStorage.setItem('accessToken', tokenData.accessToken);
+  }
+  return tokenData;
 };
 
 /**
@@ -83,10 +149,9 @@ export const socialLogin = (provider) => {
  */
 export const logout = async () => {
   const response = await api.post('/api/users/logout');
-  
-  // 로컬 스토리지에서 토큰 제거
-  localStorage.removeItem('accessToken');
-  
+
+  clearClientSession();
+
   return response.data;
 };
 
