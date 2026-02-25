@@ -14,6 +14,7 @@ export default function RobotLayout({
   getPriorityClass,
   handleDragStart,
   handleDragOver,
+  handleDrop,
   handleDragEnd,
   draggedIndex,
   dragOverIndex,
@@ -63,6 +64,7 @@ export default function RobotLayout({
                   getPriorityClass={getPriorityClass}
                   onDragStart={handleDragStart}
                   onDragOver={handleDragOver}
+                  onDrop={handleDrop}
                   onDragEnd={handleDragEnd}
                   isDragging={draggedIndex === index}
                   dragOverIndex={dragOverIndex}
@@ -91,4 +93,3 @@ export default function RobotLayout({
     </div>
   );
 }
-

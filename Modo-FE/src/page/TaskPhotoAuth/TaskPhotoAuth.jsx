@@ -1,34 +1,64 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./TaskPhotoAuth.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
 import uploadIcon from "../../assets/map/upload.svg";
 import { getLocationBackground, getLocationButtonColor, getLocationTitle } from "../../utils/locationTheme";
+import {
+  preparePhotoUpload,
+  revokePhotoPreview,
+  uploadPhotoForGuildProof,
+} from "../../api/photoApi";
+import { useTodoVerification } from "../../hooks/useTodoVerification";
+import {
+  getCachedGuildQuests,
+  photoProofGuildQuest,
+  saveCachedGuildQuests,
+} from "../../api/guildApi";
 
 export default function TaskPhotoAuth() {
   const navigate = useNavigate();
   const location = useLocation();
-  const taskTitle = location.state?.taskTitle || "";
+  const { isSubmitting, completeTodoByPhoto } = useTodoVerification();
+  const mode = location.state?.mode === "guildQuest" ? "guildQuest" : "todo";
+  const todoId = location.state?.todoId;
+  const guildId = location.state?.guildId;
+  const questId = location.state?.questId;
+  const returnPath = location.state?.returnPath;
+  const returnDate = location.state?.returnDate;
   const locationType = location.state?.locationType || "dungeon";
   const mapBackground = getLocationBackground(locationType);
   const buttonColor = getLocationButtonColor(locationType);
   const locationTitle = getLocationTitle(locationType);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [uploadPayload, setUploadPayload] = useState(null);
+  const [isGuildSubmitting, setIsGuildSubmitting] = useState(false);
+  const isProcessing = isSubmitting || isGuildSubmitting;
+
+  useEffect(() => {
+    return () => {
+      revokePhotoPreview(imagePreview);
+    };
+  }, [imagePreview]);
 
   const handleBack = () => {
     navigate(-1);
   };
 
-  const handleImageSelect = (e) => {
+  const handleImageSelect = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const payload = preparePhotoUpload(file);
+        revokePhotoPreview(imagePreview);
+        setSelectedImage(file);
+        setImagePreview(payload.previewUrl);
+        setUploadPayload(payload);
+      } catch (error) {
+        console.error("이미지 처리 실패:", error);
+        alert(error?.message || "이미지 처리에 실패했습니다.");
+      }
     }
   };
 
@@ -36,9 +66,66 @@ export default function TaskPhotoAuth() {
     document.getElementById("fileInput")?.click();
   };
 
-  const handleAuthClick = () => {
-    if (selectedImage) {
-      navigate(-1);
+  const handleAuthClick = async () => {
+    if (!selectedImage || isProcessing) return;
+
+    try {
+      if (mode === "guildQuest") {
+        if (!guildId || !questId) {
+          alert("길드/퀘스트 정보가 없어 인증할 수 없습니다.");
+          return;
+        }
+        setIsGuildSubmitting(true);
+        const photoUrl = await uploadPhotoForGuildProof(uploadPayload ?? selectedImage);
+        await photoProofGuildQuest(guildId, questId, photoUrl);
+
+        const cachedQuests = getCachedGuildQuests(guildId);
+        const updatedQuests = cachedQuests.map((quest) =>
+          Number(quest?.id) === Number(questId)
+            ? { ...quest, completed: true, status: "ONGOING" }
+            : quest
+        );
+        saveCachedGuildQuests(guildId, updatedQuests);
+
+        navigate(returnPath || `/guild/${guildId}`, {
+          replace: true,
+          state: {
+            guildQuestPhotoProofUpdatedAt: Date.now(),
+            guildQuestId: Number(questId),
+          },
+        });
+        return;
+      }
+
+      if (!todoId) {
+        alert("투두 ID가 없어 인증할 수 없습니다.");
+        return;
+      }
+
+      await completeTodoByPhoto(todoId, uploadPayload ?? selectedImage);
+      if (returnDate) {
+        navigate(`/task-detail/${returnDate}`, {
+          replace: true,
+          state: {
+            locationType,
+            refreshedAt: Date.now(),
+            verifiedTodoId: todoId,
+          },
+        });
+      } else {
+        navigate(-1);
+      }
+    } catch (error) {
+      console.error("사진 인증 실패:", error);
+      console.error("사진 인증 실패 응답:", error?.response?.status, error?.response?.data);
+      alert(
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        error?.message ||
+        "사진 인증에 실패했습니다."
+      );
+    } finally {
+      setIsGuildSubmitting(false);
     }
   };
 
@@ -55,7 +142,9 @@ export default function TaskPhotoAuth() {
           <button className={styles.backButton} onClick={handleBack}>
             <img src={arrowLeftIcon} alt="뒤로가기" />
           </button>
-          <h1 className={styles.headerTitle}>{locationTitle}</h1>
+          <h1 className={styles.headerTitle}>
+            {mode === "guildQuest" ? "길드 퀘스트" : locationTitle}
+          </h1>
         </div>
 
         {/* 사진 인증하기 제목 */}
@@ -70,8 +159,10 @@ export default function TaskPhotoAuth() {
                 className={styles.removeButton}
                 onClick={(e) => {
                   e.stopPropagation();
+                  revokePhotoPreview(imagePreview);
                   setSelectedImage(null);
                   setImagePreview(null);
+                  setUploadPayload(null);
                 }}
               >
                 X
@@ -100,13 +191,12 @@ export default function TaskPhotoAuth() {
         <button
           className={styles.authButton}
           onClick={handleAuthClick}
-          disabled={!selectedImage}
+          disabled={!selectedImage || isProcessing}
           style={{ backgroundColor: buttonColor }}
         >
-          인증하기
+          {isProcessing ? "처리 중..." : "인증하기"}
         </button>
       </div>
     </div>
   );
 }
-

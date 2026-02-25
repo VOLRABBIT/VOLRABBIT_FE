@@ -11,7 +11,11 @@ export default function StepCard({
   stepClass,
   children,
 }) {
-  const stepClassNames = stepClass ? styles[stepClass] : "";
+  const stepClassNames = (stepClass || "")
+    .split(" ")
+    .map((name) => styles[name] || "")
+    .filter(Boolean)
+    .join(" ");
   const summaryClass = isCompleted ? styles.stepCardSummary : "";
 
   return (

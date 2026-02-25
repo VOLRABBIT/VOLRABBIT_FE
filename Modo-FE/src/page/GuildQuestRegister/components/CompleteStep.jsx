@@ -1,5 +1,5 @@
+import StepCard from "../../../components/StepCard/StepCard";
 import styles from "../GuildQuestRegister.module.css";
-import StepSummary from "./StepSummary";
 import searchIcon from "../../../assets/guild/search.svg";
 
 export default function CompleteStep({
@@ -14,9 +14,14 @@ export default function CompleteStep({
   return (
     <div className={`${styles.content} ${styles.completeContent}`}>
       {stepsToShow.map((step) => (
-        <div key={step} className={`${styles.stepCard} ${styles.stepCardSummary}`}>
-          <StepSummary stepNumber={step} value={getSummaryValue(step)} />
-        </div>
+        <StepCard
+          key={step}
+          stepNumber={step}
+          isCompleted={true}
+          summaryValue={getSummaryValue(step)}
+          stepClass="summaryMode"
+          buttonColor="#7DA7DB"
+        />
       ))}
 
       <div className={styles.confirmModal}>

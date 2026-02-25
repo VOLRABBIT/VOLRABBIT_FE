@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import styles from "./GuildQuestRegister.module.css";
 import arrowLeftIcon from "../../assets/arrow-left.svg";
@@ -11,9 +11,12 @@ import Step5Subdivision from "./steps/Step5Subdivision";
 import Step6Verification from "./steps/Step6Verification";
 import Step7Tag from "./steps/Step7Tag";
 import CompleteStep from "./components/CompleteStep";
+import { proposeGuildQuest, getCachedGuildQuests, saveCachedGuildQuests } from "../../api/guildApi";
 
 export default function GuildQuestRegister() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const guildId = Number(id);
   const [currentStep, setCurrentStep] = useState(1);
   const [questName, setQuestName] = useState("");
   const [category, setCategory] = useState(null);
@@ -25,6 +28,7 @@ export default function GuildQuestRegister() {
   const [subdivision, setSubdivision] = useState(null);
   const [verification, setVerification] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 드롭다운 상태 관리
   const [deadlineDropdownOpen, setDeadlineDropdownOpen] = useState(false);
@@ -102,16 +106,58 @@ export default function GuildQuestRegister() {
     }
   };
 
-  const handleComplete = () => {
-    console.log("퀘스트 등록 완료", {
-      questName,
-      category,
-      deadline,
-      repeatCycle,
-      subdivision,
-      verification,
-    });
-    navigate(-1);
+  const handleComplete = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      const dueType =
+        deadline === "오늘" ? "TODAY" : deadline === "내일" ? "TOMORROW" : "CUSTOM";
+      const dueDate =
+        dueType === "CUSTOM"
+          ? customDeadline.replace(/\./g, "-")
+          : new Date().toISOString().slice(0, 10);
+      const verificationType =
+        verification === "자가 체크"
+          ? "CHECK"
+          : verification === "사진"
+            ? "PHOTO_PROOF"
+            : "TAG";
+      const repeatType =
+        repeatCycle === "매일"
+          ? "DAILY"
+          : repeatCycle === "매주"
+            ? "WEEKLY"
+            : repeatCycle === "매달"
+              ? "MONTHLY"
+              : "NONE";
+
+      const res = await proposeGuildQuest(guildId, {
+        content: questName,
+        dueType,
+        dueDate,
+        verificationType,
+        repeatType,
+      });
+
+      const createdQuest = {
+        id: res?.guildQuestId ?? Date.now(),
+        task: questName,
+        category: customCategory || category || "길드",
+        assignedMembers: [],
+        completed: false,
+        status: "PENDING",
+        verificationType,
+        selectedTag,
+      };
+      const cached = getCachedGuildQuests(guildId);
+      saveCachedGuildQuests(guildId, [createdQuest, ...cached]);
+
+      navigate(`/guild/${guildId}`);
+    } catch (e) {
+      alert(e?.message || "길드 퀘스트 등록에 실패했습니다.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Step 진행 가능 여부
@@ -138,7 +184,7 @@ export default function GuildQuestRegister() {
   const isStepActive = (step) => currentStep === step;
 
   const handleRegister = () => {
-    if (canRegister) {
+    if (canRegister && !isSubmitting) {
       handleComplete();
     }
   };
@@ -167,7 +213,7 @@ export default function GuildQuestRegister() {
 
   if (currentStep === 8) {
     return (
-      <div className={styles.container}>
+      <div className={styles.container} style={{ "--button-color": "#7DA7DB" }}>
         <div className={styles.header}>
           <button className={styles.backButton} onClick={() => setCurrentStep(verification === "태깅" ? 7 : 6)}>
             <img src={arrowLeftIcon} alt="뒤로가기" />
@@ -190,9 +236,9 @@ export default function GuildQuestRegister() {
               !canRegister ? styles.completeButtonDisabled : ""
             }`}
             onClick={handleRegister}
-            disabled={!canRegister}
+            disabled={!canRegister || isSubmitting}
           >
-            등록하기
+            {isSubmitting ? "등록 중..." : "등록하기"}
           </button>
         </div>
 
@@ -202,7 +248,7 @@ export default function GuildQuestRegister() {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ "--button-color": "#7DA7DB" }}>
       <div className={styles.header}>
         <button className={styles.backButton} onClick={handleBack}>
           <img src={arrowLeftIcon} alt="뒤로가기" />
@@ -315,18 +361,6 @@ export default function GuildQuestRegister() {
             canProceed={canProceedStep7}
           />
         )}
-      </div>
-
-      <div className={styles.registerSection}>
-        <button
-          className={`${styles.registerButton} ${
-            !canRegister ? styles.completeButtonDisabled : ""
-          }`}
-          onClick={handleRegister}
-          disabled={!canRegister}
-        >
-          등록하기
-        </button>
       </div>
 
       <Navbar activeItem="guild" />

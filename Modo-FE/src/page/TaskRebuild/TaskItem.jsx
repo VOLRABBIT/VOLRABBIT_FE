@@ -10,6 +10,7 @@ export default function TaskItem({
   getPriorityClass,
   onDragStart,
   onDragOver,
+  onDrop,
   onDragEnd,
   isDragging,
   dragOverIndex
@@ -31,6 +32,12 @@ export default function TaskItem({
     onDragEnd();
   };
 
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onDrop(index);
+  };
+
   const handleDragLeave = (e) => {
     e.preventDefault();
     if (dragOverIndex === index) {
@@ -41,6 +48,7 @@ export default function TaskItem({
   return (
     <div
       onDragOver={handleDragOver}
+      onDrop={handleDrop}
       onDragLeave={handleDragLeave}
       className={`${robotStyles.taskItem} ${isDragging ? robotStyles.dragging : ""} ${dragOverIndex === index ? robotStyles.dragOver : ""}`}
       style={{
@@ -85,4 +93,3 @@ export default function TaskItem({
     </div>
   );
 }
-

@@ -1,5 +1,7 @@
 import api from './api';
 
+const DELETE_ACCOUNT_PATH = '/api/users/me/delete';
+
 // Onboarding API
 /** 온보딩 질문 목록 조회 */
 export const getOnboardingQuestions = async () => {
@@ -58,6 +60,25 @@ export const updateNickname = async (nickname) => {
 
 /** 회원 탈퇴 (현재 로그인 유저 계정·토큰 정보 영구 삭제) */
 export const deleteAccount = async () => {
-  const response = await api.delete('/api/users/me');
+  const response = await api.delete(DELETE_ACCOUNT_PATH);
+  return response.data;
+};
+
+/** 카테고리 목록 조회 (id, name) **/
+export const getCategories = async () => {
+  const response = await api.get('/api/categories');
+  return response.data;
+};
+
+/** 카테고리 생성 **/
+export const createCategory = async (payload) => {
+  const name = typeof payload === 'string' ? payload : (payload?.name ?? payload?.categoryName ?? '');
+  const response = await api.post('/api/categories', { name });
+  return response.data;
+};
+
+/** 카테고리 삭제 **/
+export const deleteCategory = async (categoryId) => {
+  const response = await api.delete(`/api/categories/${categoryId}`);
   return response.data;
 };

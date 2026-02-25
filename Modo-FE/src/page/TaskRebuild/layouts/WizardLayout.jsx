@@ -25,6 +25,8 @@ export default function WizardLayout({
   handleBattleStart,
   elapsedSeconds,
   formatElapsedTime,
+  todayTotalSeconds,
+  selectedTodoTotalSeconds,
   locationType = "gorge",
 }) {
   const mapBackground = getLocationBackground(locationType);
@@ -131,6 +133,13 @@ export default function WizardLayout({
   };
 
   const layoutedTasks = layoutTasks();
+  const formatSummary = (seconds) => {
+    if (seconds == null || !Number.isFinite(Number(seconds))) {
+      return "--h --m";
+    }
+    const formatted = formatElapsedTime(Number(seconds));
+    return `${formatted.hours}h ${formatted.minutes}m`;
+  };
 
   return (
     <div className={commonStyles.container}>
@@ -210,6 +219,11 @@ export default function WizardLayout({
                   <div className={styles.wizardControlContainer}>
                     <p className={styles.wizardTime}>{formatElapsedTime(elapsedSeconds).hours}h {formatElapsedTime(elapsedSeconds).minutes}m</p>
                   </div>
+                  <div className={styles.wizardControlContainer}>
+                    <p className={styles.wizardSubtitle} style={{ fontSize: "12px" }}>
+                      오늘 누적 {formatSummary(todayTotalSeconds)} / 선택 전투 누적 {formatSummary(selectedTodoTotalSeconds)}
+                    </p>
+                  </div>
                 </>
               ) : (
                 <div className={styles.wizardControlContainerEmpty}>
@@ -254,4 +268,3 @@ export default function WizardLayout({
     </div>
   );
 }
-

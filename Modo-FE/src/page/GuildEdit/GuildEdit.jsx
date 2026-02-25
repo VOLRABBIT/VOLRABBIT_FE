@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import MemberAvatar from "../../components/MemberAvatar/MemberAvatar";
 import SkipModal from "../../components/Diagnosis/SkipModal";
@@ -8,19 +8,17 @@ import closeIcon from "../../assets/icon/close.svg";
 import groupIcon from "../../assets/guild/Group.svg";
 import guildIcon from "../../assets/guild/guild.svg";
 import correctionIcon from "../../assets/correction.svg";
-import checkedIcon from "../../assets/checked.svg";
-import { getGuildDetailData } from "../../data/guildDetailData";
+import { getGuild, getGuildMembers, updateGuild } from "../../api/guildApi";
 
 export default function GuildEdit() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const guildId = Number(id);
   const guildNameInputRef = useRef(null);
-  
-  const initialGuildData = getGuildDetailData(id || "1");
-  
-  const [guildName, setGuildName] = useState(initialGuildData.name);
-  const [members, setMembers] = useState(initialGuildData.members);
-  const [memberCount, setMemberCount] = useState(4);
+
+  const [guildName, setGuildName] = useState("");
+  const [members, setMembers] = useState([]);
+  const [memberCount, setMemberCount] = useState(0);
   const [customMemberCount, setCustomMemberCount] = useState("");
   const [duration, setDuration] = useState(null);
   const [customDuration, setCustomDuration] = useState("");
@@ -33,6 +31,38 @@ export default function GuildEdit() {
   const [showDurationInput, setShowDurationInput] = useState(false);
   const [memberCountInputFocused, setMemberCountInputFocused] = useState(false);
   const [durationInputFocused, setDurationInputFocused] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      if (!Number.isFinite(guildId)) return;
+      try {
+        const [detail, memberList] = await Promise.all([
+          getGuild(guildId),
+          getGuildMembers(guildId),
+        ]);
+        if (cancelled) return;
+        setGuildName(detail?.name || "");
+        const mapped = (Array.isArray(memberList) ? memberList : []).map((m) => ({
+          id: m?.userId ?? m?.id,
+          nickname: m?.nickname ?? "멤버",
+          avatar: m?.profileImageUrl ?? m?.avatar ?? "",
+        }));
+        setMembers(mapped);
+        setMemberCount(mapped.length);
+      } catch (e) {
+        if (!cancelled) {
+          alert(e?.message || "길드 정보를 불러오지 못했습니다.");
+          navigate(-1);
+        }
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [guildId, navigate]);
 
   const handleBack = () => {
     if (hasChanges) {
@@ -126,14 +156,25 @@ export default function GuildEdit() {
     setSelectedMember(null);
   };
 
-  const handleSave = () => {
-    console.log("길드 수정 저장:", {
-      name: guildName,
-      memberCount: memberCount || customMemberCount,
-      duration: duration || (customDuration && durationUnit ? `${customDuration}${durationUnit === "월" ? "개월" : durationUnit}` : ""),
-    });
-    setHasChanges(false);
-    navigate(-1);
+  const handleSave = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
+    try {
+      const introduction = [
+        `최대 인원: ${memberCount || customMemberCount || "-"}`,
+        `유지 기간: ${duration || (customDuration && durationUnit ? `${customDuration}${durationUnit === "월" ? "개월" : durationUnit}` : "-")}`,
+      ].join(" / ");
+      await updateGuild(guildId, {
+        name: guildName.trim(),
+        introduction,
+      });
+      setHasChanges(false);
+      navigate(-1);
+    } catch (e) {
+      alert(e?.message || "길드 수정에 실패했습니다.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleUnsavedChangesModalSave = () => {
@@ -321,8 +362,8 @@ export default function GuildEdit() {
       </div>
 
       <div className={styles.footer}>
-        <button className={styles.saveButton} onClick={handleSave}>
-          저장하기
+        <button className={styles.saveButton} onClick={handleSave} disabled={isSaving}>
+          {isSaving ? "저장 중..." : "저장하기"}
         </button>
       </div>
 
@@ -350,4 +391,3 @@ export default function GuildEdit() {
     </div>
   );
 }
-

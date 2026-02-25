@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../../components/TopBar/TopBar";
 import Navbar from "../../components/Navbar/Navbar";
@@ -7,6 +8,7 @@ import groupIcon from "../../assets/Group.svg";
 import rightIcon from "../../assets/Right icon.svg";
 import { ONGOING_GUILDS, ENDED_GUILDS } from "../../data/guildManageData";
 import styles from "./GuildManage.module.css";
+import { deleteGuild, getCurrentGuildId, getGuild, clearCurrentGuildId } from "../../api/guildApi";
 
 export default function GuildManage() {
   const navigate = useNavigate();
@@ -14,6 +16,26 @@ export default function GuildManage() {
   const [endedGuilds] = useState(ENDED_GUILDS);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedGuild, setSelectedGuild] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      const guildId = getCurrentGuildId();
+      if (!guildId) return;
+      try {
+        const detail = await getGuild(guildId);
+        if (cancelled) return;
+        setOngoingGuilds([{ id: guildId, name: detail?.name || `${guildId} 길드` }]);
+      } catch {
+        if (!cancelled) setOngoingGuilds([]);
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleBack = () => {
     navigate(-1);
@@ -31,12 +53,20 @@ export default function GuildManage() {
     }
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (selectedGuild) {
-      // 삭제 로직
-      setOngoingGuilds(ongoingGuilds.filter((g) => g.id !== selectedGuild.id));
-      setShowDeleteModal(false);
-      setSelectedGuild(null);
+      setIsDeleting(true);
+      try {
+        await deleteGuild(selectedGuild.id);
+        clearCurrentGuildId();
+        setOngoingGuilds(ongoingGuilds.filter((g) => g.id !== selectedGuild.id));
+        setShowDeleteModal(false);
+        setSelectedGuild(null);
+      } catch (e) {
+        alert(e?.message || "길드 삭제에 실패했습니다.");
+      } finally {
+        setIsDeleting(false);
+      }
     }
   };
 
@@ -107,7 +137,7 @@ export default function GuildManage() {
         <SkipModal
           title="길드를 삭제하시겠습니까?"
           content={`${selectedGuild.name}이 삭제되면 길드원, 퀘스트를 복구할 수 없어요.`}
-          stopButtonText="삭제하기"
+          stopButtonText={isDeleting ? "삭제 중..." : "삭제하기"}
           continueButtonText="취소"
           onClose={handleDeleteModalClose}
           onStop={handleDeleteConfirm}
@@ -116,4 +146,3 @@ export default function GuildManage() {
     </div>
   );
 }
-

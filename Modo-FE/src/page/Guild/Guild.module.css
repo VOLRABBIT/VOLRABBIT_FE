@@ -47,8 +47,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family: inherit;
   font-weight: 700;
   font-size: 16px;
   color: #393939;
@@ -85,15 +84,17 @@
 }
 
 .guildList {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  justify-content: center;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+  row-gap: 24px;
+  justify-items: start;
+  align-items: start;
+  align-content: start;
+  place-content: start;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  flex-wrap: nowrap;
   padding: 0;
 }
 
@@ -102,10 +103,11 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  flex: 0 0 auto;
-  width: 140px;
+  width: 100%;
+  max-width: 140px;
   box-sizing: border-box;
   position: relative;
+  justify-self: start;
 }
 
 .guildIconWrapper {
@@ -139,8 +141,7 @@
 }
 
 .guildName {
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family: inherit;
   font-weight: 700;
   font-size: 16px;
   color: #000;
@@ -157,9 +158,18 @@
   margin-top: 4px;
 }
 
+.guildRate {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 18px;
+  color: #7a7a7a;
+  text-align: center;
+  margin-top: 2px;
+}
+
 .statLabel {
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family: inherit;
   font-weight: 700;
   font-size: 12px;
   color: #000;
@@ -168,8 +178,7 @@
 }
 
 .statValue {
-  font-family: "NanumSquare", "NanumSquare Bold", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  font-family: inherit;
   font-weight: 700;
   font-size: 14px;
   color: #000;
@@ -177,3 +186,23 @@
   line-height: 24px;
 }
 
+.emptyState {
+  width: 100%;
+  grid-column: 1 / -1;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.emptyState p {
+  font-family: inherit;
+  font-weight: 400;
+  font-size: 14px;
+  color: #7a7a7a;
+  margin: 0;
+}
+
+@media (max-width: 320px) {
+  .guildList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
