@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://3.37.69.90:8080';
+const BASE_URL = 'http://140.245.76.239:8080';
 
 // axios 인스턴스
 const api = axios.create({
