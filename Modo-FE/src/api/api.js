@@ -3,7 +3,7 @@ import axios from 'axios';
 const envBase = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
 const BASE_URL =
   envBase ||
-  (import.meta.env.PROD ? 'https://www.modo.co.kr' : 'http://140.245.76.239:8080');
+  (import.meta.env.PROD ? 'https://www.modotodo.co.kr' : 'http://140.245.76.239:8080');
 
 // axios 인스턴스
 const api = axios.create({
