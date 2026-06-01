@@ -32,24 +32,33 @@ function resolveScopeTodoId(explicitTodoId, tasks) {
   return firstTask ? String(firstTask.todoId ?? firstTask.id) : null;
 }
 
+const CHARACTER_PATH_TO_TYPE = {
+  robot: "Starter-Freeze Bot",
+  graverobber: "Attention-grave",
+  wizard: "Time Wizard",
+  adventurer: "Emotional Adventure",
+};
+
+const isYmdPath = (value) => typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
+
 export default function TaskRebuild() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { date, character, locationType: locationTypeParam } = useParams();
+  const { date: dateParam, character: characterParam, locationType: locationTypeParam } = useParams();
+  const hasCharacterPath = Object.prototype.hasOwnProperty.call(CHARACTER_PATH_TO_TYPE, characterParam);
+  const character = hasCharacterPath ? characterParam : null;
+  const date = hasCharacterPath ? dateParam : (isYmdPath(characterParam) ? characterParam : dateParam);
+  const routeLocationType = hasCharacterPath
+    ? locationTypeParam
+    : (isYmdPath(characterParam) ? dateParam : locationTypeParam);
   const explicitScopeTodoId = location.state?.todoId ?? location.state?.orderScopeTodoId ?? null;
   
-  const locationType = locationTypeParam || location.state?.locationType || "gorge";
+  const locationType = routeLocationType || location.state?.locationType || "gorge";
   
   // 캐릭터 경로를 타입으로 변환
   const getCharacterType = () => {
     if (character) {
-      const characterMap = {
-        robot: "Starter-Freeze Bot",
-        graverobber: "Attention-grave",
-        wizard: "Time Wizard",
-        adventurer: "Emotional Adventure",
-      };
-      return characterMap[character] || "Starter-Freeze Bot";
+      return CHARACTER_PATH_TO_TYPE[character] || "Starter-Freeze Bot";
     }
     
     const savedPersona = localStorage.getItem("personaType");
@@ -66,7 +75,7 @@ export default function TaskRebuild() {
     return `${year}-${month}-${day}`;
   };
 
-  const dateStr = date || getTodayDateString();
+  const dateStr = isYmdPath(date) ? date : getTodayDateString();
   const [year, month, day] = dateStr.split("-");
   const formattedDate = `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`;
 
@@ -169,6 +178,7 @@ export default function TaskRebuild() {
     isOpen: false,
     taskTitle: "",
     taskId: null,
+    todoId: null,
   });
   const [battleStartModalOpen, setBattleStartModalOpen] = useState(false);
   const [selectedBattleTask, setSelectedBattleTask] = useState(null);
@@ -185,6 +195,7 @@ export default function TaskRebuild() {
   const [selectedTodoTotalSeconds, setSelectedTodoTotalSeconds] = useState(null);
   const [timeLogErrorToast, setTimeLogErrorToast] = useState("");
   const sessionStartedAtRef = useRef(null);
+  const flushCurrentTimerSessionRef = useRef(null);
   const currentTask = selectedBattleTask || null;
 
   const refreshDailyTimeSummary = useCallback(async () => {
@@ -234,11 +245,19 @@ export default function TaskRebuild() {
     }
   }, [currentTask, refreshDailyTimeSummary, refreshTodoTimeSummary]);
 
+  useEffect(() => {
+    flushCurrentTimerSessionRef.current = flushCurrentTimerSession;
+  }, [flushCurrentTimerSession]);
+
   // 타이머 동작
   useEffect(() => {
     if (!isTimerRunning) return;
 
     const intervalId = setInterval(() => {
+      setElapsedSeconds((prev) => prev + 1);
+      if (isWizard) {
+        return;
+      }
       setTimerSeconds((prev) => {
         if (prev <= 1) {
           clearInterval(intervalId);
@@ -251,11 +270,18 @@ export default function TaskRebuild() {
         }
         return prev - 1;
       });
-      setElapsedSeconds((prev) => prev + 1);
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [flushCurrentTimerSession, isGraveRobber, isTimerRunning]);
+  }, [flushCurrentTimerSession, isGraveRobber, isTimerRunning, isWizard]);
+
+  useEffect(() => {
+    return () => {
+      if (sessionStartedAtRef.current) {
+        void flushCurrentTimerSessionRef.current?.();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -437,11 +463,12 @@ export default function TaskRebuild() {
 
   const handleCheckboxClick = (taskId, taskTitle) => {
     const task = tasks.find((t) => t.id === taskId);
-    if (!task.isCompleted) {
+    if (!task?.isCompleted) {
       setModalState({
         isOpen: true,
         taskTitle,
         taskId,
+        todoId: task?.todoId ?? taskId,
       });
     } else {
       setTasks((prev) =>
@@ -455,6 +482,7 @@ export default function TaskRebuild() {
       isOpen: false,
       taskTitle: "",
       taskId: null,
+      todoId: null,
     });
   };
 
@@ -466,6 +494,14 @@ export default function TaskRebuild() {
       );
     }
     handleModalClose();
+  };
+
+  const handleModalGiveUp = () => {
+    const { taskTitle, todoId } = modalState;
+    handleModalClose();
+    navigate("/task-give-up", {
+      state: { taskTitle, locationType, todoId, returnDate: dateStr },
+    });
   };
 
   const getPriorityClass = (priority) => {
@@ -544,6 +580,7 @@ export default function TaskRebuild() {
       modalState={modalState}
       handleModalClose={handleModalClose}
       handleModalConfirm={handleModalConfirm}
+      handleModalGiveUp={handleModalGiveUp}
       locationType={locationType}
     />
   );
@@ -563,6 +600,7 @@ export default function TaskRebuild() {
         modalState={modalState}
         handleModalClose={handleModalClose}
         handleModalConfirm={handleModalConfirm}
+        handleModalGiveUp={handleModalGiveUp}
         TOTAL_TIMER_SECONDS={TOTAL_TIMER_SECONDS}
         TIMER_RADIUS={TIMER_RADIUS}
         TIMER_CIRCUMFERENCE={TIMER_CIRCUMFERENCE}
@@ -594,6 +632,7 @@ export default function TaskRebuild() {
         modalState={modalState}
         handleModalClose={handleModalClose}
         handleModalConfirm={handleModalConfirm}
+        handleModalGiveUp={handleModalGiveUp}
         battleStartModalOpen={battleStartModalOpen}
         setBattleStartModalOpen={setBattleStartModalOpen}
         handleBattleStart={handleBattleStart}

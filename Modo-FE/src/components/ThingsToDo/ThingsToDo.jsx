@@ -154,9 +154,11 @@ export default function ThingsToDo({
   };
 
   const handleModalGiveUp = () => {
-    const { taskTitle } = modalState;
+    const { taskTitle, taskId } = modalState;
     handleModalClose();
-    navigate("/task-give-up", { state: { taskTitle, locationType } });
+    navigate("/task-give-up", {
+      state: { taskTitle, locationType, todoId: taskId, returnDate: currentDate },
+    });
   };
 
   const handleSubtaskClick = async (categoryId, taskId, subtaskId) => {

@@ -44,6 +44,12 @@ export const getMyInfo = async () => {
   return response.data;
 };
 
+/** 사용자 페르소나 변경 */
+export const updateUserPersona = async (personaId) => {
+  const response = await api.patch('/api/users/persona', { personaId });
+  return response.data;
+};
+
 /** 닉네임 중복 확인 (true: 중복됨, false: 사용 가능) */
 export const checkNickname = async (nickname) => {
   const response = await api.get('/api/users/nickname/check', {

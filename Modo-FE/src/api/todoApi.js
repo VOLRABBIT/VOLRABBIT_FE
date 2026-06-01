@@ -10,34 +10,6 @@ function buildSegmentationSubtasks(item, mappedSubtasks) {
     return mappedSubtasks;
   }
 
-  const segmentationTypeRaw = item?.segmentationType ?? item?.segmentation_type;
-  const segmentationType = typeof segmentationTypeRaw === 'string' ? segmentationTypeRaw.toUpperCase() : 'NONE';
-
-  if (segmentationType === 'TWO') {
-    return [
-      {
-        id: `seg2-${item?.id ?? item?.todoId ?? 'task'}`,
-        title: '↳ segmentation2 task',
-        isCompleted: false,
-      },
-    ];
-  }
-
-  if (segmentationType === 'THREE') {
-    return [
-      {
-        id: `seg2-${item?.id ?? item?.todoId ?? 'task'}`,
-        title: '↳ segmentation2 task',
-        isCompleted: false,
-      },
-      {
-        id: `seg3-${item?.id ?? item?.todoId ?? 'task'}`,
-        title: '   ↳ segmentation3 task',
-        isCompleted: false,
-      },
-    ];
-  }
-
   return [];
 }
 
@@ -60,6 +32,37 @@ function toCompleted(item) {
   return status === 'SUCCESS' || status === 'COMPLETE' || status === 'DONE';
 }
 
+function normalizeSegmentationType(value) {
+  if (typeof value !== 'string') return 'NONE';
+  const code = value.toUpperCase();
+  return SEGMENTATION_CODES.includes(code) ? code : 'NONE';
+}
+
+function normalizeStep(step) {
+  return {
+    id: step?.stepId ?? step?.id,
+    title: step?.content ?? step?.title ?? '',
+    isCompleted: Boolean(step?.completed ?? step?.isCompleted),
+    stepOrder: step?.stepOrder ?? step?.order ?? 0,
+    sourceType: 'step',
+  };
+}
+
+function getMappedSteps(item) {
+  if (Array.isArray(item?.steps)) {
+    return item.steps.map(normalizeStep).sort((a, b) => (a.stepOrder ?? 0) - (b.stepOrder ?? 0));
+  }
+  if (Array.isArray(item?.subtasks)) {
+    return item.subtasks.map((subtask) => ({
+      id: subtask.id,
+      title: subtask.title ?? subtask.content ?? '',
+      isCompleted: toCompleted(subtask),
+      sourceType: subtask.sourceType ?? 'subtask',
+    }));
+  }
+  return [];
+}
+
 export function transformApiResponseToUi(apiList) {
   if (!Array.isArray(apiList) || apiList.length === 0) {
     return [];
@@ -76,18 +79,12 @@ export function transformApiResponseToUi(apiList) {
         id: t.id ?? t.todoId ?? `task-${i}`,
         title: t.title ?? t.taskTitle ?? t.content ?? '',
         isCompleted: toCompleted(t),
-        subtasks: buildSegmentationSubtasks(
-          t,
-          Array.isArray(t.subtasks)
-            ? t.subtasks.map((s) => ({
-                id: s.id,
-                title: s.title ?? '',
-                isCompleted: toCompleted(s),
-              }))
-            : []
-        ),
+        subtasks: buildSegmentationSubtasks(t, getMappedSteps(t)),
         startTime: t.startTime ?? null,
         duration: t.duration ?? null,
+        segmentationType: normalizeSegmentationType(
+          t.segmentationType ?? t.segmentation_type
+        ),
         verificationType: normalizeVerificationType(
           t.verificationType ?? t.verification_type
         ),
@@ -106,18 +103,12 @@ export function transformApiResponseToUi(apiList) {
       id: item.id ?? item.todoId ?? `item-${index}`,
       title: item.title ?? item.taskTitle ?? item.content ?? '',
       isCompleted: toCompleted(item),
-      subtasks: buildSegmentationSubtasks(
-        item,
-        Array.isArray(item.subtasks)
-          ? item.subtasks.map((s) => ({
-              id: s.id,
-              title: s.title ?? '',
-              isCompleted: toCompleted(s),
-            }))
-          : []
-      ),
+      subtasks: buildSegmentationSubtasks(item, getMappedSteps(item)),
       startTime: item.startTime ?? null,
       duration: item.duration ?? null,
+      segmentationType: normalizeSegmentationType(
+        item.segmentationType ?? item.segmentation_type
+      ),
       verificationType: normalizeVerificationType(
         item.verificationType ?? item.verification_type
       ),
@@ -234,6 +225,26 @@ function shouldIncludeByRepeatRule(item, dateStr) {
   return explicitDate != null ? explicitDate === dateStr : true;
 }
 
+async function attachStepsToUiGroups(groups) {
+  const safeGroups = Array.isArray(groups) ? groups : [];
+  const tasks = safeGroups.flatMap((group) => (Array.isArray(group?.tasks) ? group.tasks : []));
+  const segmentedTasks = tasks.filter((task) => {
+    const todoId = task?.id ?? task?.todoId;
+    return Number.isFinite(Number(todoId)) && normalizeSegmentationType(task?.segmentationType) !== 'NONE';
+  });
+
+  await Promise.all(segmentedTasks.map(async (task) => {
+    try {
+      const steps = await getTodoSteps(task.id ?? task.todoId);
+      task.subtasks = steps.map(normalizeStep).sort((a, b) => (a.stepOrder ?? 0) - (b.stepOrder ?? 0));
+    } catch {
+      task.subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
+    }
+  }));
+
+  return safeGroups;
+}
+
 /**
  * 날짜별 투두 목록 조회 (GET /api/todos?date=YYYY-MM-DD).
  * @param {string} dateStr - YYYY-MM-DD
@@ -246,7 +257,7 @@ export async function getTodosByDate(dateStr) {
   const data = response.data;
   let list = extractTodoList(data);
   if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-    return transformApiResponseToUi(list);
+    return attachStepsToUiGroups(transformApiResponseToUi(list));
   }
 
   const isGrouped = Array.isArray(list) && list.length > 0 && list[0].tasks && Array.isArray(list[0].tasks);
@@ -263,7 +274,7 @@ export async function getTodosByDate(dateStr) {
     list = list.filter((item) => shouldIncludeByRepeatRule(item, dateStr));
   }
 
-  return transformApiResponseToUi(list);
+  return attachStepsToUiGroups(transformApiResponseToUi(list));
 }
 
 /**
@@ -274,12 +285,37 @@ export async function getTodosByDate(dateStr) {
  */
 export async function createTodo(payload) {
   assertTodoCreateRequest(payload);
-  try {
-    const response = await api.post('/api/todos', payload);
-    return normalizeTodoCreateResponse(response.data);
-  } catch (error) {
-    throw error;
-  }
+  const response = await api.post('/api/todos', payload);
+  return normalizeTodoCreateResponse(response.data);
+}
+
+export async function getTodoSteps(todoId) {
+  const response = await api.get(`/api/todos/${todoId}/steps`);
+  const data = response?.data?.data ?? response?.data;
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.steps)) return data.steps;
+  if (Array.isArray(data?.content)) return data.content;
+  if (Array.isArray(data?.items)) return data.items;
+  return [];
+}
+
+export async function createTodoAiSteps(todoId, segmentationType) {
+  const response = await api.post(`/api/todos/${todoId}/steps/ai`, {
+    segmentationType,
+  });
+  return response?.data?.data ?? response?.data;
+}
+
+export async function toggleTodoStep(todoId, stepId) {
+  const response = await api.patch(`/api/todos/${todoId}/steps/${stepId}/toggle`);
+  return response?.data?.data ?? response?.data;
+}
+
+export async function updateTodoStepContent(todoId, stepId, content) {
+  const response = await api.patch(`/api/todos/${todoId}/steps/${stepId}/content`, {
+    content,
+  });
+  return response?.data?.data ?? response?.data;
 }
 
 function formatYmd(date) {
@@ -348,33 +384,9 @@ function buildOccurrenceDates({ repeatType, startDate, endDate }) {
   return [formatYmd(from)];
 }
 
-function buildTreeContents(content, segmentationType) {
-  const MAX_CONTENT_LENGTH = 10;
-  const withSuffix = (base, suffix) => {
-    const reserve = suffix.length;
-    const safeBase = String(base ?? '').slice(0, Math.max(0, MAX_CONTENT_LENGTH - reserve));
-    return `${safeBase}${suffix}`;
-  };
-
-  if (segmentationType === 'THREE') {
-    return [
-      String(content ?? '').slice(0, MAX_CONTENT_LENGTH),
-      withSuffix(content, ' (2)'),
-      withSuffix(content, ' (3)'),
-    ];
-  }
-  if (segmentationType === 'TWO') {
-    return [
-      String(content ?? '').slice(0, MAX_CONTENT_LENGTH),
-      withSuffix(content, ' (2)'),
-    ];
-  }
-  return [String(content ?? '').slice(0, MAX_CONTENT_LENGTH)];
-}
-
 /**
  * Swagger 기준 /api/todos CreateRequest에는 parentId/depth/order/groupId가 없습니다.
- * 따라서 트리(todo-parent/child/grandchild)는 순차 생성으로 표현합니다.
+ * segmentationType은 todo 생성 요청에 그대로 전달하고, AUTO는 생성 후 step AI API를 호출합니다.
  * @param {Object} payload - CreateRequest
  * @param {{startDate?: string, endDate?: string}=} options
  */
@@ -392,29 +404,16 @@ export async function createTodoTree(payload, options = {}) {
     startDate: baseStart,
     endDate: baseEnd,
   });
-  const treeContents = buildTreeContents(payload.content, payload.segmentationType ?? 'NONE');
-  const todoIds = [];
 
-  for (const dateYmd of occurrenceDates) {
-    for (const nodeContent of treeContents) {
-      const requestPayload = {
-        ...payload,
-        content: nodeContent,
-        dueType: 'CUSTOM',
-        dueDate: dateYmd,
-        repeatType: 'NONE',
-        segmentationType: 'NONE',
-      };
-      const created = await createTodo(requestPayload);
-      if (Number.isFinite(Number(created?.todoId))) {
-        todoIds.push(Number(created.todoId));
-      }
-    }
+  const created = await createTodo(payload);
+  const todoId = Number(created?.todoId);
+  if (Number.isFinite(todoId) && payload.segmentationType === 'AUTO') {
+    await createTodoAiSteps(todoId, payload.segmentationType);
   }
 
   return {
-    createdCount: todoIds.length,
-    todoIds,
+    ...created,
+    todoIds: Number.isFinite(todoId) ? [todoId] : [],
     occurrenceDates,
   };
 }
@@ -460,7 +459,7 @@ function normalizeCustomDeadlineInput(raw) {
  * @returns {Object} CreateRequest 형태 payload
  */
 export function buildCreateTodoPayload(form, targetDate) {
-  const { taskName, categoryId, deadline, customDeadline, selectedDate, repeatCycle, subdivision, verification, selectedTag } = form;
+  const { taskName, categoryId, deadline, customDeadline, selectedDate, repeatCycle, subdivision, verification } = form;
   const categoryIdValue =
     categoryId != null && categoryId !== '' && Number.isFinite(Number(categoryId))
       ? Number(categoryId)
@@ -497,6 +496,8 @@ export function buildCreateTodoPayload(form, targetDate) {
   };
   if (dueDate != null && dueDate !== '') {
     payload.dueDate = dueDate;
+  } else if (typeof targetDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(targetDate)) {
+    payload.dueDate = targetDate;
   } else {
     const today = new Date();
     payload.dueDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;

@@ -5,7 +5,7 @@ import SkipModal from "../Diagnosis/SkipModal";
 import taskIcon from "../../assets/navbar/task.svg";
 import taskAddIcon from "../../assets/navbar/task-add.svg";
 import reportIcon from "../../assets/navbar/report.svg";
-import { getCategories } from "../../api/apiStore";
+import { getCategories, getMyInfo } from "../../api/apiStore";
 
 const extractCategoryList = (data) => {
   if (Array.isArray(data)) return data;
@@ -13,6 +13,20 @@ const extractCategoryList = (data) => {
   if (Array.isArray(data?.content)) return data.content;
   if (Array.isArray(data?.categories)) return data.categories;
   return [];
+};
+
+const PERSONA_ID_TO_CHARACTER_PATH = {
+  1: "wizard",
+  2: "robot",
+  3: "graverobber",
+  4: "adventurer",
+};
+
+const PERSONA_TYPE_TO_CHARACTER_PATH = {
+  "Starter-Freeze Bot": "robot",
+  "Attention-grave": "graverobber",
+  "Time Wizard": "wizard",
+  "Emotional Adventure": "adventurer",
 };
 
 export default function TaskActionBar({ currentDate, orderScopeTodoId = null }) {
@@ -24,15 +38,20 @@ export default function TaskActionBar({ currentDate, orderScopeTodoId = null }) 
   // locationType 가져오기 (기본값: gorge)
   const locationType = location.state?.locationType || "gorge";
 
-  const getCharacterPath = () => {
+  const getCharacterPath = async () => {
+    try {
+      const res = await getMyInfo();
+      const profile = res?.data ?? res;
+      const personaId = Number(profile?.personaId ?? profile?.persona_id);
+      if (PERSONA_ID_TO_CHARACTER_PATH[personaId]) {
+        return PERSONA_ID_TO_CHARACTER_PATH[personaId];
+      }
+    } catch {
+      // fall back to local cached persona below
+    }
+
     const savedPersona = localStorage.getItem("personaType");
-    const characterMap = {
-      "Starter-Freeze Bot": "robot",
-      "Attention-grave": "graverobber",
-      "Time Wizard": "wizard",
-      "Emotional Adventure": "adventurer",
-    };
-    return characterMap[savedPersona] || "robot";
+    return PERSONA_TYPE_TO_CHARACTER_PATH[savedPersona] || "robot";
   };
 
   const handleTaskAddClick = async () => {
@@ -57,14 +76,14 @@ export default function TaskActionBar({ currentDate, orderScopeTodoId = null }) 
     }
   };
 
-  const handleItemClick = (itemId) => {
+  const handleItemClick = async (itemId) => {
     switch (itemId) {
       case "task-rebuild": {
         const dateStr = currentDate || (() => {
           const today = new Date();
           return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
         })();
-        const characterPath = getCharacterPath();
+        const characterPath = await getCharacterPath();
         navigate(`/task-rebuild/${characterPath}/${dateStr}/${locationType}`, {
           state: {
             locationType,
@@ -80,7 +99,7 @@ export default function TaskActionBar({ currentDate, orderScopeTodoId = null }) 
         break;
       }
       case "report":
-        navigate("/mypage");
+        navigate("/report");
         break;
       default:
         break;

@@ -5,6 +5,7 @@ import arrowLeftIcon from "../../assets/arrow-left.svg";
 import { getLocationBackground, getLocationButtonColor } from "../../utils/locationTheme";
 import TaskGiveUpConfirmModal from "../../components/TaskGiveUpConfirmModal/TaskGiveUpConfirmModal";
 import TaskGiveUpRetryModal from "../../components/TaskGiveUpRetryModal/TaskGiveUpRetryModal";
+import { createRetryTodo, giveUpTodo } from "../../api/taskApi";
 
 const GIVE_UP_REASONS = [
   "뭐부터 해야 할지 모르겠어요.",
@@ -15,19 +16,45 @@ const GIVE_UP_REASONS = [
   "입력하기",
 ];
 
+const REASON_CODES = ["DONT_KNOW_HOW", "TOO_COMPLEX", "NO_TIME", "INTERRUPTED", "ETC", "ETC"];
+
+const isCustomReason = (reason) => reason === GIVE_UP_REASONS[GIVE_UP_REASONS.length - 1];
+
+const getTomorrowYmd = () => {
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const buildOutcomePayload = (selectedReason, customReason) => {
+  const index = GIVE_UP_REASONS.indexOf(selectedReason);
+  const reasonCode = REASON_CODES[index] ?? "ETC";
+  const payload = { reasonCode };
+  const customText = reasonCode === "ETC" ? customReason.trim() : "";
+  if (customText) {
+    payload.customText = customText;
+  }
+  return payload;
+};
+
 export default function TaskGiveUp() {
   const navigate = useNavigate();
   const location = useLocation();
   const taskTitle = location.state?.taskTitle || "";
+  const todoId = location.state?.todoId ?? location.state?.taskId;
   const locationType = location.state?.locationType || "dungeon";
   const mapBackground = getLocationBackground(locationType);
   const buttonColor = getLocationButtonColor(locationType);
 
   const [selectedReason, setSelectedReason] = useState(null);
   const [customReason, setCustomReason] = useState("");
-  const [isCustomInput, setIsCustomInput] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showRetryModal, setShowRetryModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [actionError, setActionError] = useState("");
 
   const handleBack = () => {
     navigate(-1);
@@ -38,11 +65,9 @@ export default function TaskGiveUp() {
   };
 
   const handleReasonSelect = (reason) => {
-    if (reason === "입력하기") {
-      setIsCustomInput(true);
-      setSelectedReason("입력하기");
+    if (isCustomReason(reason)) {
+      setSelectedReason(reason);
     } else {
-      setIsCustomInput(false);
       setSelectedReason(reason);
     }
   };
@@ -52,9 +77,10 @@ export default function TaskGiveUp() {
   };
 
   const handleGiveUpClick = () => {
-    if (!selectedReason || (selectedReason === "입력하기" && !customReason.trim())) {
+    if (!selectedReason || (isCustomReason(selectedReason) && !customReason.trim())) {
       return;
     }
+    setActionError("");
     setShowConfirmModal(true);
   };
 
@@ -67,19 +93,62 @@ export default function TaskGiveUp() {
     setShowRetryModal(true);
   };
 
+  const submitGiveUpAndExit = async () => {
+    if (!todoId) {
+      setShowRetryModal(false);
+      setActionError("Todo ID가 없어 포기 기록을 저장할 수 없습니다.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setActionError("");
+    try {
+      await giveUpTodo(todoId, buildOutcomePayload(selectedReason, customReason));
+      setShowRetryModal(false);
+      navigate(-1);
+    } catch (err) {
+      setShowRetryModal(false);
+      setActionError(err?.response?.data?.message ?? err?.message ?? "포기 기록 저장에 실패했습니다.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const submitRetryAndExit = async () => {
+    if (!todoId) {
+      setShowRetryModal(false);
+      setActionError("Todo ID가 없어 재도전 task를 만들 수 없습니다.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setActionError("");
+    try {
+      await createRetryTodo(todoId, {
+        ...buildOutcomePayload(selectedReason, customReason),
+        dueType: "TOMORROW",
+        dueDate: getTomorrowYmd(),
+      });
+      setShowRetryModal(false);
+      navigate(-1);
+    } catch (err) {
+      setShowRetryModal(false);
+      setActionError(err?.response?.data?.message ?? err?.message ?? "재도전 task 생성에 실패했습니다.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleRetryModalClose = () => {
-    setShowRetryModal(false);
-    navigate(-1);
+    void submitGiveUpAndExit();
   };
 
   const handleRetryModalRetry = () => {
-    setShowRetryModal(false);
-    navigate(-1);
+    void submitRetryAndExit();
   };
 
   const handleRetryModalGiveUp = () => {
-    setShowRetryModal(false);
-    navigate(-1);
+    void submitGiveUpAndExit();
   };
 
   return (
@@ -113,7 +182,7 @@ export default function TaskGiveUp() {
         <div className={styles.reasonsList}>
           {GIVE_UP_REASONS.map((reason, index) => {
             const isSelected = selectedReason === reason;
-            const isInputOption = reason === "입력하기";
+            const isInputOption = isCustomReason(reason);
 
             return (
               <div key={index} className={styles.reasonItem}>
@@ -150,18 +219,25 @@ export default function TaskGiveUp() {
           })}
         </div>
 
+        {actionError && (
+          <p style={{ color: "#b91c1c", fontSize: 13, margin: "8px 0 0" }}>
+            {actionError}
+          </p>
+        )}
+
         {/* 하단 포기하기 버튼 */}
         <div className={styles.footer}>
           <button
             className={styles.giveUpButton}
             onClick={handleGiveUpClick}
             disabled={
+              isSubmitting ||
               !selectedReason ||
-              (selectedReason === "입력하기" && !customReason.trim())
+              (isCustomReason(selectedReason) && !customReason.trim())
             }
             style={{ backgroundColor: buttonColor }}
           >
-            포기하기
+            {isSubmitting ? "처리 중..." : "포기하기"}
           </button>
         </div>
       </div>

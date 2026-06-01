@@ -1,9 +1,8 @@
 import axios from 'axios';
 
+const DEFAULT_API_BASE_URL = 'http://140.245.76.239:8080';
 const envBase = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
-const BASE_URL =
-  envBase ||
-  (import.meta.env.PROD ? 'https://www.modo.co.kr' : 'http://140.245.76.239:8080');
+export const BASE_URL = envBase || DEFAULT_API_BASE_URL;
 
 // axios 인스턴스
 const api = axios.create({

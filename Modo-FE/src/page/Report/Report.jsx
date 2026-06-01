@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../../components/TopBar/TopBar";
 import Navbar from "../../components/Navbar/Navbar";
@@ -12,7 +12,7 @@ export default function Report() {
   // State 및 Refs
   const navigate = useNavigate();
   const [periodType, setPeriodType] = useState("주간");
-  const [currentPeriod, setCurrentPeriod] = useState("2025년 10월 1주차");
+  const [currentPeriod] = useState("2025년 10월 1주차");
   // TODO: 실제 사용자 캐릭터 ID로 교체 필요
   const [userCharacterId] = useState(0);
   
@@ -54,13 +54,13 @@ export default function Report() {
   }, [periodType]);
 
   // 차트 계산 함수
-  const calculateBubbleSize = (value, maxValue, minSize = 50, maxSize = 90) => {
+  const calculateBubbleSize = useCallback((value, maxValue, minSize = 50, maxSize = 90) => {
     const ratio = value / maxValue;
     return minSize + (maxSize - minSize) * ratio;
-  };
+  }, []);
 
   // 버블 차트 위치 계산: 3개 버블을 고정 위치에 배치하고 컨테이너 경계를 넘지 않도록 보정
-  const calculateAllBubblePositions = (bubbles, dimensions) => {
+  const calculateAllBubblePositions = useCallback((bubbles, dimensions) => {
     const maxValue = Math.max(...bubbles.map(b => b.value));
     const chartHeight = dimensions.height;
     const availableWidth = dimensions.width;
@@ -113,7 +113,7 @@ export default function Report() {
     }
     
     return [];
-  };
+  }, [calculateBubbleSize]);
 
   // Event Handlers
   const handleBack = () => {
@@ -143,11 +143,11 @@ export default function Report() {
 
   const abandonBubblePositions = useMemo(() => {
     return calculateAllBubblePositions(sortedAbandonReasons, abandonChartDimensions);
-  }, [sortedAbandonReasons, abandonChartDimensions]);
+  }, [sortedAbandonReasons, abandonChartDimensions, calculateAllBubblePositions]);
 
   const failureBubblePositions = useMemo(() => {
     return calculateAllBubblePositions(sortedFailureReasons, failureChartDimensions);
-  }, [sortedFailureReasons, failureChartDimensions]);
+  }, [sortedFailureReasons, failureChartDimensions, calculateAllBubblePositions]);
 
   // 도넛 차트 계산: 세그먼트 간 고정 간격을 유지하며 percentage에 따라 세그먼트 길이 계산
   const calculateDonutChart = (battleTypes) => {
@@ -160,7 +160,7 @@ export default function Report() {
     
     let currentOffset = 0;
     
-    return battleTypes.map((type, index) => {
+    return battleTypes.map((type) => {
       const segmentLength = (type.percentage / 100) * availableLength;
       const currentGap = fixedGapLength;
       const gap = circumference - segmentLength;
@@ -257,7 +257,7 @@ export default function Report() {
           <div className={styles.donutChart}>
             <div className={styles.donutChartVisual}>
               <svg viewBox="0 0 120 120" className={styles.donutChartSvg}>
-                {donutChartData.map((type, index) => (
+                {donutChartData.map((type) => (
                   <circle
                     key={type.name}
                     cx="60"
