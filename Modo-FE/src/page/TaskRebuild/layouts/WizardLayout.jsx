@@ -20,6 +20,7 @@ export default function WizardLayout({
   modalState,
   handleModalClose,
   handleModalConfirm,
+  handleModalGiveUp,
   battleStartModalOpen,
   setBattleStartModalOpen,
   handleBattleStart,
@@ -253,6 +254,7 @@ export default function WizardLayout({
           taskTitle={modalState.taskTitle}
           onClose={handleModalClose}
           onConfirm={handleModalConfirm}
+          onGiveUp={handleModalGiveUp}
           locationType={locationType}
         />
       )}

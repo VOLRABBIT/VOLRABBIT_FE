@@ -31,16 +31,18 @@ export default function NFCSettings() {
     const newTag = location.state?.newTag;
     if (newTag && location.key && !processedKeysRef.current.has(location.key)) {
       processedKeysRef.current.add(location.key);
-      setTags((prevTags) => {
-        // 이미 같은 ID의 태그가 있는지 확인
-        const exists = prevTags.some((tag) => tag.id === newTag.id);
-        if (!exists) {
-          return [...prevTags, newTag];
-        }
-        return prevTags;
+      queueMicrotask(() => {
+        setTags((prevTags) => {
+          // 이미 같은 ID의 태그가 있는지 확인
+          const exists = prevTags.some((tag) => tag.id === newTag.id);
+          if (!exists) {
+            return [...prevTags, newTag];
+          }
+          return prevTags;
+        });
+        // state 제거 (replace: true로 navigate하여 state만 제거)
+        navigate(location.pathname, { replace: true, state: null });
       });
-      // state 제거 (replace: true로 navigate하여 state만 제거)
-      navigate(location.pathname, { replace: true, state: null });
     }
   }, [location.key, location.state, navigate, location.pathname]);
 

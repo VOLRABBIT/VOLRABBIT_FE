@@ -1,6 +1,6 @@
 import styles from "./PauseToast.module.css";
 
-export default function PauseToast({ onClose }) {
+export default function PauseToast() {
   return (
     <div className={styles.toast}>
       <p className={styles.toastText}>

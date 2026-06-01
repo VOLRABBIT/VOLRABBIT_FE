@@ -22,6 +22,7 @@ export default function RobotLayout({
   modalState,
   handleModalClose,
   handleModalConfirm,
+  handleModalGiveUp,
   locationType = "gorge",
 }) {
   const mapBackground = getLocationBackground(locationType);
@@ -87,6 +88,7 @@ export default function RobotLayout({
           taskTitle={modalState.taskTitle}
           onClose={handleModalClose}
           onConfirm={handleModalConfirm}
+          onGiveUp={handleModalGiveUp}
           locationType={locationType}
         />
       )}

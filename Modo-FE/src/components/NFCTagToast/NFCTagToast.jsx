@@ -1,6 +1,6 @@
 import styles from "./NFCTagToast.module.css";
 
-export default function NFCTagToast({ message, isVisible, onClose }) {
+export default function NFCTagToast({ message, isVisible }) {
   if (!isVisible) return null;
 
   return (

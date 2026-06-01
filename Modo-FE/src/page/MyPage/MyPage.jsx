@@ -158,11 +158,6 @@ export default function MyPage() {
     }
   };
 
-  const handleResultPageClose = () => {
-    setShowResultPage(false);
-    setMyPagePersonaId(null);
-  };
-
   const handleLogout = async () => {
     await logout();
     navigate("/");

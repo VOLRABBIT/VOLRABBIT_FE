@@ -81,11 +81,12 @@ function AppContent() {
             <Route path="/nickname-change" element={<NicknameChange />} />
             <Route path="/task-give-up" element={<TaskGiveUp />} />
             <Route path="/task-failed-review" element={<TaskFailedReview />} />
+            <Route path="/task-failed-review/:locationType" element={<TaskFailedReview />} />
             <Route path="/task-photo-auth" element={<TaskPhotoAuth />} />
             <Route path="/task-create" element={<TaskCreate />} />
             <Route path="/task-detail/:date" element={<TaskDetail key={location.pathname} />} />
-            <Route path="/task-rebuild/:character/:date/:locationType?" element={<TaskRebuild />} />
             <Route path="/task-rebuild/:date/:locationType?" element={<TaskRebuild />} />
+            <Route path="/task-rebuild/:character/:date/:locationType?" element={<TaskRebuild />} />
             <Route path="/pause" element={<Pause />} />
             <Route path="/report" element={<Report />} />
             <Route path="/all-types" element={<AllTypesPage />} />

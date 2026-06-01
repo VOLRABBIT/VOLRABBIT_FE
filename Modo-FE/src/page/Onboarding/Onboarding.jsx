@@ -70,24 +70,20 @@ export default function Onboarding() {
   /** 온보딩 제출 API 호출 후 페르소나 타입/ID 반환 */
   const getPersonaFromApi = useCallback(
     async (answers, isSkipped) => {
-      try {
-        const payload = isSkipped
-          ? null
-          : apiQuestions.map((q, i) => ({
-              questionNo: q.questionNo,
-              questionResponse: convertAnswerToScore(answers[i] ?? ""),
-            }));
-        const res = await submitOnboarding(payload);
-        const data = res?.data ?? res;
-        const personaId = data?.personaId;
-        const personaType = data?.personaType ?? (personaId ? PERSONA_ID_TO_TYPE[personaId] : null);
-        if (!personaType && !personaId) {
-          throw new Error("서버에서 페르소나 결과를 받지 못했습니다.");
-        }
-        return personaId ? { personaType: personaType ?? PERSONA_ID_TO_TYPE[personaId], personaId } : personaType;
-      } catch (err) {
-        throw err;
+      const payload = isSkipped
+        ? null
+        : apiQuestions.map((q, i) => ({
+            questionNo: q.questionNo,
+            questionResponse: convertAnswerToScore(answers[i] ?? ""),
+          }));
+      const res = await submitOnboarding(payload);
+      const data = res?.data ?? res;
+      const personaId = data?.personaId;
+      const personaType = data?.personaType ?? (personaId ? PERSONA_ID_TO_TYPE[personaId] : null);
+      if (!personaType && !personaId) {
+        throw new Error("서버에서 페르소나 결과를 받지 못했습니다.");
       }
+      return personaId ? { personaType: personaType ?? PERSONA_ID_TO_TYPE[personaId], personaId } : personaType;
     },
     [apiQuestions]
   );

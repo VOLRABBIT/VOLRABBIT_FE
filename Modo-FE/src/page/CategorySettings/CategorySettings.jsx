@@ -85,10 +85,7 @@ export default function CategorySettings() {
     }
   };
 
-  const handleCategoryNameClick = (categoryId, categoryName) => {
-  };
-
-  const handleEditConfirm = async (categoryId) => {
+  const handleEditConfirm = async () => {
   };
 
   const handleEditCancel = () => {
@@ -96,9 +93,9 @@ export default function CategorySettings() {
     setEditingCategoryName("");
   };
 
-  const handleEditInputKeyPress = (e, categoryId) => {
+  const handleEditInputKeyPress = (e) => {
     if (e.key === "Enter") {
-      handleEditConfirm(categoryId);
+      handleEditConfirm();
     } else if (e.key === "Escape") {
       handleEditCancel();
     }
@@ -245,12 +242,12 @@ export default function CategorySettings() {
                     className={styles.categoryInput}
                     value={editingCategoryName}
                     onChange={(e) => setEditingCategoryName(e.target.value)}
-                    onKeyDown={(e) => handleEditInputKeyPress(e, category.id)}
+                    onKeyDown={handleEditInputKeyPress}
                   />
                   <div className={styles.addActions}>
                     <button
                       className={styles.confirmButton}
-                      onClick={() => handleEditConfirm(category.id)}
+                      onClick={handleEditConfirm}
                       disabled={!editingCategoryName.trim() || mutateLoading}
                     >
                       {mutateLoading ? "저장 중..." : "확인"}
