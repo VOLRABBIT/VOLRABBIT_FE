@@ -72,26 +72,42 @@ const ResultPage = ({ personaData: propPersonaData, buttonImage, onButtonClick, 
   const [expandedStats, setExpandedStats] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
   const [analysisLoading, setAnalysisLoading] = useState(false);
-  const [characterImageError, setCharacterImageError] = useState(false);
+  const [failedCharacterSrc, setFailedCharacterSrc] = useState("");
 
   // location state에서 personaData를 가져오거나 props에서 가져옴
   const personaData = location.state?.personaData || propPersonaData;
 
-  // 분석 데이터 변경 시 이미지 에러 상태 초기화
-  useEffect(() => {
-    setCharacterImageError(false);
-  }, [analysisData, personaId]);
-
   // personaId가 있으면 GET /api/personas/{personaId}/analysis 조회
   useEffect(() => {
     if (personaId == null) return;
-    setAnalysisLoading(true);
-    getPersonaAnalysis(personaId)
-      .then((res) => setAnalysisData(res?.data ?? null))
-      .catch(() => setAnalysisData(null))
+    let cancelled = false;
+
+    Promise.resolve()
+      .then(() => {
+        if (!cancelled) {
+          setAnalysisLoading(true);
+        }
+        return getPersonaAnalysis(personaId);
+      })
+      .then((res) => {
+        if (!cancelled) {
+          setAnalysisData(res?.data ?? null);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setAnalysisData(null);
+        }
+      })
       .finally(() => {
-        setAnalysisLoading(false);
+        if (!cancelled) {
+          setAnalysisLoading(false);
+        }
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [personaId]);
 
   // personaData가 없으면 이전 페이지로 이동
@@ -123,9 +139,10 @@ const ResultPage = ({ personaData: propPersonaData, buttonImage, onButtonClick, 
   const useApiData = !!analysisData;
   const title = useApiData ? analysisData.name : personaData.id;
   const hashtag = useApiData ? analysisData.hashtag : (personaData.hashtag ?? "");
+  const apiCharacterSrc = useApiData ? analysisData.iconUrl : "";
   const characterSrc =
-    useApiData && analysisData.iconUrl && !characterImageError
-      ? analysisData.iconUrl
+    apiCharacterSrc && failedCharacterSrc !== apiCharacterSrc
+      ? apiCharacterSrc
       : personaData.character;
   const recommendationSuffix = useApiData && analysisData.recommendation?.recommendationSuffix
     ? analysisData.recommendation.recommendationSuffix
@@ -160,7 +177,7 @@ const ResultPage = ({ personaData: propPersonaData, buttonImage, onButtonClick, 
             src={characterSrc}
             className={`${styles.resultCharacter} ${getCharacterSizeClass()}`}
             alt=""
-            onError={() => setCharacterImageError(true)}
+            onError={() => setFailedCharacterSrc(characterSrc)}
           />
         </div>
 

@@ -23,28 +23,13 @@ const getOrCreateDeviceId = () => {
   }
 };
 
-const resolvePublicOrigin = () => {
-  if (import.meta.env.VITE_PUBLIC_ORIGIN) {
-    return import.meta.env.VITE_PUBLIC_ORIGIN;
-  }
-  if (typeof window !== 'undefined' && window.location?.origin) {
-    return window.location.origin;
-  }
-  return 'http://localhost:5173';
-};
-
-const buildOAuthCallbackUrl = (provider) => {
-  const origin = resolvePublicOrigin().replace(/\/$/, '');
-  return `${origin}/oauth/callback/${encodeURIComponent(provider)}`;
-};
-
 export const clearClientSession = () => {
   try {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('deviceId');
     localStorage.removeItem('personaType');
     localStorage.removeItem('selectedMap');
-  } catch {
+  } catch (error) {
     console.error('clearClientSession 에러:', error);
   }
 };
@@ -95,34 +80,8 @@ export const signup = async (nickname, email, password) => {
  * @returns {void} - 브라우저가 해당 URL로 리다이렉트됨
  */
 export const socialLogin = (provider) => {
-  const deviceId = getOrCreateDeviceId();
-  const callbackUrl = buildOAuthCallbackUrl(provider);
   const startPath = `/api/auth/oauth/${provider}`;
-  const startUrl = `${api.defaults.baseURL}${startPath}?deviceId=${encodeURIComponent(deviceId)}&redirectUri=${encodeURIComponent(callbackUrl)}`;
-
-  api
-    .get(startPath, {
-      params: {
-        deviceId,
-        redirectUri: callbackUrl,
-      },
-      withCredentials: true,
-    })
-    .then((res) => {
-      const redirectUrl =
-        res?.data?.data?.url ??
-        res?.data?.url ??
-        res?.data?.data?.redirectUrl ??
-        res?.data?.redirectUrl;
-      if (redirectUrl) {
-        window.location.href = redirectUrl;
-        return;
-      }
-      window.location.href = startUrl;
-    })
-    .catch(() => {
-      window.location.href = startUrl;
-    });
+  window.location.href = `${api.defaults.baseURL}${startPath}`;
 };
 
 /**

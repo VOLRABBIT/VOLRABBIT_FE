@@ -22,6 +22,7 @@ export default function GraveRobberLayout({
   modalState,
   handleModalClose,
   handleModalConfirm,
+  handleModalGiveUp,
   TOTAL_TIMER_SECONDS,
   TIMER_RADIUS,
   TIMER_CIRCUMFERENCE,
@@ -144,6 +145,7 @@ export default function GraveRobberLayout({
           taskTitle={modalState.taskTitle}
           onClose={handleModalClose}
           onConfirm={handleModalConfirm}
+          onGiveUp={handleModalGiveUp}
           locationType={locationType}
         />
       )}
@@ -162,6 +164,7 @@ export default function GraveRobberLayout({
       {timerFinishedModalOpen && (
         <TimerFinishedModal
           taskTitle={currentTask?.title}
+          taskId={currentTask?.todoId ?? currentTask?.id}
           onClose={() => setTimerFinishedModalOpen(false)}
           onConfirm={handleTimerFinishedConfirm}
           locationType={locationType}

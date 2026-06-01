@@ -19,10 +19,6 @@ export default function IntroScreen({
         <h1 className={customStyles.introTitle}>{title}</h1>
         <div className={customStyles.introParagraphs}>
           {paragraphs.map((paragraph, index) => {
-            const processedText = paragraph
-              .replace(/<br\s*\/?>/gi, '\n')
-              .split('\n');
-            
             return (
               <p
                 key={index}

@@ -1,6 +1,6 @@
 import api from './api';
 import { submitTodoPhotoProof } from './photoApi';
-import { filterOutGuildQuests, filterOutGuildQuestGroups } from "../utils/taskSource";
+import { getTodosByDate, toggleTodoStep } from './todoApi';
 
 /**
  * 날짜별 todo 목록 조회
@@ -12,20 +12,7 @@ export const getTasksByDate = async (date) => {
   if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     throw new Error('날짜 형식이 올바르지 않습니다. YYYY-MM-DD 형식이어야 합니다.');
   }
-  
-  const response = await api.get('/api/todos', {
-    params: { 
-      date: date
-    },
-  });
-  const data = response?.data?.data || response?.data;
-  if (Array.isArray(data)) {
-    if (data.length > 0 && Array.isArray(data[0]?.tasks)) {
-      return filterOutGuildQuestGroups(data);
-    }
-    return filterOutGuildQuests(data);
-  }
-  return data;
+  return getTodosByDate(date);
 };
 
 /**
@@ -132,8 +119,8 @@ export const toggleTaskComplete = async (todoId, isCompleted = true) => {
  * @param {number} todoId
  * @returns {Promise} 업데이트된 todo 정보
  */
-export const giveUpTodo = async (todoId) => {
-  const response = await api.patch(`/api/todos/${todoId}/give-up`);
+export const giveUpTodo = async (todoId, outcome = {}) => {
+  const response = await api.patch(`/api/todos/${todoId}/give-up`, outcome);
   return response?.data?.data || response?.data;
 };
 
@@ -142,8 +129,8 @@ export const giveUpTodo = async (todoId) => {
  * @param {number} todoId
  * @returns {Promise} 업데이트된 todo 정보
  */
-export const failTodo = async (todoId) => {
-  const response = await api.patch(`/api/todos/${todoId}/fail`);
+export const failTodo = async (todoId, outcome = {}) => {
+  const response = await api.patch(`/api/todos/${todoId}/fail`, outcome);
   return response?.data?.data || response?.data;
 };
 
@@ -215,8 +202,8 @@ export const tagTodo = async (todoId, tagData) => {
  * @param {number} todoId
  * @returns {Promise} 업데이트된 todo 정보
  */
-export const retryTodo = async (todoId) => {
-  const response = await api.post(`/api/todos/${todoId}/retry`);
+export const retryTodo = async (todoId, payload = {}) => {
+  const response = await api.post(`/api/todos/${todoId}/retry`, payload);
   return response?.data?.data || response?.data;
 };
 
@@ -225,8 +212,8 @@ export const retryTodo = async (todoId) => {
  * @param {number} todoId
  * @returns {Promise} 생성된 재도전 todo 정보
  */
-export const createRetryTodo = async (todoId) => {
-  const response = await api.post(`/api/todos/${todoId}/give-up/retry`);
+export const createRetryTodo = async (todoId, payload = {}) => {
+  const response = await api.post(`/api/todos/${todoId}/give-up/retry`, payload);
   return response?.data?.data || response?.data;
 };
 
@@ -237,7 +224,7 @@ export const createRetryTodo = async (todoId) => {
  * @returns {Promise} 업데이트된 todo 정보
  */
 export const updateTaskTitle = async (todoId, title) => {
-  return updateTask(todoId, { title });
+  return updateTask(todoId, { content: title });
 };
 
 /**
@@ -247,10 +234,6 @@ export const updateTaskTitle = async (todoId, title) => {
  * @param {boolean} isCompleted
  * @returns {Promise} 업데이트된 subtask 정보
  */
-export const toggleSubtaskComplete = async (todoId, subtaskId, isCompleted) => {
-  const response = await api.patch(
-    `/api/todos/${todoId}/subtasks/${subtaskId}/complete`,
-    { isCompleted },
-  );
-  return response?.data?.data || response?.data;
+export const toggleSubtaskComplete = async (todoId, subtaskId) => {
+  return toggleTodoStep(todoId, subtaskId);
 };

@@ -5,6 +5,7 @@ import { getLocationButtonColor } from "../../utils/locationTheme";
 
 export default function TimerFinishedModal({
   taskTitle,
+  taskId,
   onClose,
   onConfirm,
   locationType = "dungeon",
@@ -29,7 +30,7 @@ export default function TimerFinishedModal({
     onClose();
     if (taskTitle) {
       console.log("TimerFinishedModal - navigating with locationType:", locationType);
-      navigate(`/task-failed-review/${locationType}`, { state: { taskTitle, locationType } });
+      navigate(`/task-failed-review/${locationType}`, { state: { taskTitle, taskId, locationType } });
     }
   };
 

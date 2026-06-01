@@ -57,7 +57,6 @@ export default function AdvancedDiagnosis() {
     handleBack,
     handleSkip,
     handleCloseModal,
-    handleSkipConfirm: originalHandleSkipConfirm,
     handleNext,
     handleAnswerChange,
     questionsLength,

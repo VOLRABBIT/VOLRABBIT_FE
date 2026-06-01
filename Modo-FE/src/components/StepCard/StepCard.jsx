@@ -5,7 +5,6 @@ export default function StepCard({
   title,
   description,
   isCompleted,
-  isActive,
   summaryValue,
   stepClass,
   children,
